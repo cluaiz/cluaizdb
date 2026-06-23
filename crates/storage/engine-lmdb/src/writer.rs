@@ -13,8 +13,8 @@ use crate::env::LmdbEnv;
 /// # Errors
 /// Returns `StorageError` if the write transaction or serialization fails.
 pub fn write_neuron(env: &LmdbEnv, neuron: &UniversalNeuron) -> Result<(), StorageError> {
-    if neuron.vector_data != [0.0; 16] {
-        env.hnsw_index.insert(neuron.id, neuron.vector_data.to_vec());
+    if !neuron.vector_data.is_empty() && !neuron.vector_data.iter().all(|&x| x == 0.0) {
+        env.hnsw_index.insert(neuron.id, neuron.vector_data.clone());
     }
     let mut wtxn = env.write_txn()?;
 
@@ -45,7 +45,7 @@ mod tests {
 
         let neuron = UniversalNeuron::new(
             Bytes::from("test payload"),
-            [0.1f32; 16],
+            vec![0.1f32; 16],
             [0u8; 32],
             PayloadType::Text,
         );

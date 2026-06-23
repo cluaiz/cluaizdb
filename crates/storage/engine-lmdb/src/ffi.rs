@@ -1,7 +1,7 @@
 use std::ffi::{c_char, c_void, CString};
 use std::slice;
 
-use cluaizd_types::NeuronId;
+use cluaizd_types::{NeuronId, UniversalNeuron};
 use crate::env::LmdbEnv;
 use crate::reader::read_neuron;
 
@@ -14,10 +14,12 @@ use crate::reader::read_neuron;
 #[repr(C)]
 pub struct CluaizdFfiNeuron {
     pub id: [u8; 16],
-    pub vector: [f32; 16],
+    pub vector_ptr: *const f32,
+    pub vector_len: usize,
     pub state_hash: [u8; 32],
     pub payload_ptr: *const u8,
     pub payload_len: usize,
+    pub handle: *mut c_void,
 }
 
 /// Read a neuron by its 16-byte UUID from the LMDB environment.
@@ -47,32 +49,40 @@ pub unsafe extern "C" fn cluaizd_ffi_read_neuron(
 
     match read_neuron(env, id, None) {
         Ok(neuron) => {
-            // Write directly to the C struct without ANY JSON serialization
             let out = &mut *out_neuron;
             out.id.copy_from_slice(neuron.id.as_bytes());
-            out.vector.copy_from_slice(&neuron.vector_data);
-            out.state_hash.copy_from_slice(&neuron.model_creator_hash);
+            
+            // Move loaded UniversalNeuron to the heap using Box so we can keep it alive.
+            let boxed = Box::into_raw(Box::new(neuron));
+            let neuron_ref = &*boxed;
+
+            out.vector_ptr = neuron_ref.vector_data.as_ptr();
+            out.vector_len = neuron_ref.vector_data.len();
+            out.state_hash.copy_from_slice(&neuron_ref.model_creator_hash);
             
             // Expose the raw payload bytes directly
-            out.payload_ptr = neuron.raw_payload.as_ptr();
-            out.payload_len = neuron.raw_payload.len();
-            
-            // NOTE: The caller must read the payload before the neuron is dropped/transaction ends.
-            // Since `read_neuron` currently returns an owned `UniversalNeuron`, this memory is valid
-            // only as long as we keep it around. To make it TRULY zero-copy, the FFI should ideally 
-            // return a read transaction handle. For now, we leak it so the caller can read it,
-            // and provide a free function.
-            std::mem::forget(neuron); 
+            out.payload_ptr = neuron_ref.raw_payload.as_ptr();
+            out.payload_len = neuron_ref.raw_payload.len();
+            out.handle = boxed as *mut c_void;
             0
         }
         Err(_) => -3,
     }
 }
 
-/// Free the neuron payload leaked by `cluaizd_ffi_read_neuron`
+/// Free the boxed UniversalNeuron created by `cluaizd_ffi_read_neuron`
+#[no_mangle]
+pub unsafe extern "C" fn cluaizd_ffi_free_neuron(neuron_ptr: *mut c_void) {
+    if !neuron_ptr.is_null() {
+        let _ = Box::from_raw(neuron_ptr as *mut UniversalNeuron);
+    }
+}
+
+/// Free the neuron payload leaked by legacy FFI read calls
 #[no_mangle]
 pub unsafe extern "C" fn cluaizd_ffi_free_neuron_payload(payload_ptr: *mut u8, payload_len: usize, capacity: usize) {
     if !payload_ptr.is_null() {
+        // Fallback for backwards compatibility if needed
         let _ = Vec::from_raw_parts(payload_ptr, payload_len, capacity);
     }
 }
@@ -93,7 +103,7 @@ mod tests {
 
         let neuron = UniversalNeuron::new(
             Bytes::from("hello ffi"),
-            [0.5f32; 16],
+            [0.5f32; 16].to_vec(),
             [0u8; 32],
             PayloadType::Text,
         );
@@ -103,10 +113,12 @@ mod tests {
         let id_ptr = neuron.id.as_bytes().as_ptr();
         let mut out_neuron = CluaizdFfiNeuron {
             id: [0; 16],
-            vector: [0.0; 16],
+            vector_ptr: ptr::null(),
+            vector_len: 0,
             state_hash: [0; 32],
             payload_ptr: ptr::null(),
             payload_len: 0,
+            handle: ptr::null_mut(),
         };
 
         // SAFETY: We provide valid stack references
@@ -116,7 +128,12 @@ mod tests {
 
         assert_eq!(result, 0);
         assert!(!out_neuron.payload_ptr.is_null());
-        assert_eq!(out_neuron.vector[0], 0.5f32);
+        
+        let slice = unsafe { std::slice::from_raw_parts(out_neuron.vector_ptr, out_neuron.vector_len) };
+        assert_eq!(slice[0], 0.5f32);
+
+        // Free the leaked memory
+        unsafe { cluaizd_ffi_free_neuron(out_neuron.handle) };
 
         let _ = std::fs::remove_dir_all(&tmp_dir);
     }
@@ -167,10 +184,11 @@ pub unsafe extern "C" fn cluaizd_ffi_execute_parameterized(
             genome::cdql::planner::PlanStep::InsertData { label, data } => {
                 let is_vector_param = data.get("vector") == Some(&genome::cdql::parser::CdqlValue::Parameter);
                 
-                let mut vector_data = [0f32; 16];
-                if is_vector_param && !param_ptr.is_null() && param_len == 64 {
-                    let slice = slice::from_raw_parts(param_ptr as *const f32, 16);
-                    vector_data.copy_from_slice(slice);
+                let mut vector_data = Vec::new();
+                if is_vector_param && !param_ptr.is_null() && param_len > 0 {
+                    let num_elements = param_len / 4;
+                    let slice = slice::from_raw_parts(param_ptr as *const f32, num_elements);
+                    vector_data = slice.to_vec();
                 }
 
                 let payload_str = match data.get("payload") {

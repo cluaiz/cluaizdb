@@ -27,6 +27,8 @@ pub use shard_manager::ShardManager;
 /// Build the main Axum router with all CLUAIZD API routes.
 pub fn build_router(state: Arc<AppState>) -> Router {
     Router::new()
+        // Health check for brain status
+        .route("/health", get(|| async { axum::http::StatusCode::OK }))
         // Write a neuron (insert or update)
         .route("/neuron", post(write::handle_write))
         // Read a neuron by ID

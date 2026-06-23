@@ -20,7 +20,7 @@ async fn test_shard_isolation_and_routing() {
     let model_hash = [42u8; 32];
     let neuron = UniversalNeuron::new(
         Bytes::from("tenant A specific message"),
-        [0.5f32; 16],
+        [0.5f32; 16].to_vec(),
         model_hash,
         PayloadType::Text,
     );
@@ -50,7 +50,7 @@ async fn test_shard_wal_recovery_on_opening() {
     let model_hash = [100u8; 32];
     let neuron = UniversalNeuron::new(
         Bytes::from("lost transaction to recover"),
-        [0.9f32; 16],
+        [0.9f32; 16].to_vec(),
         model_hash,
         PayloadType::Text,
     );
@@ -86,7 +86,7 @@ async fn test_biological_gc_ttl_decay() {
     let model_hash = [100u8; 32];
     let mut neuron = UniversalNeuron::new(
         Bytes::from("temporary sensory data"),
-        [0.8f32; 16],
+        [0.8f32; 16].to_vec(),
         model_hash,
         PayloadType::Text,
     );
@@ -120,7 +120,7 @@ async fn test_biological_gc_ttl_decay() {
 
     assert_eq!(fetched.tier, cluaizd_types::StorageTier::Warm);
     assert!(fetched.raw_payload.is_empty());
-    assert_eq!(fetched.vector_data, [0.8f32; 16]);
+    assert_eq!(fetched.vector_data, vec![0.8f32; 16]);
 }
 
 #[tokio::test]
@@ -190,7 +190,7 @@ async fn test_sandbox_mutation_validation() {
     let req_safe = axum::Json(ValidateNeuronRequest {
         original_id: original_id.clone(),
         proposed_payload: "valid update".to_string(),
-        proposed_vector_data: [0.5f32; 16],
+        proposed_vector_data: vec![0.5f32; 16],
         model_creator_hash: model_hash.clone(),
         payload_type: "text".to_string(),
         dna: None,
@@ -203,7 +203,7 @@ async fn test_sandbox_mutation_validation() {
     let req_unsafe = axum::Json(ValidateNeuronRequest {
         original_id: original_id.clone(),
         proposed_payload: "tumor mutation".to_string(),
-        proposed_vector_data: [10.0f32; 16],
+        proposed_vector_data: vec![10.0f32; 16],
         model_creator_hash: model_hash,
         payload_type: "text".to_string(),
         dna: None,

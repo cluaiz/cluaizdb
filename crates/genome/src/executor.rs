@@ -96,30 +96,26 @@ pub fn create_rhai_engine() -> rhai::Engine {
 
     // Register cosine_similarity helper
     engine.register_fn("cosine_similarity", |a: rhai::Array, b: rhai::Array| -> f64 {
-        let mut vec_a = [0.0f32; 16];
-        let mut vec_b = [0.0f32; 16];
-        for i in 0..16 {
-            if let Some(val) = a.get(i) {
-                vec_a[i] = val.as_float().unwrap_or(0.0) as f32;
-            }
-            if let Some(val) = b.get(i) {
-                vec_b[i] = val.as_float().unwrap_or(0.0) as f32;
-            }
+        let mut vec_a = Vec::with_capacity(a.len());
+        let mut vec_b = Vec::with_capacity(b.len());
+        for val in a {
+            vec_a.push(val.as_float().unwrap_or(0.0) as f32);
+        }
+        for val in b {
+            vec_b.push(val.as_float().unwrap_or(0.0) as f32);
         }
         cluaizd_types::distance::cosine_similarity(&vec_a, &vec_b) as f64
     });
 
     // Register euclidean_distance helper
     engine.register_fn("euclidean_distance", |a: rhai::Array, b: rhai::Array| -> f64 {
-        let mut vec_a = [0.0f32; 16];
-        let mut vec_b = [0.0f32; 16];
-        for i in 0..16 {
-            if let Some(val) = a.get(i) {
-                vec_a[i] = val.as_float().unwrap_or(0.0) as f32;
-            }
-            if let Some(val) = b.get(i) {
-                vec_b[i] = val.as_float().unwrap_or(0.0) as f32;
-            }
+        let mut vec_a = Vec::with_capacity(a.len());
+        let mut vec_b = Vec::with_capacity(b.len());
+        for val in a {
+            vec_a.push(val.as_float().unwrap_or(0.0) as f32);
+        }
+        for val in b {
+            vec_b.push(val.as_float().unwrap_or(0.0) as f32);
         }
         cluaizd_types::distance::euclidean_distance(&vec_a, &vec_b) as f64
     });

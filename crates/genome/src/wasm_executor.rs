@@ -185,7 +185,7 @@ impl WasmExecutor {
     }
 
     /// Execute a validation hook on a payload and vector using WASM DNA (from bytes).
-    pub fn execute_validate(&self, wasm_bytes: &[u8], payload: &[u8], vector: &[f32; 16]) -> Result<bool, StorageError> {
+    pub fn execute_validate(&self, wasm_bytes: &[u8], payload: &[u8], vector: &[f32]) -> Result<bool, StorageError> {
         let module = Module::from_binary(&WASM_ENGINE, wasm_bytes)
             .map_err(|e| StorageError::WasmExecutionFailed(format!("Invalid DNA WASM: {}", e)))?;
         
@@ -209,11 +209,11 @@ impl WasmExecutor {
         memory.write(&mut store, p_ptr as usize, payload)
             .map_err(|e| StorageError::WasmExecutionFailed(e.to_string()))?;
             
-        // Allocate and write vector (16 * 4 bytes = 64 bytes)
-        let v_len = 64u32;
+        // Allocate and write vector (vector.len() * 4 bytes)
+        let v_len = (vector.len() * 4) as u32;
         let v_ptr = alloc_func.call(&mut store, v_len)
             .map_err(|e| StorageError::WasmExecutionFailed(e.to_string()))?;
-        let vector_bytes = unsafe { std::slice::from_raw_parts(vector.as_ptr() as *const u8, 64) };
+        let vector_bytes = unsafe { std::slice::from_raw_parts(vector.as_ptr() as *const u8, v_len as usize) };
         memory.write(&mut store, v_ptr as usize, vector_bytes)
             .map_err(|e| StorageError::WasmExecutionFailed(e.to_string()))?;
             
@@ -232,7 +232,7 @@ impl WasmExecutor {
     }
 
     /// Execute a validation hook on a payload and vector using RAM cached WASM DNA.
-    pub fn execute_validate_cached(&self, module_name: &str, payload: &[u8], vector: &[f32; 16]) -> Result<bool, StorageError> {
+    pub fn execute_validate_cached(&self, module_name: &str, payload: &[u8], vector: &[f32]) -> Result<bool, StorageError> {
         let module = WASM_CACHE.get(module_name)
             .ok_or_else(|| StorageError::WasmExecutionFailed(format!("WASM DNA '{}' not found in RAM cache", module_name)))?;
         
@@ -256,11 +256,11 @@ impl WasmExecutor {
         memory.write(&mut store, p_ptr as usize, payload)
             .map_err(|e| StorageError::WasmExecutionFailed(e.to_string()))?;
             
-        // Allocate and write vector (16 * 4 bytes = 64 bytes)
-        let v_len = 64u32;
+        // Allocate and write vector (vector.len() * 4 bytes)
+        let v_len = (vector.len() * 4) as u32;
         let v_ptr = alloc_func.call(&mut store, v_len)
             .map_err(|e| StorageError::WasmExecutionFailed(e.to_string()))?;
-        let vector_bytes = unsafe { std::slice::from_raw_parts(vector.as_ptr() as *const u8, 64) };
+        let vector_bytes = unsafe { std::slice::from_raw_parts(vector.as_ptr() as *const u8, v_len as usize) };
         memory.write(&mut store, v_ptr as usize, vector_bytes)
             .map_err(|e| StorageError::WasmExecutionFailed(e.to_string()))?;
             

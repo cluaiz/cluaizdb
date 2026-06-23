@@ -81,7 +81,7 @@ mod tests {
         let model_hash = [42u8; 32];
         let neuron = UniversalNeuron::new(
             Bytes::from("hello cluaizd"),
-            [1.0f32; 16],
+            [1.0f32; 16].to_vec(),
             model_hash,
             PayloadType::Text,
         );

@@ -20,7 +20,7 @@ fn test_graph_traversal_integration() {
     let root = NeuronId::new();
     let leaf = NeuronId::new();
 
-    let mut root_neuron = UniversalNeuron::new(Bytes::new(), [0.0; 16], [0; 32], PayloadType::Text);
+    let mut root_neuron = UniversalNeuron::new(Bytes::new(), [0.0; 16].to_vec(), [0; 32], PayloadType::Text);
     root_neuron.id = root.clone();
     root_neuron.adjacency = vec![NeuronEdge { target_id: leaf.clone(), weight: 1.0, last_accessed_ns: 0 }];
     

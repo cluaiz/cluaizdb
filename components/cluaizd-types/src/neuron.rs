@@ -84,7 +84,7 @@ pub struct UniversalNeuron {
     /// The 16-dimensional hardware footprint bitmask of this neuron.
     /// Generated externally by an AI model or hardware transducer — NOT by the DB.
     /// Stored alongside the raw payload (no separate index table).
-    pub vector_data: [f32; 16],
+    pub vector_data: Vec<f32>,
 
     /// SHA-256 hash of the AI model that generated `vector_data`.
     /// On query, if the requesting model's hash does not match this value,
@@ -115,7 +115,7 @@ impl UniversalNeuron {
     /// `dna` defaults to `None` (Static Heap Mode) and `adjacency` starts empty.
     pub fn new(
         raw_payload: Bytes,
-        vector_data: [f32; 16],
+        vector_data: Vec<f32>,
         model_creator_hash: [u8; 32],
         payload_type: PayloadType,
     ) -> Self {
@@ -151,7 +151,7 @@ mod tests {
     #[test]
     fn test_neuron_creation() {
         let payload = Bytes::from("hello world");
-        let vector = [0.1f32; 16];
+        let vector = vec![0.1f32; 16];
         let hash = [0u8; 32];
         let neuron = UniversalNeuron::new(payload.clone(), vector, hash, PayloadType::Text);
 
@@ -163,7 +163,7 @@ mod tests {
     #[test]
     fn test_neuron_dna_attachment() {
         let payload = Bytes::from("test");
-        let vector = [0.0f32; 16];
+        let vector = vec![0.0f32; 16];
         let hash = [0u8; 32];
         let mut neuron = UniversalNeuron::new(payload, vector, hash, PayloadType::Text);
 

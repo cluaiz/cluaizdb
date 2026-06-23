@@ -3,9 +3,9 @@
 //! Shared traits, utility functions, and constants used across
 //! all crates in the Cluaizd CLUAIZD workspace.
 
-/// Validates that a 16-dimensional vector contains only finite values.
+/// Validates that a vector contains only finite values.
 /// Returns the index of the first invalid value, or `Ok(())` if valid.
-pub fn validate_vector(vector: &[f32; 16]) -> Result<(), usize> {
+pub fn validate_vector(vector: &[f32]) -> Result<(), usize> {
     for (i, val) in vector.iter().enumerate() {
         if !val.is_finite() {
             return Err(i);

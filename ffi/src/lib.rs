@@ -118,7 +118,7 @@ pub extern "C" fn cluaizd_write(
         _ => PayloadType::Binary,
     };
 
-    let mut neuron = UniversalNeuron::new(bytes.clone(), [0.0f32; 16], [0u8; 32], ptype);
+    let mut neuron = UniversalNeuron::new(bytes.clone(), [0.0f32; 16].to_vec(), [0u8; 32], ptype);
     
     // Attempt to hydrate DNA if payload is JSON (just like HTTP route)
     if let Ok(json_val) = serde_json::from_slice::<serde_json::Value>(&bytes) {

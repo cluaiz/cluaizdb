@@ -17,8 +17,8 @@ pub struct ValidateNeuronRequest {
     pub original_id: String,
     /// Proposed raw payload.
     pub proposed_payload: String,
-    /// Proposed 16-D coordinates footprint.
-    pub proposed_vector_data: [f32; 16],
+    /// Proposed dynamic coordinates footprint.
+    pub proposed_vector_data: Vec<f32>,
     /// Hex model hash generating the proposed vector.
     pub model_creator_hash: String,
     /// proposed type payload.

@@ -61,7 +61,7 @@ impl SensoryShard {
         let zero_hash = [0u8; 32];
 
         let mut neuron =
-            UniversalNeuron::new(raw_stream, zero_vector, zero_hash, PayloadType::VoltageStream);
+            UniversalNeuron::new(raw_stream, zero_vector.to_vec(), zero_hash, PayloadType::VoltageStream);
 
         neuron.dna = dna;
 

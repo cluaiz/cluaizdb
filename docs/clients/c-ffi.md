@@ -158,35 +158,35 @@ import json
 cluaizd = ctypes.CDLL("./target/release/libcluaizd.so")
 
 # Configure return types (CRITICAL — without this, Python will crash)
-cluaizd.cluaizd_open.restype = ctypes.c_void_p
-cluaizd.cluaizd_open.argtypes = [ctypes.c_char_p, ctypes.c_ulong]
+cluaizd.cluaized_open.restype = ctypes.c_void_p
+cluaizd.cluaized_open.argtypes = [ctypes.c_char_p, ctypes.c_ulong]
 
-cluaizd.cluaizd_write.restype = ctypes.c_int
-cluaizd.cluaizd_write.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+cluaizd.cluaized_write.restype = ctypes.c_int
+cluaizd.cluaized_write.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 
-cluaizd.cluaizd_read.restype = ctypes.c_char_p
-cluaizd.cluaizd_read.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+cluaizd.cluaized_read.restype = ctypes.c_char_p
+cluaizd.cluaized_read.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 
-cluaizd.cluaizd_query.restype = ctypes.c_char_p
-cluaizd.cluaizd_query.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+cluaizd.cluaized_query.restype = ctypes.c_char_p
+cluaizd.cluaized_query.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 
-cluaizd.cluaizd_free_string.argtypes = [ctypes.c_char_p]
-cluaizd.cluaizd_close.argtypes = [ctypes.c_void_p]
+cluaizd.cluaized_free_string.argtypes = [ctypes.c_char_p]
+cluaizd.cluaized_close.argtypes = [ctypes.c_void_p]
 
 # Open database
-handle = cluaizd.cluaizd_open(b"./neuron/sensory_tissue", 4096)
+handle = cluaizd.cluaized_open(b"./neuron/sensory_tissue", 4096)
 
 # Write data
 payload = json.dumps({"electrode": 42, "voltage_uv": 0.42, "ts": 1717789200}).encode()
-cluaizd.cluaizd_write(handle, b"bci_reading_001", payload)
+cluaizd.cluaized_write(handle, b"bci_reading_001", payload)
 
 # Read back (direct O(1) lookup)
-result_bytes = cluaizd.cluaizd_read(handle, b"bci_reading_001")
+result_bytes = cluaizd.cluaized_read(handle, b"bci_reading_001")
 if result_bytes:
     print(json.loads(result_bytes))
 
 # Close
-cluaizd.cluaizd_close(handle)
+cluaizd.cluaized_close(handle)
 ```
 
 ---

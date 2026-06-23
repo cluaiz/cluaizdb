@@ -23,8 +23,8 @@ pub struct WriteNeuronEdgeRequest {
 pub struct WriteNeuronRequest {
     /// The raw payload as a UTF-8 string (for text) or base64 (for binary).
     pub raw_payload: String,
-    /// The 16-dimensional hardware footprint vector from the external model.
-    pub vector_data: [f32; 16],
+    /// The dynamic hardware footprint vector from the external model.
+    pub vector_data: Vec<f32>,
     /// SHA-256 hash (hex string) of the model that generated `vector_data`.
     pub model_creator_hash: String,
     /// The type of data (text, audio, video, code, binary).
@@ -48,6 +48,8 @@ pub async fn handle_write(
     headers: HeaderMap,
     Json(body): Json<WriteNeuronRequest>,
 ) -> impl IntoResponse {
+    tracing::info!(">>> ENTERED handle_write for payload_type: {}", body.payload_type);
+    
     // Validate vector dimensions.
     if body.vector_data.iter().any(|v| !v.is_finite()) {
         warn!("Rejected write: vector contains NaN or Infinity");

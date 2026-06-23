@@ -58,24 +58,24 @@ lib_path = "./target/release/cluaizd.dll" if os.name == "nt" else "./target/rele
 cluaizd = ctypes.CDLL(lib_path)
 
 # Configure argument and return types
-cluaizd.cluaizd_open.argtypes = [ctypes.c_char_p, ctypes.c_size_t]
-cluaizd.cluaizd_open.restype = ctypes.c_void_p
+cluaizd.cluaized_open.argtypes = [ctypes.c_char_p, ctypes.c_size_t]
+cluaizd.cluaized_open.restype = ctypes.c_void_p
 
-cluaizd.cluaizd_write.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_size_t, ctypes.c_char_p]
-cluaizd.cluaizd_write.restype = ctypes.c_char_p
+cluaizd.cluaized_write.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_size_t, ctypes.c_char_p]
+cluaizd.cluaized_write.restype = ctypes.c_char_p
 
-cluaizd.cluaizd_close.argtypes = [ctypes.c_void_p]
+cluaizd.cluaized_close.argtypes = [ctypes.c_void_p]
 
 # Open local database mapping (0ms Network Latency!)
-db_handle = cluaizd.cluaizd_open(b"./data/local_embedded_db", 1024)
+db_handle = cluaizd.cluaized_open(b"./data/local_embedded_db", 1024)
 
 # Write direct payload
 payload = b"sensor_voltage_check"
-neuron_id = cluaizd.cluaizd_write(db_handle, payload, len(payload), b"text")
+neuron_id = cluaizd.cluaized_write(db_handle, payload, len(payload), b"text")
 print("Saved Local Neuron UUID:", neuron_id.decode("utf-8"))
 
 # Close environment
-cluaizd.cluaizd_close(db_handle)
+cluaizd.cluaized_close(db_handle)
 ```
 
 ---

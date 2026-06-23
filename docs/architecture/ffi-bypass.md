@@ -154,13 +154,13 @@ import time
 cluaizd = ctypes.CDLL("./libcluaizd.so")
 
 # Set return types
-cluaizd.cluaizd_open.restype = ctypes.c_void_p
-cluaizd.cluaizd_write.restype = ctypes.c_int
-cluaizd.cluaizd_read.restype = ctypes.c_char_p
-cluaizd.cluaizd_query.restype = ctypes.c_char_p
+cluaizd.cluaized_open.restype = ctypes.c_void_p
+cluaizd.cluaized_write.restype = ctypes.c_int
+cluaizd.cluaized_read.restype = ctypes.c_char_p
+cluaizd.cluaized_query.restype = ctypes.c_char_p
 
 # Open the sensory shard directly (no HTTP server needed)
-handle = cluaizd.cluaizd_open(b"./out/sensory_tissue", 8192)
+handle = cluaizd.cluaized_open(b"./out/sensory_tissue", 8192)
 
 def stream_bci_sample(electrode_id: int, voltage: float, timestamp_ns: int):
     """Stream a single BCI electrode reading at 0ms latency."""
@@ -172,7 +172,7 @@ def stream_bci_sample(electrode_id: int, voltage: float, timestamp_ns: int):
         "sample_rate_hz": 1000
     }).encode()
     
-    result = cluaizd.cluaizd_write(handle, neuron_id, payload)
+    result = cluaizd.cluaized_write(handle, neuron_id, payload)
     return result == 0
 
 # Simulate 256 electrodes × 1000 Hz = 256,000 writes/second
@@ -190,7 +190,7 @@ print(f"256,000 writes in {elapsed:.3f}s = {256000/elapsed:.0f} writes/sec")
 # Expected output: ~200,000-800,000 writes/sec (depends on NVMe speed)
 
 # Cleanup
-cluaizd.cluaizd_close(handle)
+cluaizd.cluaized_close(handle)
 ```
 
 ---
