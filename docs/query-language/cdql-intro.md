@@ -1,4 +1,4 @@
-# cluaizd Neural Query Language (CDQL)
+# cluaizdb Neural Query Language (CDQL)
 
 Because CLUAIZD is a 10-in-1 shape-shifting engine, a standard query language like SQL or GraphQL is insufficient. SQL cannot express Graph Traversals effectively, and GraphQL cannot express Vector Mathematics.
 

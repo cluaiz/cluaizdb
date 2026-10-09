@@ -1,6 +1,6 @@
-# 📖 Cluaizd Master Technical Dictionary (A-Z)
+# 📖 Cluaizdb Master Technical Dictionary (A-Z)
 
-Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This document outlines every key technical term, architectural component, database paradigm keyword, and mathematical concept utilized across Cluaizd's codebase, query engines, and documentation.
+Welcome to the official **Cluaizdb Master Glossary and Systems Dictionary**. This document outlines every key technical term, architectural component, database paradigm keyword, and mathematical concept utilized across Cluaizdb's codebase, query engines, and documentation.
 
 ---
 
@@ -13,7 +13,7 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### AVX2 / AVX-512 (Advanced Vector Extensions)
 *   **Definition**: Intel/AMD hardware-level SIMD instruction set extensions designed for executing high-dimensional parallel mathematical operations.
-*   **Systems Implementation**: Cluaizd's core SIMD vector engine binds these hardware registers to perform fast Euclidean and Cosine distance operations on the `[f32; 16]` neuron spatial footprint.
+*   **Systems Implementation**: Cluaizdb's core SIMD vector engine binds these hardware registers to perform fast Euclidean and Cosine distance operations on the `[f32; 16]` neuron spatial footprint.
 
 ---
 
@@ -29,7 +29,7 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### BSL 1.1 (Business Source License)
 *   **Definition**: A source-available licensing agreement that transitions to open-source (e.g., GPL/Apache) after a specified time duration.
-*   **Systems Implementation**: Governs Cluaizd's commercial usage restrictions, allowing free deployment for edge robotics, research, and non-managed deployments.
+*   **Systems Implementation**: Governs Cluaizdb's commercial usage restrictions, allowing free deployment for edge robotics, research, and non-managed deployments.
 
 ---
 
@@ -41,15 +41,15 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### C-FFI (C Foreign Function Interface)
 *   **Definition**: A foreign language boundary allowing programs written in C/C++, Python, or Go to call Rust binary functions directly without IPC overhead.
-*   **Systems Implementation**: Implemented inside `crates/cluaizd-ffi`. Bypasses TCP stack latency to deliver 0ms database ingestion speeds directly inside in-process memory runtimes.
+*   **Systems Implementation**: Implemented inside `crates/cluaizdb-ffi`. Bypasses TCP stack latency to deliver 0ms database ingestion speeds directly inside in-process memory runtimes.
 
 ### Cognitive Tissue
-*   **Definition**: The primary database sharding partition (`cognitive_tissue.mdb`) in Cluaizd.
+*   **Definition**: The primary database sharding partition (`cognitive_tissue.mdb`) in Cluaizdb.
 *   **Systems Implementation**: Stores the core graph relationships, long-term index pointers, vector spatial structures, and heavy document payloads. Designed for highly structured query access.
 
 ### CRDT (Conflict-Free Replicated Data Type)
 *   **Definition**: A mathematical data structure that can be replicated across multiple nodes in a network, where replicas can be updated independently and concurrently without coordination, guaranteeing eventual consistency.
-*   **Systems Implementation**: Covered in Cluaizd paradigm guides [22-crdt.md](../cluaizd-types/22-crdt.md) and [28-crdt-collaborative.md](../cluaizd-types/28-crdt-collaborative.md) to manage concurrent edge updates.
+*   **Systems Implementation**: Covered in Cluaizdb paradigm guides [22-crdt.md](../cluaizdb-types/22-crdt.md) and [28-crdt-collaborative.md](../cluaizdb-types/28-crdt-collaborative.md) to manage concurrent edge updates.
 
 ### CRISPR (Cluaiz Relational Indexing & Surgical Pointer Routing)
 *   **Definition**: An administrative system API enabling direct manual mutations of raw B-Tree keys and physical pointer arrays.
@@ -65,7 +65,7 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 *   **Systems Implementation**: Stored inside `UniversalNeuron.dna`. Executed at the storage boundary using WASM, Rhai, JSON, or CDQL scripts to dynamically control database ingestion, read verification, and garbage collection.
 
 ### Dreamer Engine
-*   **Definition**: The asynchronous background compactor daemon thread in Cluaizd.
+*   **Definition**: The asynchronous background compactor daemon thread in Cluaizdb.
 *   **Systems Implementation**: Scans the physical database files, monitors RAM pressure, executes `on_lifecycle` DNA hooks, transitions records between memory tiers, and applies ZSTD Level 9 compression to cold blocks.
 
 ### Durability
@@ -78,7 +78,7 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### Elastic License
 *   **Definition**: A non-copyleft license that permits free usage, modification, and integration, but blocks using the software to provide a managed cloud database service.
-*   **Systems Implementation**: Hybridized with the BSL 1.1 to safeguard Cluaizd cloud deployments.
+*   **Systems Implementation**: Hybridized with the BSL 1.1 to safeguard Cluaizdb cloud deployments.
 
 ---
 
@@ -114,7 +114,7 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### IMDB (In-Memory Database)
 *   **Definition**: A database engine that relies primarily on main memory (RAM) for computer data storage.
-*   **Systems Implementation**: Supported natively in Cluaizd via memory-mapped environments, allowing virtual memory mappings to act as primary memory caches.
+*   **Systems Implementation**: Supported natively in Cluaizdb via memory-mapped environments, allowing virtual memory mappings to act as primary memory caches.
 
 ---
 
@@ -122,10 +122,10 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### JSON (JavaScript Object Notation)
 *   **Definition**: A lightweight data-interchange format structured as text.
-*   **Systems Implementation**: Transpiled internally by Cluaizd into a binary-packedMsgPack-style byte stream to support zero-allocation key lookups inside where filters.
+*   **Systems Implementation**: Transpiled internally by Cluaizdb into a binary-packedMsgPack-style byte stream to support zero-allocation key lookups inside where filters.
 
 ### JUJU
-*   **Definition**: The official real-time, interactive 3D spatial visualization canvas for Cluaizd.
+*   **Definition**: The official real-time, interactive 3D spatial visualization canvas for Cluaizdb.
 *   **Systems Implementation**: Renders the dynamic topological node relationships, vector clusters, and edge activations directly inside a web-interface via WebGL/WebSockets.
 
 ---
@@ -134,7 +134,7 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### LMDB (Lightning Memory-Mapped Database)
 *   **Definition**: An ultra-fast, ultra-compact transactional key-value store using a B-Tree structure, mapping files directly into virtual memory.
-*   **Systems Implementation**: The foundational storage library underneath Cluaizd (`engine-lmdb`). It executes zero-copy disk reads by returning pointers directly to the OS page cache.
+*   **Systems Implementation**: The foundational storage library underneath Cluaizdb (`engine-lmdb`). It executes zero-copy disk reads by returning pointers directly to the OS page cache.
 
 ---
 
@@ -142,7 +142,7 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### MDB_val
 *   **Definition**: The basic binary structure used by LMDB to exchange keys and values.
-*   **Systems Implementation**: Defined in C as a struct containing `size_t mv_size` and a pointer `void *mv_data`. Cluaizd casts these pointers directly to Rust structs (`UniversalNeuron`) to avoid memory copies.
+*   **Systems Implementation**: Defined in C as a struct containing `size_t mv_size` and a pointer `void *mv_data`. Cluaizdb casts these pointers directly to Rust structs (`UniversalNeuron`) to avoid memory copies.
 
 ### MVCC (Multi-Version Concurrency Control)
 *   **Definition**: A database concurrency protocol that allows readers to access stable historical states of data while writers append mutations concurrently, avoiding reader-writer blocking.
@@ -153,8 +153,8 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 ## 🅽 N
 
 ### Neuron (UniversalNeuron)
-*   **Definition**: The fundamental database record unit inside Cluaizd.
-*   **Systems Implementation**: Implemented inside `components/cluaizd-types`. Houses payload bytes, vector arrays, adjacency pointers, and rulesets inside a unified memory block.
+*   **Definition**: The fundamental database record unit inside Cluaizdb.
+*   **Systems Implementation**: Implemented inside `components/cluaizdb-types`. Houses payload bytes, vector arrays, adjacency pointers, and rulesets inside a unified memory block.
 
 ### NeuronEdge
 *   **Definition**: The structural representation of a directed, weighted link between two database nodes.
@@ -166,7 +166,7 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### OT (Operational Transformation)
 *   **Definition**: A concurrency control technology used to support real-time, multi-user collaborative editing.
-*   **Systems Implementation**: Outlined in the operational transformation paradigm guide [23-operational-transformation.md](../cluaizd-types/23-operational-transformation.md) to manage collaborative document nodes.
+*   **Systems Implementation**: Outlined in the operational transformation paradigm guide [23-operational-transformation.md](../cluaizdb-types/23-operational-transformation.md) to manage collaborative document nodes.
 
 ---
 
@@ -193,15 +193,15 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 ## 🆂 S
 
 ### Sensory Tissue
-*   **Definition**: A dedicated, isolated write-optimized database shard partition (`sensory_tissue.mdb`) in Cluaizd.
+*   **Definition**: A dedicated, isolated write-optimized database shard partition (`sensory_tissue.mdb`) in Cluaizdb.
 *   **Systems Implementation**: Bypasses heavy B-Tree sorting and index logic to quickly ingest raw, high-frequency IoT telemetry and sensor logs.
 
 ### SIMD (Single Instruction, Multiple Data)
 *   **Definition**: A parallel execution model allowing a CPU to perform the same operation on multiple data elements in a single CPU instruction.
-*   **Systems Implementation**: Applied in Cluaizd's distance functions to evaluate vector proximity using AVX hardware registers.
+*   **Systems Implementation**: Applied in Cluaizdb's distance functions to evaluate vector proximity using AVX hardware registers.
 
 ### Specular Graph
-*   **Definition**: The fast-path graph engine in Cluaizd.
+*   **Definition**: The fast-path graph engine in Cluaizdb.
 *   **Systems Implementation**: Leverages bitwise intersections and index-free adjacencies to navigate multi-hop traversals at microsecond speeds.
 
 ### StorageTier
@@ -222,7 +222,7 @@ Welcome to the official **Cluaizd Master Glossary and Systems Dictionary**. This
 
 ### WAL (Write-Ahead Log)
 *   **Definition**: An append-only log file on non-volatile disk storage where all transactional mutations are recorded prior to applying them to the database.
-*   **Systems Implementation**: Secures crash consistency. In the event of power loss, Cluaizd replays the log sequentially during boot to restore system state.
+*   **Systems Implementation**: Secures crash consistency. In the event of power loss, Cluaizdb replays the log sequentially during boot to restore system state.
 
 ### WASM (WebAssembly)
 *   **Definition**: A binary instruction format for a stack-based virtual machine, executing code at near-native performance.

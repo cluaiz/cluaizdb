@@ -1,7 +1,7 @@
 # 🌪️ Chaos Engineering & ACID Tests
 
 ## 🎯 Purpose
-This workspace focuses on **Fault Injection and Concurrency Stress**. It proves that Cluaizd is robust against:
+This workspace focuses on **Fault Injection and Concurrency Stress**. It proves that Cluaizdb is robust against:
 - Data corruption
 - Hardware failure
 - Concurrent read/write race conditions (Deadlocks)

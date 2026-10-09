@@ -23,7 +23,7 @@ For example:
 - Attach `time_series.json` and the Neuron will automatically compress old data and aggregate time windows.
 - Attach `ephemeral_cache.json` and the Neuron behaves like In-Memory Cache, evicting itself from memory based on TTL.
 
-## The cluaizd Neural Query Language (CDQL)
+## The cluaizdb Neural Query Language (CDQL)
 To command these diverse Genomes, CLUAIZD introduces **CDQL** — a universal, pipeline-based query language. CDQL allows you to run Graph traversals, Vector searches, and Geo-Spatial queries seamlessly within the exact same pipeline string.
 
 ```text

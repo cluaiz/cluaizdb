@@ -1,7 +1,7 @@
 # ⚙️ Configuration Reference (A-Z)
 
-Welcome to the **cluaizd Configuration Reference**.
-Engine parameters are strictly governed via the `cluaizd.toml` file located in the root installation directory. This reference details how Database Administrators (DBAs) can tune the engine for specific hardware constraints.
+Welcome to the **cluaizdb Configuration Reference**.
+Engine parameters are strictly governed via the `cluaizdb.toml` file located in the root installation directory. This reference details how Database Administrators (DBAs) can tune the engine for specific hardware constraints.
 
 ## Configuration Index
 

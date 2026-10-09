@@ -1,7 +1,7 @@
 # 🔌 HTTP / WebSocket API Reference (A-Z)
 
-Welcome to the **cluaizd API Reference**.
-While CDQL is the query language, the actual data transmission occurs over ultra-fast HTTP/REST and WebSocket protocols. This ensures that cluaizd can be integrated into any backend language (Node.js, Python, Go, Rust) without needing bulky proprietary drivers.
+Welcome to the **cluaizdb API Reference**.
+While CDQL is the query language, the actual data transmission occurs over ultra-fast HTTP/REST and WebSocket protocols. This ensures that cluaizdb can be integrated into any backend language (Node.js, Python, Go, Rust) without needing bulky proprietary drivers.
 
 ## API Reference Index
 

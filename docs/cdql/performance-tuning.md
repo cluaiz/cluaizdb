@@ -113,10 +113,10 @@ for reading in sensor_readings:
 
 # ✅ GOOD — C-FFI adds ~1µs per write (20x faster)
 import ctypes
-cluaizd = ctypes.CDLL("./libcluaizd.so")
-handle = cluaizd.cluaized_open(b"./out/sensory_tissue", 8192)
+cluaizdb = ctypes.CDLL("./libcluaizdb.so")
+handle = cluaizdb.cluaizdbb_open(b"./out/sensory_tissue", 8192)
 for reading in sensor_readings:
-    cluaizd.cluaized_write(handle, b"bci_stream", json.dumps(reading).encode())
+    cluaizdb.cluaizdbb_write(handle, b"bci_stream", json.dumps(reading).encode())
 ```
 
 ---

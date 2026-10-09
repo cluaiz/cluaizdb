@@ -1,7 +1,7 @@
-# 🚫 cluaizd-errors: Centralized Error Architecture
+# 🚫 cluaizdb-errors: Centralized Error Architecture
 
 ## 🎯 Deep Purpose
-The `cluaizd-errors` crate provides strongly-typed, predictable error handling across the entire Cluaizd ecosystem. By centralizing errors, we prevent "stringly-typed" error messages and ensure that upstream APIs (like the Axum HTTP server) can map internal database failures directly to appropriate HTTP status codes (e.g., 404, 500, 400).
+The `cluaizdb-errors` crate provides strongly-typed, predictable error handling across the entire Cluaizdb ecosystem. By centralizing errors, we prevent "stringly-typed" error messages and ensure that upstream APIs (like the Axum HTTP server) can map internal database failures directly to appropriate HTTP status codes (e.g., 404, 500, 400).
 
 ## 🏛️ Architectural Flow
 

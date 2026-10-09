@@ -3,7 +3,7 @@ api_tests/
 
 # Rust build artifacts
 target/
-Cargo.lock
+# Cargo.lock is tracked for reproducible workspace builds
 
 # Node / JS
 node_modules/
@@ -14,7 +14,6 @@ build/
 
 # Logs & Debugging
 *.log
-*.txt
 *.pdb
 *.rlib
 *.rmeta
@@ -22,9 +21,9 @@ build/
 # Database Storage / Cache (Local testing only)
 *.mdb
 *.lmdb
-data/
-neuron/
-storage/
+/data/
+/neuron/
+/storage/
 
 # Environment files
 .env

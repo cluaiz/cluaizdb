@@ -35,6 +35,6 @@ Payload parsing is dynamically configured per-collection.
 ## Hierarchical Configuration System
 
 These settings can be applied at two distinct layers:
-1. **Global Tier (`cluaizd.toml`)**: Sets the default behavior for the entire physical server cluster.
+1. **Global Tier (`cluaizdb.toml`)**: Sets the default behavior for the entire physical server cluster.
 2. **Local Tier (`collection_config.json`)**: Specific databases (tenants) can completely override the global tier. 
    - *Example: You can run a JSON/Mutex database and a FlatBuffers/DashMap database natively on the exact same CLUAIZD instance!*

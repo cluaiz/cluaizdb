@@ -1,6 +1,6 @@
 # 🔎 CDQL (Context-Driven Query Language) Template
 
-This guide details the syntax and execution steps of the CDQL query language used in Cluaizd.
+This guide details the syntax and execution steps of the CDQL query language used in Cluaizdb.
 
 ---
 

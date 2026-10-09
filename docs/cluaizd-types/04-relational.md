@@ -1,6 +1,6 @@
 # 🗄️ Mode 04: Relational Database Paradigm (PostgreSQL-Style)
 
-This guide details how to configure and run Cluaizd as a relational data engine, simulating schema enforcement, multi-table structural mapping, and transaction rules through core DNA controls.
+This guide details how to configure and run Cluaizdb as a relational data engine, simulating schema enforcement, multi-table structural mapping, and transaction rules through core DNA controls.
 
 ---
 
@@ -10,7 +10,7 @@ In Relational Mode, structured tables and foreign keys are simulated by establis
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Insert Row| Server[Cluaizd Core]
+    Client[Python Client] -->|Insert Row| Server[Cluaizdb Core]
     Server -->|Validate Field Types| DNA[DNA Relational Parser]
     DNA -->|Type Mismatch| Fail[Abort Write / 400 Bad Request]
     DNA -->|Type Pass| LMDB[(LMDB Data Store)]
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enforce sequential execution order via `mutex` to prevent multi-thread write conflicts on structured tables:
 

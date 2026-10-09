@@ -7,7 +7,7 @@ use uuid::Uuid;
 use futures_util::future::BoxFuture;
 use futures_util::FutureExt;
 
-use cluaizd_types::{NeuronId, UniversalNeuron};
+use cluaizdb_types::{NeuronId, UniversalNeuron};
 use crate::routes::AppState;
 use crate::routes::shard_manager::ActiveShard;
 
@@ -86,8 +86,8 @@ pub async fn handle_traverse(
                         let env_clone = shard.env.clone();
                         engine.register_fn("fast_bitwise_intersection", move |a_id_str: String, b_id_str: String| -> bool {
                             if let (Ok(a_uuid), Ok(b_uuid)) = (uuid::Uuid::parse_str(&a_id_str), uuid::Uuid::parse_str(&b_id_str)) {
-                                let a_id = cluaizd_types::NeuronId::from_bytes(*a_uuid.as_bytes());
-                                let b_id = cluaizd_types::NeuronId::from_bytes(*b_uuid.as_bytes());
+                                let a_id = cluaizdb_types::NeuronId::from_bytes(*a_uuid.as_bytes());
+                                let b_id = cluaizdb_types::NeuronId::from_bytes(*b_uuid.as_bytes());
                                 engine_lmdb::SpecularGraph::fast_bitwise_intersection(&env_clone, a_id, b_id).unwrap_or(false)
                             } else {
                                 false
@@ -483,7 +483,7 @@ fn explore_path(
     }.boxed()
 }
 
-fn apply_mutations(shard: &Arc<ActiveShard>, mutations: Vec<genome::GraphMutation>) -> Result<(), cluaizd_errors::StorageError> {
+fn apply_mutations(shard: &Arc<ActiveShard>, mutations: Vec<genome::GraphMutation>) -> Result<(), cluaizdb_errors::StorageError> {
     for mutation in mutations {
         match mutation {
             genome::GraphMutation::ConnectNeurons { source, target, weight } => {
@@ -494,7 +494,7 @@ fn apply_mutations(shard: &Arc<ActiveShard>, mutations: Vec<genome::GraphMutatio
                         if let Some(edge) = src_neuron.adjacency.iter_mut().find(|e| e.target_id == tgt_id) {
                             edge.weight = weight;
                         } else {
-                            src_neuron.adjacency.push(cluaizd_types::NeuronEdge {
+                            src_neuron.adjacency.push(cluaizdb_types::NeuronEdge {
                                 target_id: tgt_id,
                                 weight,
                                 last_accessed_ns: std::time::SystemTime::now()

@@ -1,4 +1,4 @@
-// cluaizd-dna-templates/weight_decay.rhai
+// cluaizdb-dna-templates/weight_decay.rhai
 // Semantic graph edge weight decay and pruning template
 
 // on_read: increment connection weights on query access

@@ -1,0 +1,12 @@
+[package]
+name = "cluaizdb-time-series"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+cluaizdb-types = { workspace = true }
+serde = { workspace = true }
+tracing = { workspace = true }
+bytes = { workspace = true }
+thiserror = { workspace = true }

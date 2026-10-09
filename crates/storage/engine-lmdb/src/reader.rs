@@ -1,7 +1,7 @@
 use tracing::debug;
 
-use cluaizd_errors::StorageError;
-use cluaizd_types::{NeuronId, UniversalNeuron};
+use cluaizdb_errors::StorageError;
+use cluaizdb_types::{NeuronId, UniversalNeuron};
 
 use crate::env::LmdbEnv;
 
@@ -25,7 +25,7 @@ pub fn read_neuron(
     let rtxn = env.read_txn()?;
 
     let mut neuron: UniversalNeuron = match env.db.get(&rtxn, &id)
-        .map_err(|e| StorageError::ReadTxnFailed(e.to_string()))? {
+        .map_err(|e: heed::Error| StorageError::ReadTxnFailed(e.to_string()))? {
         Some(n) => n,
         None => return Err(StorageError::NeuronNotFound(id)),
     };
@@ -68,7 +68,7 @@ pub fn read_neuron(
 #[cfg(test)]
 mod tests {
     use bytes::Bytes;
-    use cluaizd_types::PayloadType;
+    use cluaizdb_types::PayloadType;
 
     use super::*;
     use crate::{env::LmdbEnv, writer::write_neuron};
@@ -109,9 +109,9 @@ pub fn iter_all_neurons(env: &crate::env::LmdbEnv) -> Result<Vec<UniversalNeuron
     let rtxn = env.read_txn()?;
     let mut neurons = Vec::new();
 
-    let iter = env.db.iter(&rtxn).map_err(|e| StorageError::ReadTxnFailed(e.to_string()))?;
+    let iter = env.db.iter(&rtxn).map_err(|e: heed::Error| StorageError::ReadTxnFailed(e.to_string()))?;
     for result in iter {
-        let (_k, neuron) = result.map_err(|e| StorageError::ReadTxnFailed(e.to_string()))?;
+        let (_k, neuron) = result.map_err(|e: heed::Error| StorageError::ReadTxnFailed(e.to_string()))?;
         neurons.push(neuron);
     }
 
@@ -121,14 +121,14 @@ pub fn iter_all_neurons(env: &crate::env::LmdbEnv) -> Result<Vec<UniversalNeuron
 /// Scans the database and returns neurons matching a specific payload type.
 pub fn scan_neurons_by_type(
     env: &crate::env::LmdbEnv,
-    payload_type: cluaizd_types::PayloadType,
+    payload_type: cluaizdb_types::PayloadType,
 ) -> Result<Vec<UniversalNeuron>, StorageError> {
     let rtxn = env.read_txn()?;
     let mut neurons = Vec::new();
 
-    let iter = env.db.iter(&rtxn).map_err(|e| StorageError::ReadTxnFailed(e.to_string()))?;
+    let iter = env.db.iter(&rtxn).map_err(|e: heed::Error| StorageError::ReadTxnFailed(e.to_string()))?;
     for result in iter {
-        let (_k, neuron) = result.map_err(|e| StorageError::ReadTxnFailed(e.to_string()))?;
+        let (_k, neuron) = result.map_err(|e: heed::Error| StorageError::ReadTxnFailed(e.to_string()))?;
         if neuron.payload_type == payload_type {
             neurons.push(neuron);
         }

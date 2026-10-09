@@ -7,7 +7,7 @@ The `ctx.time()` API provides sandboxed scripts with the current Unix Epoch time
 ### 1. Syscall Optimization via Atomic Clocks
 In high-performance compute nodes, repeatedly asking the Operating System for the current time via syscalls (e.g., `clock_gettime()`) introduces severe kernel-space to user-space context switching overhead. 
 
-To prevent this, the cluaizd Engine runs a dedicated background thread that queries the OS clock once every millisecond. It stores this timestamp in a highly optimized `AtomicU64` memory address. When `ctx.time()` is called inside the WASM sandbox, it simply reads this atomic integer from RAM without ever triggering a kernel syscall.
+To prevent this, the cluaizdb Engine runs a dedicated background thread that queries the OS clock once every millisecond. It stores this timestamp in a highly optimized `AtomicU64` memory address. When `ctx.time()` is called inside the WASM sandbox, it simply reads this atomic integer from RAM without ever triggering a kernel syscall.
 
 ### 2. Monotonic Guarantees
 The atomic clock utilized by `ctx.time()` strictly adheres to a monotonic progression. It is immune to NTP (Network Time Protocol) drift or leap seconds, ensuring that a timestamp generated during an `on_write` hook is never logically "older" than a previous transaction.

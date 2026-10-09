@@ -6,7 +6,7 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use base64::{engine::general_purpose, Engine as _};
-use cluaizd_types::NeuronDna;
+use cluaizdb_types::NeuronDna;
 use crate::routes::AppState;
 
 #[derive(Debug, Deserialize)]

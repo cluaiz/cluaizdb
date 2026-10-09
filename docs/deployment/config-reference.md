@@ -1,8 +1,8 @@
-# ⚙️ Configuration Reference (`cluaizd.toml`)
+# ⚙️ Configuration Reference (`cluaizdb.toml`)
 
-CLUAIZD is configured via a `cluaizd.toml` file located in the working directory from which the server is run. 
+CLUAIZD is configured via a `cluaizdb.toml` file located in the working directory from which the server is run. 
 
-If no `cluaizd.toml` is found, CLUAIZD will boot with sensible defaults.
+If no `cluaizdb.toml` is found, CLUAIZD will boot with sensible defaults.
 
 ## Full Reference
 
@@ -70,14 +70,14 @@ flush_interval_ms = 50
 ```
 
 ## Environment Variables
-Any value in `cluaizd.toml` can be overridden by an environment variable using the prefix `CLUAIZD_`, followed by the section and key in uppercase.
+Any value in `cluaizdb.toml` can be overridden by an environment variable using the prefix `CLUAIZD_`, followed by the section and key in uppercase.
 
 Examples:
 - `CLUAIZD_SERVER_PORT=8080` overrides `[server] port`.
 - `CLUAIZD_STORAGE_DATA_DIR=/mnt/nvme0/data` overrides `[storage] data_dir`.
 
 ## Collection-Level Local Overrides (Method B)
-While `cluaizd.toml` sets the global default for the entire engine, you can override database settings (like `concurrency_mode` and `payload_format`) on a per-collection (tenant) basis.
+While `cluaizdb.toml` sets the global default for the entire engine, you can override database settings (like `concurrency_mode` and `payload_format`) on a per-collection (tenant) basis.
 
 When a new tenant/collection is created, CLUAIZD creates a `collection_config.json` inside its physical shard directory (`data/shards/<tenant_id>/collection_config.json`).
 - If you edit this file or specify it during creation, those local settings take precedence.

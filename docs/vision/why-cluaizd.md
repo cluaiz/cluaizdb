@@ -52,7 +52,7 @@ CLUAIZD stores raw bytes (called **Neurons**). The **policy** is injected extern
 
 ## The CDQL Superpower: Cross-Paradigm Queries
 
-The real magic is that these 10 paradigms do not live in silos. CLUAIZD's **CDQL (cluaizd Neural Query Language)** allows you to cross database-paradigm boundaries in a single pipeline query.
+The real magic is that these 10 paradigms do not live in silos. CLUAIZD's **CDQL (cluaizdb Neural Query Language)** allows you to cross database-paradigm boundaries in a single pipeline query.
 
 ### Example 1: AI-Powered Product Recommendation
 *"Find active pro-tier users, traverse their purchase graph, filter by location, rank by semantic similarity."*

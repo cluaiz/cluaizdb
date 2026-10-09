@@ -3,7 +3,7 @@ use axum::{Json, extract::{Path, State}, http::{StatusCode, HeaderMap}, response
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use cluaizd_types::NeuronId;
+use cluaizdb_types::NeuronId;
 use crate::routes::AppState;
 
 #[derive(Deserialize)]
@@ -113,7 +113,7 @@ pub async fn handle_force_edge(
 
     // Prevent duplicates
     if !neuron.adjacency.iter().any(|e| e.target_id == target_id) {
-        neuron.adjacency.push(cluaizd_types::NeuronEdge {
+        neuron.adjacency.push(cluaizdb_types::NeuronEdge {
             target_id,
             weight: payload.weight,
             last_accessed_ns: std::time::SystemTime::now()

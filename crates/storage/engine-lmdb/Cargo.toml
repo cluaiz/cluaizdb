@@ -6,9 +6,9 @@ license = "BSL-1.1"
 description = "LMDB-backed physical storage engine for Cluaiz CLUAIZD"
 
 [dependencies]
-cluaizd-types  = { workspace = true }
-cluaizd-index-mvhsnw = { workspace = true }
-cluaizd-errors = { workspace = true }
+cluaizdb-types  = { workspace = true }
+cluaizdb-index-mvhsnw = { workspace = true }
+cluaizdb-errors = { workspace = true }
 thiserror    = { workspace = true }
 tokio        = { workspace = true }
 bytes        = { workspace = true }

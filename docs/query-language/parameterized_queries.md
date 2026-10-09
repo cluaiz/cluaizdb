@@ -1,6 +1,6 @@
 # CDQL Parameterized Queries (Binary Binding)
 
-Cluaizd supports a high-performance **Parameterized Query Protocol** to handle massive data payloads (like 4096-dimensional vectors or heavy binary code blobs) without the extreme overhead of string parsing. 
+Cluaizdb supports a high-performance **Parameterized Query Protocol** to handle massive data payloads (like 4096-dimensional vectors or heavy binary code blobs) without the extreme overhead of string parsing. 
 
 Whenever you need to insert or query against heavy data, you should **never** hardcode the data into the CDQL string. Instead, use the `?` placeholder syntax.
 
@@ -34,7 +34,7 @@ let payload_bytes = my_heavy_vector.as_bytes();
 
 // Bind and execute
 let status = unsafe {
-    cluaizd_ffi_execute_parameterized(
+    cluaizdb_ffi_execute_parameterized(
         query.as_ptr() as *const i8,
         payload_bytes.as_ptr(),
         payload_bytes.len()

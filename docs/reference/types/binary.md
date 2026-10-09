@@ -1,6 +1,6 @@
 # `binary` Data Type
 
-The `binary` payload format is the default raw format in Cluaizd. It is used to store raw, unstructured byte buffers.
+The `binary` payload format is the default raw format in Cluaizdb. It is used to store raw, unstructured byte buffers.
 
 ## Architectural Storage
 

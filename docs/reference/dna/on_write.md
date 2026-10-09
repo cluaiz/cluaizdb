@@ -4,7 +4,7 @@ The `on_write` hook is a synchronous execution affordance triggered whenever a m
 
 ## Architectural Execution
 
-When a client submits a payload to the cluaizd Engine, the mutation does not immediately hit the Write-Ahead Log (WAL).
+When a client submits a payload to the cluaizdb Engine, the mutation does not immediately hit the Write-Ahead Log (WAL).
 
 1. **Sandboxed Instantiation**: The engine detects the `on_write` hook and spins up a lightweight WASM instance (via `wasmtime` or `rhai`). 
 2. **Memory Pointer Passing**: To avoid copying the payload, the engine passes a raw memory pointer (offset and length) to the WASM sandbox.

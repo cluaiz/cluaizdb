@@ -1,4 +1,4 @@
-use cluaizd_types::NeuronId;
+use cluaizdb_types::NeuronId;
 use serde_json::json;
 
 mod common;

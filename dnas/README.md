@@ -1,14 +1,14 @@
 # 🧪 DNAs: User-Defined Logic Extensions
 
 ## Purpose
-The `dnas/` directory is the staging area for **User-Created Custom DNA Scripts**. While the `genomes/` directory contains the 30 base templates built into Cluaizd, this folder allows developers to define their own custom data validation, business logic, and complex triggers before they are compiled into the database.
+The `dnas/` directory is the staging area for **User-Created Custom DNA Scripts**. While the `genomes/` directory contains the 30 base templates built into Cluaizdb, this folder allows developers to define their own custom data validation, business logic, and complex triggers before they are compiled into the database.
 
 ## Architecture Flow
 
 ```mermaid
 graph LR
     A[Developer writes Custom Logic] -->|Saves to| B[dnas/custom_logic.json]
-    B --> C[Cluaizd Compiler]
+    B --> C[Cluaizdb Compiler]
     C -->|Compiles to WASM| D[active_dnas/custom_logic.wasm]
     D --> E[Injected into Rust Execution Engine]
 ```
@@ -20,7 +20,7 @@ This folder acts as the drop-zone for custom logic authored by the end-user (Dat
 
 **1. Custom Schema Enforcement**
 - **Core Logic:** Users write scripts that intercept database operations specifically targeted at their application's data. 
-- **Execution Flow:** A user might drop a file named `banking_ledger.json` here. It contains Rhai code: `if payload.amount < 0 && payload.transaction_type == "deposit" { return Reject; }`. The Cluaizd background compiler detects this file, validates the syntax, and compiles it into a WASM binary placed in `active_dnas/`.
+- **Execution Flow:** A user might drop a file named `banking_ledger.json` here. It contains Rhai code: `if payload.amount < 0 && payload.transaction_type == "deposit" { return Reject; }`. The Cluaizdb background compiler detects this file, validates the syntax, and compiles it into a WASM binary placed in `active_dnas/`.
 - **Why?** It replaces the need for mid-tier application servers. Instead of the backend Node.js or Python server validating transactions before sending them to the database, the database validates them intrinsically at the C/Rust memory level.
 
 **2. The Compiler Pipeline**

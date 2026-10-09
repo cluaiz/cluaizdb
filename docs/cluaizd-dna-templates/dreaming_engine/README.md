@@ -8,7 +8,7 @@ Why was this created?
 Most database compute cycles are wasted at 3 AM when user traffic drops to zero. In an Agentic Ecosystem, an AI should use this downtime to "sleep and dream"—consolidating memories and finding hidden relationships in the data that humans missed. This template turns dead server time into actionable insights.
 
 ## 3. Mechanism (How it works)
-1. **The Idle Trigger:** The Cluaizd `heart` module monitors CPU/NPU usage. If metabolism drops below 20%, it fires the `SYSTEM.IDLE` event.
+1. **The Idle Trigger:** The Cluaizdb `heart` module monitors CPU/NPU usage. If metabolism drops below 20%, it fires the `SYSTEM.IDLE` event.
 2. **The Anchor:** The script queries for a recently accessed node (the "Anchor").
 3. **The Walk:** It performs a **Stochastic Graph Walk**. Instead of a rigid BFS/DFS, it randomly traverses edges to deep, forgotten parts of the graph.
 4. **Resonance Check:** It mathematically compares the 16-D vector bitmask of the Anchor node with the final Destination node using Cosine Similarity.
@@ -18,7 +18,7 @@ Most database compute cycles are wasted at 3 AM when user traffic drops to zero.
 ```mermaid
 sequenceDiagram
     participant Heart as Telemetry (Heart)
-    participant Engine as Cluaizd Core
+    participant Engine as Cluaizdb Core
     participant DNA as Dreaming Script
     participant LMDB as Graph Storage
 
@@ -57,7 +57,7 @@ Explore the actual code used to implement this template. Each file demonstrates 
 - **The Filter & Merge:** The pipeline evaluates `WHERE SIMILAR_TO(destination.vector) > 0.85`. If true, it uses the native `MERGE EDGE "Hypothesis" BETWEEN origin AND destination` command. CDQL abstracts away all the looping and time-budget management, making it incredibly safe.
 
 ### 🦀 3. [dream_walk.auto_wasm.rs](./dream_walk.auto_wasm.rs) (Auto-WASM)
-- **SDK Integration:** Built using `cluaizd_dna_sdk::prelude::*`. This is for massive production graphs where a stochastic walk requires millions of CPU instructions.
+- **SDK Integration:** Built using `cluaizdb_dna_sdk::prelude::*`. This is for massive production graphs where a stochastic walk requires millions of CPU instructions.
 - **Memory Safety:** The script uses `ctx::query().node(id)` to load nodes directly from the `dashmap` cache.
 - **Mathematical Intensity:** Cosine similarity across 1536-dimensional vectors is computationally heavy. Executing this inside the WASM sandbox allows the engine to utilize SIMD (Single Instruction, Multiple Data) CPU instructions, generating Eurekas 100x faster than the Rhai script.
 - **Atomic Mutex:** When a Hypothesis edge is found, the WASM code issues a `Mutation::CreateEdge`. The engine momentarily acquires an exclusive Write Lock (`mutex`) on the specific graph shard, commits the edge atomically to prevent data corruption, and releases the lock.

@@ -1,6 +1,6 @@
 # 🧬 Mode 11: Multi-Model Database Paradigm (CosmosDB-Style)
 
-This guide details how to configure and run Cluaizd as a Multi-Model Database, fusing document, graph, and vector capabilities within a unified process space.
+This guide details how to configure and run Cluaizdb as a Multi-Model Database, fusing document, graph, and vector capabilities within a unified process space.
 
 ---
 
@@ -10,7 +10,7 @@ In Multi-Model Mode, a single `UniversalNeuron` holds document properties (in `r
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Query Graph + Vector| Server[Cluaizd Core]
+    Client[Python Client] -->|Query Graph + Vector| Server[Cluaizdb Core]
     Server -->|Evaluate Adjacency| Graph[Traverse Friends Graph]
     Server -->|Compute Distance| Vector[SIMD Cosine Similarity]
     Graph -->|Intersect| Merge[Consolidated Result]
@@ -20,7 +20,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Configure parallel query workers via `dashmap` to optimize complex multi-model processing:
 

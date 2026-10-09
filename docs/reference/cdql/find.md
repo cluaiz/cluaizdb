@@ -1,6 +1,6 @@
 # `find` Command Reference
 
-The `find` command is the primary read-operation instruction in the cluaizdd Query Language (CDQL). It is designed to traverse the database engine's storage layers and retrieve records.
+The `find` command is the primary read-operation instruction in the cluaizdbd Query Language (CDQL). It is designed to traverse the database engine's storage layers and retrieve records.
 
 ## Syntax Rules
 

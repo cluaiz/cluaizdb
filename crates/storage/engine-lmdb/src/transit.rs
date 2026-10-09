@@ -1,6 +1,6 @@
 use crossbeam::queue::ArrayQueue;
 use std::sync::Arc;
-use cluaizd_types::UniversalNeuron;
+use cluaizdb_types::UniversalNeuron;
 use tracing::{info, warn};
 
 /// The Transit Lounge (Lock-Free Ring Buffer Queue)

@@ -1,7 +1,7 @@
 # 🌍 API Contract & Regression Tests
 
 ## 🎯 Purpose
-This workspace tests the stability of the public REST and gRPC/WebSocket APIs exposed by the Cluaizd server. 
+This workspace tests the stability of the public REST and gRPC/WebSocket APIs exposed by the Cluaizdb server. 
 
 ## 🧬 What we test here
 1. **Schema Validation:** Ensure that API responses match the documented schemas exactly.

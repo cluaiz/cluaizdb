@@ -1,6 +1,6 @@
 # ⏱️ Mode 23: Temporal / Bi-Temporal Database Paradigm (Datomic-Style)
 
-This guide details how to configure and run Cluaizd as a Temporal / Bi-Temporal Database, managing dual timelines (*Valid Time* vs *Transaction Time*) using co-located timestamps and DNA auditing rules.
+This guide details how to configure and run Cluaizdb as a Temporal / Bi-Temporal Database, managing dual timelines (*Valid Time* vs *Transaction Time*) using co-located timestamps and DNA auditing rules.
 
 ---
 
@@ -13,7 +13,7 @@ To query past states, DNA scripts retrieve neurons matching specific historical 
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Update Record| Server[Cluaizd Core]
+    Client[Python Client] -->|Update Record| Server[Cluaizdb Core]
     Server -->|Write New Version of Neuron| Version[New Version Node]
     Version -->|Set Valid & Transaction Times| LMDB[(LMDB Data Store)]
     LMDB -->|Query Time-Travel / 'As Of'| Replay[Fetch Version matching Timestamp]
@@ -22,7 +22,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set database concurrency setting to `mutex` to serialize timeline transitions:
 

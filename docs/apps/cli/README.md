@@ -1,6 +1,6 @@
-# Cluaizd Enterprise CLI (`cluaizd`)
+# Cluaizdb Enterprise CLI (`cluaizdb`)
 
-The Cluaizd CLI is the primary administrative interface for the database. It is designed for **headless server administration**, allowing you to manage configurations, background daemons, and database shards directly from the terminal without a GUI.
+The Cluaizdb CLI is the primary administrative interface for the database. It is designed for **headless server administration**, allowing you to manage configurations, background daemons, and database shards directly from the terminal without a GUI.
 
 > **Note:** The CLI connects directly to the LMDB storage engine via FFI for most operations, meaning you can inspect and modify database shards even when the server daemon is completely stopped.
 
@@ -11,17 +11,17 @@ The Cluaizd CLI is the primary administrative interface for the database. It is 
 To build and run the CLI locally from the source:
 ```bash
 cargo build -p cli
-./target/debug/cluaizd --help
+./target/debug/cluaizdb --help
 ```
 
 ---
 
 ## 🏃 Direct Server Launch (`run`)
 
-The most common command. Instead of using the background daemon tools, you can directly launch the `cluaizd` server process in the foreground:
+The most common command. Instead of using the background daemon tools, you can directly launch the `cluaizdb` server process in the foreground:
 
 ```bash
-cluaizd run
+cluaizdb run
 ```
 
 *Note: This automatically targets `./target/debug/server` by default, or you can specify a custom binary with `--bin`.*
@@ -40,14 +40,14 @@ These flags can be applied to **any** CLI command.
 
 **Example:** Fetch server port for a bash script:
 ```bash
-PORT=$(cluaizd --json config get server.port)
+PORT=$(cluaizdb --json config get server.port)
 ```
 
 ---
 
 ## ⚙️ Config Management (`config`)
 
-Read and modify the `cluaizd.toml` file dynamically without opening an editor. The CLI uses dot-notation for nested fields.
+Read and modify the `cluaizdb.toml` file dynamically without opening an editor. The CLI uses dot-notation for nested fields.
 
 ### Commands
 
@@ -57,26 +57,26 @@ Read and modify the `cluaizd.toml` file dynamically without opening an editor. T
 - **`config get <key>`**
   Extracts a specific key.
   ```bash
-  cluaizd config get database.concurrency_mode
+  cluaizdb config get database.concurrency_mode
   ```
 
 - **`config set <key> [value]`**
-  Updates a specific key and atomically writes it back to `cluaizd.toml`.
+  Updates a specific key and atomically writes it back to `cluaizdb.toml`.
   If you omit the `[value]`, the CLI will launch an **interactive dropdown menu** for supported keys (e.g., `database.concurrency_mode`, `database.payload_format`).
   
   *Direct assignment:*
   ```bash
-  cluaizd config set server.port 8080
+  cluaizdb config set server.port 8080
   ```
   
   *Interactive selection:*
   ```bash
-  cluaizd config set database.concurrency_mode
+  cluaizdb config set database.concurrency_mode
   # Prompts: Select concurrency_mode:
   # > dashmap
   #   mutex
   
-  cluaizd config set database.payload_format
+  cluaizdb config set database.payload_format
   # Prompts: Select payload_format:
   # > flatbuffers
   #   protobuf
@@ -87,14 +87,14 @@ Read and modify the `cluaizd.toml` file dynamically without opening an editor. T
 
 ## 🖥️ Server Daemon Control (`server`)
 
-Manage the Cluaizd background process.
+Manage the Cluaizdb background process.
 
 ### Commands
 
 - **`server start`**
-  Spawns the server binary as a detached background daemon. It writes its process ID to `data/cluaizd.pid`.
+  Spawns the server binary as a detached background daemon. It writes its process ID to `data/cluaizdb.pid`.
   ```bash
-  cluaizd server start --bin ./target/release/server
+  cluaizdb server start --bin ./target/release/server
   ```
 
 - **`server status`**
@@ -106,7 +106,7 @@ Manage the Cluaizd background process.
 - **`server logs`**
   Tails the server's background log file directly to your terminal.
   ```bash
-  cluaizd server logs --lines 100
+  cluaizdb server logs --lines 100
   ```
 
 ---
@@ -123,13 +123,13 @@ Directly interact with the LMDB shard files via FFI. **These commands do not req
 - **`db stats`**
   Provides a deep dive into your database footprint. Outputs physical file size and a breakdown of neurons currently residing in Hot, Warm, and Cold storage tiers.
   ```bash
-  cluaizd db stats
+  cluaizdb db stats
   ```
 
 - **`db backup <destination>`**
   Creates a **live, zero-downtime safe copy** of the database shard using LMDB's native copy-on-write mechanisms.
   ```bash
-  cluaizd db backup ./data/nightly_backup
+  cluaizdb db backup ./data/nightly_backup
   ```
 
 - **`db compact`**
@@ -149,7 +149,7 @@ The Write-Ahead Log ensures ACID compliance. The CLI allows you to inspect it fo
 - **`wal inspect`**
   Reads the `.wal` files in `data/wal` and prints pending operations. Crucially, it detects and reports the exact number of corrupt entries if a catastrophic crash occurred.
   ```bash
-  cluaizd wal inspect --limit 50
+  cluaizdb wal inspect --limit 50
   ```
 
 ---
@@ -178,5 +178,5 @@ Execute CDQL queries directly against the storage engine without passing through
 > **Note:** Because this bypasses the server, only basic read operations (`Find`, `FindById`, `Limit`) are supported. Advanced operations (Vector Similarity, Graph Traversal) require the full server runtime.
 
 ```bash
-cluaizd-cli query "FIND * LIMIT 10"
+cluaizdb-cli query "FIND * LIMIT 10"
 ```

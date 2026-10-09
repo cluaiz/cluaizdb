@@ -1,4 +1,4 @@
-// cluaizd-dna-templates/crud_schema.rhai
+// cluaizdb-dna-templates/crud_schema.rhai
 // Strict CRUD validation rules template
 
 let payload_str = payload; // Raw text payload

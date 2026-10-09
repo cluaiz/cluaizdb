@@ -14,7 +14,7 @@ fn check_server() {
         }
         attempts += 1;
         if attempts > 30 {
-            panic!("Server did not start! Run `cargo run --bin cluaizd-server` before benchmarking.");
+            panic!("Server did not start! Run `cargo run --bin cluaizdb-server` before benchmarking.");
         }
         std::thread::sleep(Duration::from_millis(100));
     }

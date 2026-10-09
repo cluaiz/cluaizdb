@@ -1,6 +1,6 @@
 # 🧠 Mode 05: Vector / AI Database Paradigm (Pinecone-Style)
 
-This guide details how to configure and run Cluaizd as a high-performance Vector Database, leveraging native SIMD calculations (`cosine_similarity`) and hybrid filters within DNA scripts.
+This guide details how to configure and run Cluaizdb as a high-performance Vector Database, leveraging native SIMD calculations (`cosine_similarity`) and hybrid filters within DNA scripts.
 
 ---
 
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set concurrency settings to `dashmap` to maximize read query throughput:
 
@@ -108,7 +108,7 @@ def search_similar(query_vector: list, limit: int = 5):
     return response.json()
 
 # Usage
-insert_vector("Cluaizd database architecture", [0.1] * 16)
+insert_vector("Cluaizdb database architecture", [0.1] * 16)
 results = search_similar([0.1] * 16)
 print("Search Results:", results)
 ```

@@ -20,7 +20,7 @@ In AI systems, a large document (1GB video or thick JSON) might become irrelevan
 ```mermaid
 sequenceDiagram
     participant GC as Garbage Collector Thread
-    participant Engine as Cluaizd Core
+    participant Engine as Cluaizdb Core
     participant DNA as Neural TTL Script
     participant LMDB as Disk Storage
 
@@ -48,7 +48,7 @@ Explore the actual code used to implement this template. Each file demonstrates 
 ### 🟢 1. [lifecycle.rhai](./lifecycle.rhai) (Rhai Script)
 - **The Evaluation Phase:** The script receives a `neuron` object. It reads `neuron.last_accessed_ns` and compares it to the current time to calculate `idle_days`.
 - **Threshold Matching:** It checks the `idle_days` against `config.warm_threshold_days` and `config.cold_threshold_days`.
-- **The Action Map:** Rhai scripts in Cluaizd are stateless. They cannot mutate the database directly. Instead, the script returns an Action Map: `return #{"action": "compress"}` or `return #{"action": "purge_payload"}`. The Rust engine reads this map and executes the physical disk IO.
+- **The Action Map:** Rhai scripts in Cluaizdb are stateless. They cannot mutate the database directly. Instead, the script returns an Action Map: `return #{"action": "compress"}` or `return #{"action": "purge_payload"}`. The Rust engine reads this map and executes the physical disk IO.
 
 ### 🔵 2. [lifecycle.cdql](./lifecycle.cdql) (CDQL Declarative Logic)
 - **The Trigger:** `ON SYSTEM.GC_SWEEP`. This natively hooks into the background Garbage Collector.

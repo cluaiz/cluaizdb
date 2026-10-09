@@ -1,9 +1,9 @@
 [package]
-name = "cluaizd-types"
+name = "cluaizdb-types"
 version = "0.1.0"
 edition = "2021"
 license = "BSL-1.1"
-description = "Core data types for the Cluaizd Nervous System Database"
+description = "Core data types for the Cluaizdb Nervous System Database"
 
 [dependencies]
 serde    = { workspace = true }

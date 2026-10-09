@@ -1,6 +1,6 @@
 # 🕸️ Mode 02: Graph Database Paradigm (Neo4j-Style)
 
-This guide details how to configure and run Cluaizd as a high-performance Graph Database, utilizing the co-located `adjacency` edge list of the `UniversalNeuron` and fast Specular bitwise intersections for nanosecond traversal.
+This guide details how to configure and run Cluaizdb as a high-performance Graph Database, utilizing the co-located `adjacency` edge list of the `UniversalNeuron` and fast Specular bitwise intersections for nanosecond traversal.
 
 ---
 
@@ -45,7 +45,7 @@ return #{
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Configure the tenant shard to use `mutex` or `dashmap` depending on cluster distribution:
 

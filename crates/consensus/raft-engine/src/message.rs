@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use cluaizd_types::UniversalNeuron;
+use cluaizdb_types::UniversalNeuron;
 
 /// Raft RPC Messages.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -61,7 +61,7 @@ pub enum RaftCommand {
     /// Insert a new neuron
     InsertNeuron(UniversalNeuron),
     /// Delete a neuron
-    DeleteNeuron(cluaizd_types::NeuronId),
+    DeleteNeuron(cluaizdb_types::NeuronId),
     /// Execute a generic DNA hook or config change
     ConfigChange(Vec<String>),
 }

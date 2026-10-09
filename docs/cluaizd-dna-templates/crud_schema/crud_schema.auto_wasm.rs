@@ -2,7 +2,7 @@
 // 🧱 CRUD Schema Validation (Auto-WASM Rust Edition)
 // ==============================================================================
 
-use cluaizd_dna_sdk::prelude::*;
+use cluaizdb_dna_sdk::prelude::*;
 use serde_json::Value;
 
 #[dna_hook(on_write)]

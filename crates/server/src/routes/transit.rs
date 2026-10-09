@@ -4,7 +4,7 @@ use crossbeam::queue::ArrayQueue;
 use tokio::sync::Mutex;
 use tracing::{debug, error, warn};
 
-use cluaizd_types::UniversalNeuron;
+use cluaizdb_types::UniversalNeuron;
 use engine_lmdb::LmdbEnv;
 use wal::WalWriter;
 

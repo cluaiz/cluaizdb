@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-cluaizd-types = { workspace = true }
-cluaizd-errors = { workspace = true }
+cluaizdb-types = { workspace = true }
+cluaizdb-errors = { workspace = true }
 rhai = { version = "1.25.1", features = ["serde", "sync"] }
 serde = { workspace = true }
 serde_json = { workspace = true }

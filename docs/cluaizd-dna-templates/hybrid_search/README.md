@@ -6,7 +6,7 @@ The **Hybrid Search** template utilizes the `on_index` DNA hook. It intercepts t
 ## 2. Purpose
 Why was this created?
 Standard databases force developers to choose between BM25 (Text) and HNSW (Vector) search. If a user searches for the exact phrase "Harry Potter 2", Vector search might return "Lord of the Rings" (semantically similar), while BM25 returns the exact text match.
-By intercepting the `on_index` pipeline, you can execute a Hybrid Search. Cluaizd computes both indices simultaneously, hands the raw rankings to your DNA script, and lets you calculate the ultimate score. You get the best of both worlds natively in the database, without running Elasticsearch and Pinecone side-by-side.
+By intercepting the `on_index` pipeline, you can execute a Hybrid Search. Cluaizdb computes both indices simultaneously, hands the raw rankings to your DNA script, and lets you calculate the ultimate score. You get the best of both worlds natively in the database, without running Elasticsearch and Pinecone side-by-side.
 
 ## 3. Mechanism (How it works)
 1. **The Query:** An API client sends a `search` command containing both a string and a vector float array.
@@ -19,7 +19,7 @@ By intercepting the `on_index` pipeline, you can execute a Hybrid Search. Cluaiz
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Core as Cluaizd Search Engine
+    participant Core as Cluaizdb Search Engine
     participant DNA as Hybrid Search Script
     
     Client->>Core: search(text="Apple", vector=[0.1, 0.2...])

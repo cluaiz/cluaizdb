@@ -1,4 +1,4 @@
-use cluaizd_time_series::{GorillaCompressor, DataPoint};
+use cluaizdb_time_series::{GorillaCompressor, DataPoint};
 
 #[test]
 fn test_gorilla_compression_flow() {

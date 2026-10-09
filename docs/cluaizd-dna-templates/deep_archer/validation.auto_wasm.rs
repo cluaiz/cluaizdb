@@ -2,10 +2,10 @@
 // 🛡️ Deep Archer Validation Matrix (Auto-WASM Rust Edition)
 // ==============================================================================
 // For absolute maximum performance (C-level execution speed).
-// Cluaizd will automatically compile this to WASM upon upload.
+// Cluaizdb will automatically compile this to WASM upon upload.
 // ------------------------------------------------------------------------------
 
-use cluaizd_dna_sdk::prelude::*;
+use cluaizdb_dna_sdk::prelude::*;
 use serde::Deserialize;
 
 #[derive(Deserialize)]

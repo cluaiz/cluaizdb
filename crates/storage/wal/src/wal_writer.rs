@@ -5,8 +5,8 @@ use std::sync::Arc;
 
 use tracing::{debug, info};
 
-use cluaizd_errors::StorageError;
-use cluaizd_types::{NeuronId, UniversalNeuron};
+use cluaizdb_errors::StorageError;
+use cluaizdb_types::{NeuronId, UniversalNeuron};
 
 use crate::log_entry::{WalEntry, WalOperation};
 
@@ -52,7 +52,7 @@ impl WalWriter {
             .open(&path)
             .map_err(|e| StorageError::WalAppendFailed(e.to_string()))?;
 
-        let current_size = file.metadata().map(|m| m.len()).unwrap_or(0);
+        let current_size = file.metadata().map(|m: std::fs::Metadata| m.len()).unwrap_or(0);
 
         info!(path = %path.display(), "WAL writer opened");
 

@@ -4,8 +4,8 @@ use std::sync::Arc;
 use tokio::sync::{Mutex, RwLock};
 use tracing::{info, warn};
 
-use cluaizd_errors::StorageError;
-use cluaizd_types::UniversalNeuron;
+use cluaizdb_errors::StorageError;
+use cluaizdb_types::UniversalNeuron;
 use engine_lmdb::LmdbEnv;
 use wal::{WalWriter, WalOperation};
 

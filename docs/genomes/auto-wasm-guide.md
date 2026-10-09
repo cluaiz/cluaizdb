@@ -1,6 +1,6 @@
 # Auto-WASM Guide: Writing Zero-Latency DNA
 
-`auto-wasm` is one of the 4 execution modes in Cluaizd. It allows you to write raw Rust code, send it to the database via API, and have it automatically compile and hot-reload into the database's core memory.
+`auto-wasm` is one of the 4 execution modes in Cluaizdb. It allows you to write raw Rust code, send it to the database via API, and have it automatically compile and hot-reload into the database's core memory.
 
 > [!IMPORTANT]
 > The defining feature of `auto-wasm` is **Strict Typing**. Because the code compiles down to native machine instructions, you MUST define the exact layout of your data (`String`, `bool`, `f32`). This strictness is what allows `auto-wasm` to execute at `0.05ms` per hook, bypassing the heavy overhead of dynamic JSON parsing found in traditional NoSQL databases.
@@ -73,6 +73,6 @@ pub extern "C" fn on_write(ptr: *const u8, len: usize) -> i32 {
 
 1. **Compilation:** When the API receives your code, it spins up a temporary Cargo project in the background and runs `cargo build --target wasm32-unknown-unknown --release`.
 2. **Hot-Reload:** The resulting `.wasm` binary is placed in the `active_dnas/` directory.
-3. **Caching:** Cluaizd's internal File Watcher detects the new WASM file and instantly swaps it into the global RAM Cache without dropping any active connections.
+3. **Caching:** Cluaizdb's internal File Watcher detects the new WASM file and instantly swaps it into the global RAM Cache without dropping any active connections.
 
 By defining your types upfront, `auto-wasm` guarantees absolute data integrity and microsecond latencies for your database operations.

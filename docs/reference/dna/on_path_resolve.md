@@ -42,7 +42,7 @@ Speculative Search Engine
 | :----- | :---------- |
 | `ctx.strengthen_edge(from_id, to_id, delta)` | Increases the weight of an edge by `delta` (0.0–1.0). Weight is clamped to 1.0. |
 | `ctx.weaken_edge(from_id, to_id, delta)` | Decreases the weight of an edge by `delta`. Weight is clamped to 0.0. |
-| `ctx.log(message)` | Writes a message to the cluaizd telemetry log |
+| `ctx.log(message)` | Writes a message to the cluaizdb telemetry log |
 
 ---
 

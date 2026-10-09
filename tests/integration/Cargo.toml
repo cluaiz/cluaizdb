@@ -10,12 +10,12 @@ tokio = { workspace = true, features = ["full"] }
 tokio-test = "0.4"
 serde = { workspace = true }
 serde_json = { workspace = true }
-cluaizd-types = { workspace = true }
-cluaizd-errors = { workspace = true }
+cluaizdb-types = { workspace = true }
+cluaizdb-errors = { workspace = true }
 genome = { workspace = true }
 bytes = { workspace = true }
 chrono = "0.4"
-cluaizd-index-mvhsnw = { path = "../../crates/storage/index-mvhsnw" }
-cluaizd-consensus-raft = { path = "../../crates/consensus/raft-engine" }
-cluaizd-graph-engine = { path = "../../crates/storage/graph-engine" }
-cluaizd-time-series = { path = "../../crates/storage/time-series" }
+cluaizdb-index-mvhsnw = { path = "../../crates/storage/index-mvhsnw" }
+cluaizdb-consensus-raft = { path = "../../crates/consensus/raft-engine" }
+cluaizdb-graph-engine = { path = "../../crates/storage/graph-engine" }
+cluaizdb-time-series = { path = "../../crates/storage/time-series" }

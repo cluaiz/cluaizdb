@@ -1,11 +1,11 @@
 [package]
-name = "cluaizd-consensus-raft"
+name = "cluaizdb-consensus-raft"
 version = "0.1.0"
 edition = "2021"
 publish = false
 
 [dependencies]
-cluaizd-types = { workspace = true }
+cluaizdb-types = { workspace = true }
 serde = { workspace = true }
 tracing = { workspace = true }
 tokio = { workspace = true }

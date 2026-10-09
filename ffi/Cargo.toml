@@ -1,17 +1,17 @@
 [package]
-name = "cluaizd-ffi"
+name = "cluaizdb-ffi"
 version = "0.1.0"
 edition = "2021"
 description = "C-compatible FFI bindings for CLUAIZD — 0ms local access for robots, AI agents, and embedded systems"
 
 # Build as a C-compatible shared library (.dll / .so / .dylib)
 [lib]
-name = "cluaizd"
+name = "cluaizdb"
 crate-type = ["cdylib", "staticlib", "rlib"]
 
 [dependencies]
-cluaizd-types = { path = "../components/cluaizd-types" }
-cluaizd-errors = { path = "../components/cluaizd-errors" }
+cluaizdb-types = { path = "../components/cluaizdb-types" }
+cluaizdb-errors = { path = "../components/cluaizdb-errors" }
 engine-lmdb = { path = "../crates/storage/engine-lmdb" }
 genome = { path = "../crates/genome" }
 bytes = "1.9"

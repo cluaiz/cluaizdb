@@ -1,6 +1,6 @@
 # 🌌 Mode 26: Multivalued Database Paradigm (Pick Model / non-1NF Style)
 
-This guide details how to configure and run Cluaizd as a Multivalued Database, violating SQL's First Normal Form by storing list arrays directly inside single table cells.
+This guide details how to configure and run Cluaizdb as a Multivalued Database, violating SQL's First Normal Form by storing list arrays directly inside single table cells.
 
 ---
 
@@ -10,7 +10,7 @@ In Multivalued Mode, we bypass the relational restriction of storing only atomic
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Insert Multivalued Row| Server[Cluaizd Core]
+    Client[Python Client] -->|Insert Multivalued Row| Server[Cluaizdb Core]
     Server -->|Save Nested Fields| LMDB[(LMDB Data Store)]
     LMDB -->|Query specific list value| Filter[Scan nested array list]
     Filter -->|Match and Return| Client
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enable lock-free writing via `dashmap` to optimize parallel JSON list parsing:
 

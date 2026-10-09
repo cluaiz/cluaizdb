@@ -18,7 +18,7 @@ CLUAIZD is a **shape-shifting memory substrate** built in Rust on top of LMDB. Y
 ## 📁 Codebase Structure (Critical Paths)
 
 ```
-cluaizd/
+cluaizdb/
 ├── crates/
 │   ├── genome/src/cdql/      ← CDQL parser.rs + planner.rs (THE QUERY BRAIN)
 │   ├── server/src/routes/    ← HTTP API (query.rs, data.rs, state.rs)
@@ -26,9 +26,9 @@ cluaizd/
 │       ├── engine-lmdb/      ← Raw LMDB read/write (NEVER add business logic here)
 │       └── wal/              ← Write-Ahead Log for crash recovery
 ├── components/
-│   └── cluaizd-types/          ← UniversalNeuron, StorageTier, DNA structs
+│   └── cluaizdb-types/          ← UniversalNeuron, StorageTier, DNA structs
 ├── genomes/                  ← All 10 DNA scripts (sql_strict.json, etc.)
-├── ffi/                      ← C-FFI bindings (cluaizd.h + lib.rs)
+├── ffi/                      ← C-FFI bindings (cluaizdb.h + lib.rs)
 └── docs/                     ← Documentation (registry.json + markdown)
 ```
 

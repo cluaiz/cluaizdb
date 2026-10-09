@@ -12,7 +12,7 @@ The `limit` modifier truncates the result set returned by the engine. It is a cr
 
 ## Architecture: How it works under the hood
 
-The cluaizd engine handles limits at the iterator level, avoiding unnecessary data loading.
+The cluaizdb engine handles limits at the iterator level, avoiding unnecessary data loading.
 
 ### 1. Lazy Evaluation
 When a query includes a `limit` (e.g., `limit 10`), the internal storage iterator does not scan the entire database and then slice the array. Instead, it processes records one by one. As soon as the 10th record matching the `where` filter is found, the engine immediately aborts the traversal loop.

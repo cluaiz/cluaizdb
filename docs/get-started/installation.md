@@ -35,9 +35,9 @@ sudo apt-get update && sudo apt-get install -y clang llvm libclang-dev
 
 ### Step 3: Clone and Run
 ```bash
-git clone https://github.com/cluaiz/cluaizd.git
-cd cluaizd
-cargo run -p cluaizd-server
+git clone https://github.com/cluaiz/cluaizdb.git
+cd cluaizdb
+cargo run -p cluaizdb-server
 ```
 
 > [!TIP]
@@ -55,12 +55,12 @@ On success, you will see:
 ## Method 2: Docker
 
 ```bash
-docker pull ghcr.io/cluaiz/cluaizd:latest
+docker pull ghcr.io/cluaiz/cluaizdb:latest
 docker run -d \
-  --name cluaizd \
+  --name cluaizdb \
   -p 7331:7331 \
-  -v $(pwd)/cluaizd-data:/app/out \
-  ghcr.io/cluaiz/cluaizd:latest
+  -v $(pwd)/cluaizdb-data:/app/out \
+  ghcr.io/cluaiz/cluaizdb:latest
 ```
 
 The `/app/out` volume is where CLUAIZD stores its LMDB `.mdb` data files and WAL log. Always mount this as a persistent volume to survive container restarts.
@@ -72,16 +72,16 @@ The `/app/out` volume is where CLUAIZD stores its LMDB `.mdb` data files and WAL
 For embedding CLUAIZD into a Python, C++, or Rust application as a native library (with 0ms latency, no HTTP overhead):
 
 ```bash
-cargo build --release -p cluaizd-ffi
+cargo build --release -p cluaizdb-ffi
 
 # Linux output:
-ls target/release/libcluaizd.so
+ls target/release/libcluaizdb.so
 
 # Windows output:
-ls target/release/cluaizd.dll
+ls target/release/cluaizdb.dll
 ```
 
-Copy the `.so` or `.dll` and the `ffi/cluaizd.h` header into your target project.
+Copy the `.so` or `.dll` and the `ffi/cluaizdb.h` header into your target project.
 
 ---
 

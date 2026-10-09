@@ -1,5 +1,5 @@
 use bytes::Bytes;
-use cluaizd_types::{PayloadType, UniversalNeuron, NeuronDna};
+use cluaizdb_types::{PayloadType, UniversalNeuron, NeuronDna};
 use tempfile::tempdir;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -118,7 +118,7 @@ async fn test_biological_gc_ttl_decay() {
     let fetched = engine_lmdb::read_neuron(&shard.env, neuron_id, Some(model_hash))
         .expect("Failed to read neuron after GC");
 
-    assert_eq!(fetched.tier, cluaizd_types::StorageTier::Warm);
+    assert_eq!(fetched.tier, cluaizdb_types::StorageTier::Warm);
     assert!(fetched.raw_payload.is_empty());
     assert_eq!(fetched.vector_data, vec![0.8f32; 16]);
 }

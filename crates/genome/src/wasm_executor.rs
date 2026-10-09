@@ -1,4 +1,4 @@
-use cluaizd_errors::StorageError;
+use cluaizdb_errors::StorageError;
 use wasmtime::{Engine, Instance, Module, Store};
 use dashmap::DashMap;
 use notify::{Watcher, RecursiveMode, Event};

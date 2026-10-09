@@ -1,4 +1,4 @@
-// cluaizd-dna-templates/hybrid_search.rhai
+// cluaizdb-dna-templates/hybrid_search.rhai
 // Hybrid vector and keyword relevance search template
 
 let vec = vector_data;

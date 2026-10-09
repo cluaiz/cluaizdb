@@ -1,6 +1,6 @@
 # ⚡ Mode 16: In-Memory Database Paradigm (IMDB / SAP HANA-Style)
 
-This guide details how to configure and run Cluaizd as an In-Memory Database, optimizing access speeds using Hot State memory maps and zero-copy page management.
+This guide details how to configure and run Cluaizdb as an In-Memory Database, optimizing access speeds using Hot State memory maps and zero-copy page management.
 
 ---
 
@@ -10,14 +10,14 @@ In In-Memory Mode, the entire active dataset resides in the memory-mapped space 
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|GET / POST| Server[Cluaizd Core]
+    Client[Python Client] -->|GET / POST| Server[Cluaizdb Core]
     Server -->|Direct Page Map Access| RAM[Memory-Mapped Page Cache]
     RAM -->|Sub-microsecond return| Client
 ```
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Use the high-speed lock-free `dashmap` concurrency model for parallel read execution:
 

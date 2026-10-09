@@ -11,17 +11,17 @@
 //!
 //! ## Compile
 //! ```sh
-//! cargo build --release -p cluaizd-ffi
-//! # Output: target/release/cluaizd.dll (Windows) / cluaizd.so (Linux)
+//! cargo build --release -p cluaizdb-ffi
+//! # Output: target/release/cluaizdb.dll (Windows) / cluaizdb.so (Linux)
 //! ```
 //!
 //! ## C Usage
 //! ```c
-//! #include "cluaizd.h"
+//! #include "cluaizdb.h"
 //!
-//! CluaizdHandle* db = cluaizd_open("./data/mydb", 4096);
-//! cluaizd_write(db, "hello world", 11, "text");
-//! cluaizd_close(db);
+//! CluaizdbHandle* db = cluaizdb_open("./data/mydb", 4096);
+//! cluaizdb_write(db, "hello world", 11, "text");
+//! cluaizdb_close(db);
 //! ```
 
 use std::ffi::{CStr, CString};
@@ -29,12 +29,12 @@ use std::os::raw::{c_char, c_ulong};
 use std::sync::Mutex;
 
 use bytes::Bytes;
-use cluaizd_types::{PayloadType, UniversalNeuron};
+use cluaizdb_types::{PayloadType, UniversalNeuron};
 use engine_lmdb::LmdbEnv;
 
 /// Opaque handle representing an open CLUAIZD  instance.
-/// The caller holds a raw pointer — they must call `cluaizd_close` to free it.
-pub struct CluaizdHandle {
+/// The caller holds a raw pointer — they must call `cluaizdb_close` to free it.
+pub struct CluaizdbHandle {
     env: LmdbEnv,
 }
 
@@ -45,12 +45,12 @@ pub struct CluaizdHandle {
 /// - `map_size_mb`: Maximum database size in megabytes (e.g. 4096 = 4GB)
 ///
 /// # Returns
-/// A non-null `CluaizdHandle*` on success, or `NULL` on failure.
+/// A non-null `CluaizdbHandle*` on success, or `NULL` on failure.
 ///
 /// # Safety
-/// Caller must free the returned pointer with `cluaizd_close()`.
+/// Caller must free the returned pointer with `cluaizdb_close()`.
 #[no_mangle]
-pub extern "C" fn cluaizd_open(path: *const c_char, map_size_mb: usize) -> *mut CluaizdHandle {
+pub extern "C" fn cluaizdb_open(path: *const c_char, map_size_mb: usize) -> *mut CluaizdbHandle {
     if path.is_null() {
         return std::ptr::null_mut();
     }
@@ -65,7 +65,7 @@ pub extern "C" fn cluaizd_open(path: *const c_char, map_size_mb: usize) -> *mut 
     let map_size = safe_mb * 1024 * 1024;
     match LmdbEnv::open(std::path::Path::new(path_str), map_size) {
         Ok(env) => {
-            let handle = Box::new(CluaizdHandle {
+            let handle = Box::new(CluaizdbHandle {
                 env,
             });
             Box::into_raw(handle)
@@ -77,21 +77,21 @@ pub extern "C" fn cluaizd_open(path: *const c_char, map_size_mb: usize) -> *mut 
 /// Write a raw payload into CLUAIZD.
 ///
 /// # Arguments
-/// - `handle`: A valid `CluaizdHandle*` from `cluaizd_open()`
+/// - `handle`: A valid `CluaizdbHandle*` from `cluaizdb_open()`
 /// - `payload`: Pointer to the raw byte payload
 /// - `payload_len`: Length of the payload in bytes
 /// - `payload_type`: Type string: "text", "audio", "video", "code", "voltage_stream", or "binary"
 ///
 /// # Returns
 /// A heap-allocated null-terminated string containing the assigned Neuron UUID.
-/// The caller MUST free this with `cluaizd_free_string()`.
+/// The caller MUST free this with `cluaizdb_free_string()`.
 /// Returns `NULL` on failure.
 ///
 /// # Safety
 /// `payload` must point to a valid buffer of at least `payload_len` bytes.
 #[no_mangle]
-pub extern "C" fn cluaizd_write(
-    handle: *mut CluaizdHandle,
+pub extern "C" fn cluaizdb_write(
+    handle: *mut CluaizdbHandle,
     payload: *const u8,
     payload_len: usize,
     payload_type: *const c_char,
@@ -123,7 +123,7 @@ pub extern "C" fn cluaizd_write(
     // Attempt to hydrate DNA if payload is JSON (just like HTTP route)
     if let Ok(json_val) = serde_json::from_slice::<serde_json::Value>(&bytes) {
         if let Some(dna_val) = json_val.get("dna") {
-            if let Ok(dna) = serde_json::from_value::<cluaizd_types::NeuronDna>(dna_val.clone()) {
+            if let Ok(dna) = serde_json::from_value::<cluaizdb_types::NeuronDna>(dna_val.clone()) {
                 neuron.dna = Some(dna);
             }
         }
@@ -164,20 +164,20 @@ pub extern "C" fn cluaizd_write(
 /// Read a neuron's raw payload from CLUAIZD by its UUID string.
 ///
 /// # Arguments
-/// - `handle`: A valid `CluaizdHandle*`
+/// - `handle`: A valid `CluaizdbHandle*`
 /// - `neuron_id`: A null-terminated UUID string (e.g. "550e8400-e29b-41d4-...")
 /// - `out_len`: Pointer to a `ulong` that receives the payload byte length
 ///
 /// # Returns
 /// A heap-allocated byte buffer containing the raw payload.
-/// The caller MUST free this with `cluaizd_free_bytes()`.
+/// The caller MUST free this with `cluaizdb_free_bytes()`.
 /// Returns `NULL` if the neuron is not found.
 ///
 /// # Safety
 /// `out_len` must be a valid pointer.
 #[no_mangle]
-pub extern "C" fn cluaizd_read(
-    handle: *mut CluaizdHandle,
+pub extern "C" fn cluaizdb_read(
+    handle: *mut CluaizdbHandle,
     neuron_id: *const c_char,
     out_len: *mut c_ulong,
 ) -> *mut u8 {
@@ -194,7 +194,7 @@ pub extern "C" fn cluaizd_read(
         Err(_) => return std::ptr::null_mut(),
     };
 
-    let nid = cluaizd_types::NeuronId::from_bytes(*uuid.as_bytes());
+    let nid = cluaizdb_types::NeuronId::from_bytes(*uuid.as_bytes());
 
     let handle_ref = unsafe { &*handle };
     let env = &handle_ref.env;
@@ -216,16 +216,16 @@ pub extern "C" fn cluaizd_read(
 /// Query CLUAIZD using a CDQL string.
 ///
 /// # Arguments
-/// - `handle`: A valid `CluaizdHandle*`
+/// - `handle`: A valid `CluaizdbHandle*`
 /// - `cdql`: A null-terminated CDQL query string (e.g. `find *(name: "Aryan")`)
 ///
 /// # Returns
 /// A heap-allocated null-terminated JSON string containing the array of matched neuron IDs.
-/// The caller MUST free this with `cluaizd_free_string()`.
+/// The caller MUST free this with `cluaizdb_free_string()`.
 /// Returns `NULL` on failure.
 #[no_mangle]
-pub extern "C" fn cluaizd_query(
-    handle: *mut CluaizdHandle,
+pub extern "C" fn cluaizdb_query(
+    handle: *mut CluaizdbHandle,
     cdql: *const c_char,
 ) -> *mut c_char {
     if handle.is_null() || cdql.is_null() {
@@ -243,7 +243,7 @@ pub extern "C" fn cluaizd_query(
         Ok(neurons) => {
             let ids: Vec<String> = if let Ok(query) = genome::cdql::parser::parse(query_str) {
                 if let Ok(plan) = genome::cdql::planner::build_plan(&query) {
-                    let mut working_set: Vec<&cluaizd_types::UniversalNeuron> = neurons.iter().collect();
+                    let mut working_set: Vec<&cluaizdb_types::UniversalNeuron> = neurons.iter().collect();
                     for step in &plan.steps {
                         match step {
                             genome::cdql::planner::PlanStep::FastPathIdLookup { id } => {
@@ -295,9 +295,9 @@ pub extern "C" fn cluaizd_query(
 /// Close a CLUAIZD handle and free all associated resources.
 ///
 /// # Safety
-/// `handle` must be a valid pointer from `cluaizd_open()`. After this call, the pointer is invalid.
+/// `handle` must be a valid pointer from `cluaizdb_open()`. After this call, the pointer is invalid.
 #[no_mangle]
-pub extern "C" fn cluaizd_close(handle: *mut CluaizdHandle) {
+pub extern "C" fn cluaizdb_close(handle: *mut CluaizdbHandle) {
     if !handle.is_null() {
         unsafe { drop(Box::from_raw(handle)) };
     }
@@ -306,24 +306,24 @@ pub extern "C" fn cluaizd_close(handle: *mut CluaizdHandle) {
 /// Free a string returned by CLUAIZD FFI functions.
 ///
 /// # Safety
-/// `ptr` must be a pointer returned by `cluaizd_write()` or `cluaizd_query()`.
+/// `ptr` must be a pointer returned by `cluaizdb_write()` or `cluaizdb_query()`.
 #[no_mangle]
-pub extern "C" fn cluaizd_free_string(ptr: *mut c_char) {
+pub extern "C" fn cluaizdb_free_string(ptr: *mut c_char) {
     if !ptr.is_null() {
         unsafe { drop(CString::from_raw(ptr)) };
     }
 }
 
-/// Free a byte buffer returned by `cluaizd_read()`.
+/// Free a byte buffer returned by `cluaizdb_read()`.
 ///
 /// # Arguments
-/// - `ptr`: The pointer returned by `cluaizd_read()`
+/// - `ptr`: The pointer returned by `cluaizdb_read()`
 /// - `len`: The length previously written to `out_len`
 ///
 /// # Safety
-/// `ptr` and `len` must match what was returned by `cluaizd_read()`.
+/// `ptr` and `len` must match what was returned by `cluaizdb_read()`.
 #[no_mangle]
-pub extern "C" fn cluaizd_free_bytes(ptr: *mut u8, len: c_ulong) {
+pub extern "C" fn cluaizdb_free_bytes(ptr: *mut u8, len: c_ulong) {
     if !ptr.is_null() {
         unsafe {
             let slice = std::slice::from_raw_parts_mut(ptr, len as usize);

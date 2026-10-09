@@ -6,15 +6,15 @@
 
 In traditional database systems, you pull data out of the database, send it over the network to a Node.js or Python backend, process it, and send the result back. This "network tax" is incredibly slow.
 
-Cluaizd solves this by letting you push your backend logic *into* the database using **DNA (Dynamic Neural Affordance)**. 
+Cluaizdb solves this by letting you push your backend logic *into* the database using **DNA (Dynamic Neural Affordance)**. 
 
-While Cluaizd supports a dynamic `Rhai` scripting engine and pre-compiled `.wasm` binaries, **Auto-WASM** is the ultimate developer experience. It allows you to submit raw Rust code directly to the `POST /dna/setup` endpoint. Cluaizd will automatically compile it into an ultra-optimized WebAssembly binary in the background and hot-reload it into the active execution pipeline.
+While Cluaizdb supports a dynamic `Rhai` scripting engine and pre-compiled `.wasm` binaries, **Auto-WASM** is the ultimate developer experience. It allows you to submit raw Rust code directly to the `POST /dna/setup` endpoint. Cluaizdb will automatically compile it into an ultra-optimized WebAssembly binary in the background and hot-reload it into the active execution pipeline.
 
 ## Why Auto-WASM is the Preferred Engine
 
 1. **Microsecond Execution (`0.05ms`):** Because WASM is a strongly-typed binary format executing within Wasmtime, it runs at near-native C/Rust speeds. It completely bypasses the interpreter overhead of engines like Rhai or V8.
 2. **Strict Memory Layout:** Unlike dynamic Document databases, Auto-WASM uses strict memory layouts. You define exactly what your JSON payload looks like using Rust `struct` definitions. This allows the memory allocator to be hyper-efficient.
-3. **Hot-Reloading:** You can update the Rust code, hit the API, and Cluaizd will seamlessly swap the WASM module without dropping a single active connection.
+3. **Hot-Reloading:** You can update the Rust code, hit the API, and Cluaizdb will seamlessly swap the WASM module without dropping a single active connection.
 
 ## Example: Writing an Auto-WASM Template
 
@@ -33,7 +33,7 @@ struct UserPayload {
     is_active: bool,
 }
 
-// 2. The entry point called by the Cluaizd Kernel
+// 2. The entry point called by the Cluaizdb Kernel
 #[no_mangle]
 pub extern "C" fn validate_write(ptr: *const u8, len: usize) -> i32 {
     // Reconstruct the raw JSON bytes from the database memory
@@ -58,7 +58,7 @@ pub extern "C" fn validate_write(ptr: *const u8, len: usize) -> i32 {
 
 ## How to Deploy Auto-WASM
 
-You submit this raw string to the server. The Cluaizd Engine takes care of the compilation.
+You submit this raw string to the server. The Cluaizdb Engine takes care of the compilation.
 
 ```bash
 curl -X POST http://localhost:8080/dna/setup \
@@ -76,4 +76,4 @@ Once compiled, any Neuron labeled `User` will automatically have this logic exec
 
 > [!IMPORTANT]
 > **Why Type Definitions Matter**
-> You cannot just say `payload["age"]` in WASM. You MUST define `struct UserPayload { age: i32 }`. This strict memory constraint is the secret behind Cluaizd's microsecond latency. If a document does not match the struct, `serde` safely fails the deserialization.
+> You cannot just say `payload["age"]` in WASM. You MUST define `struct UserPayload { age: i32 }`. This strict memory constraint is the secret behind Cluaizdb's microsecond latency. If a document does not match the struct, `serde` safely fails the deserialization.

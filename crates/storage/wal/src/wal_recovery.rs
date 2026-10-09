@@ -3,7 +3,7 @@ use std::path::Path;
 
 use tracing::{info, warn};
 
-use cluaizd_errors::StorageError;
+use cluaizdb_errors::StorageError;
 
 use crate::log_entry::{WalEntry, WalOperation};
 
@@ -45,7 +45,7 @@ pub fn recover_from_wal(
     }
 
     // Collect and sort all WAL segment files by name.
-    let mut segment_files: Vec<_> = std::fs::read_dir(wal_dir)
+    let mut segment_files: Vec<std::fs::DirEntry> = std::fs::read_dir(wal_dir)
         .map_err(|e| StorageError::WalRecoveryFailed(e.to_string()))?
         .filter_map(|entry| entry.ok())
         .filter(|entry| {

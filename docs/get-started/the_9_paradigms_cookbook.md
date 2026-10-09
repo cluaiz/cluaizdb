@@ -2,7 +2,7 @@
 
 Why pay for 4 different databases when one engine can mutate to act like all of them?
 
-Below are quick configurations showing how to use Cluaizd CNSDB as different types of databases just by changing your JSON payload and CDQL.
+Below are quick configurations showing how to use Cluaizdb CNSDB as different types of databases just by changing your JSON payload and CDQL.
 
 ## 1. Document Store (MongoDB Style)
 
@@ -39,7 +39,7 @@ If you are building an AI app (RAG) and need to find semantically similar text e
 ```json
 POST /neuron
 {
-  "raw_payload": "Cluaizd is a universal database engine.",
+  "raw_payload": "Cluaizdb is a universal database engine.",
   "payload_type": "text",
   "vector_data": [0.12, -0.44, 0.89, ...], // Your 1536-dim OpenAI embedding here
   "model_creator_hash": "e3b0c4...",

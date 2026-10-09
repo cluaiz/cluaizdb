@@ -17,7 +17,7 @@ graph TD
 
 **1. `server/`**
 - **Core Logic:** The HTTP/REST edge of the database.
-- **Why?** By isolating network logic here, we can completely strip out `crates/server/` if we want to compile Cluaizd as a pure embedded library (using `ffi/`) without bringing in the heavy `axum` and `hyper` dependencies.
+- **Why?** By isolating network logic here, we can completely strip out `crates/server/` if we want to compile Cluaizdb as a pure embedded library (using `ffi/`) without bringing in the heavy `axum` and `hyper` dependencies.
 
 **2. `storage/`**
 - **Core Logic:** The physical B+Tree LMDB mapper.

@@ -1,6 +1,6 @@
 # 🌍 Mode 28: Spatial-Temporal / Moving Object Database Paradigm (MobilityDB-Style)
 
-This guide details how to configure and run Cluaizd as a Spatial-Temporal / Moving Object Database, tracking dynamic trajectories, velocities, and changing coordinate paths over time.
+This guide details how to configure and run Cluaizdb as a Spatial-Temporal / Moving Object Database, tracking dynamic trajectories, velocities, and changing coordinate paths over time.
 
 ---
 
@@ -10,7 +10,7 @@ In Moving Object Mode, we track objects whose coordinates change continuously (s
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Add Trajectory Checkpoint| Server[Cluaizd Core]
+    Client[Python Client] -->|Add Trajectory Checkpoint| Server[Cluaizdb Core]
     Server -->|Link Checkpoints in Chain| Node[Checkpoint Neuron]
     Node -->|Edge / Timestamp| Prev[Previous Checkpoint Node]
     Prev -->|Evaluate Path Speed| DNA[DNA Trajectory Helper]
@@ -19,7 +19,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Configure parallel write scaling via `dashmap` to support rapid location stream tracking:
 

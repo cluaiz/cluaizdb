@@ -1,6 +1,6 @@
 # `crispr` API Reference
 
-In the cluaizd architecture, graph relations and dynamic execution logic are not defined via static tables. Instead, they are mutated through the `/crispr` API route. This endpoint allows developers to manually construct or sever direct memory pointers between records.
+In the cluaizdb architecture, graph relations and dynamic execution logic are not defined via static tables. Instead, they are mutated through the `/crispr` API route. This endpoint allows developers to manually construct or sever direct memory pointers between records.
 
 ## Syntax & Routing
 

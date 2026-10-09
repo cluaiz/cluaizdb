@@ -10,6 +10,6 @@ tokio = { workspace = true, features = ["full"] }
 tokio-test = "0.4"
 serde = { workspace = true }
 serde_json = { workspace = true }
-cluaizd-types = { workspace = true }
+cluaizdb-types = { workspace = true }
 chrono = "0.4"
 futures-util = "0.3"

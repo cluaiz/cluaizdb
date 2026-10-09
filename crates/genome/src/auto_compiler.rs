@@ -1,12 +1,12 @@
 use std::path::PathBuf;
 use std::process::Command;
-use cluaizd_errors::StorageError;
+use cluaizdb_errors::StorageError;
 
 /// Compiles a raw Rust code string into a `.wasm` file using Cargo in the background.
 /// The resulting `.wasm` file is written directly to `active_dnas/`.
 pub fn compile_rust_to_wasm(name: &str, rust_code: &str) -> Result<(), StorageError> {
     // We will use a temporary directory to build the WASM file
-    let tmp_dir = std::env::temp_dir().join(format!("cluaizd_auto_wasm_{}", name));
+    let tmp_dir = std::env::temp_dir().join(format!("cluaizdb_auto_wasm_{}", name));
     
     // Create or clear the tmp dir
     if tmp_dir.exists() {

@@ -3,9 +3,9 @@ resolver = "2"
 
 members = [
     # Components (shared libraries, no business logic)
-    "components/cluaizd-types",
-    "components/cluaizd-errors",
-    "components/cluaizd-common",
+    "components/cluaizdb-types",
+    "components/cluaizdb-errors",
+    "components/cluaizdb-common",
 
     # Storage Layer
     "crates/storage/engine-lmdb",
@@ -70,9 +70,13 @@ hex          = "0.4"
 futures-util = "0.3"
 
 # Internal crates (version managed here)
-cluaizd-types  = { path = "components/cluaizd-types" }
-cluaizd-errors = { path = "components/cluaizd-errors" }
-cluaizd-common = { path = "components/cluaizd-common" }
-genome       = { path = "crates/genome" }
-heart        = { path = "crates/heart" }
-cluaizd-index-mvhsnw = { path = "crates/storage/index-mvhsnw" }
+cluaizdb-types        = { path = "components/cluaizdb-types" }
+cluaizdb-errors       = { path = "components/cluaizdb-errors" }
+cluaizdb-common       = { path = "components/cluaizdb-common" }
+cluaizd-types         = { package = "cluaizdb-types", path = "components/cluaizdb-types" }
+cluaizd-errors        = { package = "cluaizdb-errors", path = "components/cluaizdb-errors" }
+cluaizd-common        = { package = "cluaizdb-common", path = "components/cluaizdb-common" }
+genome                = { path = "crates/genome" }
+heart                 = { path = "crates/heart" }
+cluaizdb-index-mvhsnw = { path = "crates/storage/index-mvhsnw" }
+cluaizd-index-mvhsnw  = { package = "cluaizdb-index-mvhsnw", path = "crates/storage/index-mvhsnw" }

@@ -1,7 +1,7 @@
-//! `cluaizd-common`
+//! `cluaizdb-common`
 //!
 //! Shared traits, utility functions, and constants used across
-//! all crates in the Cluaizd CLUAIZD workspace.
+//! all crates in the Cluaizdb CLUAIZD workspace.
 
 /// Validates that a vector contains only finite values.
 /// Returns the index of the first invalid value, or `Ok(())` if valid.

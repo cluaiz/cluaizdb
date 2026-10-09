@@ -20,11 +20,11 @@ pub struct DatabaseSection {
 
 impl ServerConfig {
     pub fn load() -> Self {
-        std::fs::read_to_string("cluaizd.toml")
+        std::fs::read_to_string("cluaizdb.toml")
             .ok()
             .and_then(|content| toml::from_str(&content).ok())
             .unwrap_or_else(|| {
-                tracing::warn!("Could not read cluaizd.toml, using defaults");
+                tracing::warn!("Could not read cluaizdb.toml, using defaults");
                 ServerConfig {
                     server: ServerSection {
                         port: 7331,

@@ -1,6 +1,6 @@
 # `ws:// /stream` WebSocket API
 
-While HTTP is excellent for ingestion (`POST /neuron`), it is highly inefficient for returning millions of records due to the Request-Response buffering limits. Cluaizd utilizes a persistent WebSocket connection for all CDQL read queries (`find`), enabling asynchronous, zero-copy data streaming.
+While HTTP is excellent for ingestion (`POST /neuron`), it is highly inefficient for returning millions of records due to the Request-Response buffering limits. Cluaizdb utilizes a persistent WebSocket connection for all CDQL read queries (`find`), enabling asynchronous, zero-copy data streaming.
 
 ## Architectural Execution
 

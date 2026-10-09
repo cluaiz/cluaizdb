@@ -1,7 +1,7 @@
-# 🧪 Cluaizd Unified Testing Framework
+# 🧪 Cluaizdb Unified Testing Framework
 
 ## 🎯 Architecture Philosophy
-Welcome to the core testing directory of Cluaizd. In accordance with professional Rust and database engineering standards, **all testing logic is strictly isolated from the main production code (`crates/`).** 
+Welcome to the core testing directory of Cluaizdb. In accordance with professional Rust and database engineering standards, **all testing logic is strictly isolated from the main production code (`crates/`).** 
 
 This directory is organized into specialized testing sub-workspaces, ensuring that everything from microsecond-level latency benchmarks to destructive fault-injection tests are beautifully separated.
 
@@ -9,7 +9,7 @@ This directory is organized into specialized testing sub-workspaces, ensuring th
 
 ### 1. `integration/`
 - **Purpose:** Black-box HTTP and CDQL testing.
-- **What it does:** Sends raw JSON and CDQL commands to a running Cluaizd server instance to verify successful data ingestion, schema parsing, and Graph/SQL/Vector routing.
+- **What it does:** Sends raw JSON and CDQL commands to a running Cluaizdb server instance to verify successful data ingestion, schema parsing, and Graph/SQL/Vector routing.
 
 ### 2. `chaos/`
 - **Purpose:** Database resilience, ACID compliance, and Fault Injection (Jepsen-style).
@@ -33,7 +33,7 @@ This directory is organized into specialized testing sub-workspaces, ensuring th
 
 ### 7. `apps/`
 - **Purpose:** External tools and CLI testing.
-- **What it does:** Tests the `cluaizd-cli` and GUI dashboard binaries. Checks if commands like `stats` or `backup` parse arguments and execute correctly.
+- **What it does:** Tests the `cluaizdb-cli` and GUI dashboard binaries. Checks if commands like `stats` or `backup` parse arguments and execute correctly.
 
 ### 8. `qa/`
 - **Purpose:** Legacy scripts, human QA procedures, and experimental testing rigs.
@@ -45,7 +45,7 @@ This directory is organized into specialized testing sub-workspaces, ensuring th
 
 ### 10. `migration/`
 - **Purpose:** Schema upgrades and data migrations.
-- **What it does:** Tests forward compatibility (upgrading older LMDB shard formats) and backward rollbacks to ensure zero data loss during Cluaizd engine updates.
+- **What it does:** Tests forward compatibility (upgrading older LMDB shard formats) and backward rollbacks to ensure zero data loss during Cluaizdb engine updates.
 
 ### 11. `replication/`
 - **Purpose:** Distributed consistency and cluster testing.
@@ -56,4 +56,4 @@ To run all Rust integration, chaos, and quality tests at once across the workspa
 ```bash
 cargo test --workspace
 ```
-*(Ensure a local test instance of `cluaizd` is running for integration tests that hit HTTP endpoints).*
+*(Ensure a local test instance of `cluaizdb` is running for integration tests that hit HTTP endpoints).*

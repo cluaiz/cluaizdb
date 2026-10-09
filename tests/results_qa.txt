@@ -1,0 +1,34 @@
+Fuzzing & Quality Assurance (Phase 3) Results
+=============================================
+
+Running tests\cdql_search_mechanics.rs
+running 17 tests
+test cdql_search_mechanics::pipeline_geo_plan_parses_correctly ... ok
+test cdql_search_mechanics::pipeline_fulltext_plan_parses_correctly ... ok
+test cdql_search_mechanics::pipeline_range_numeric_bob_out_of_bounds ... ok
+test cdql_search_mechanics::pipeline_range_missing_field_returns_false ... ok
+test cdql_search_mechanics::pipeline_geo_gurgaon_within_50km_of_delhi ... ok
+test cdql_search_mechanics::pipeline_geo_alternate_key_variants_latitude_longitude ... ok
+test cdql_search_mechanics::pipeline_geo_mumbai_outside_50km_of_delhi ... ok
+test cdql_search_mechanics::pipeline_fulltext_exact_matches_relevant_payload ... ok
+test cdql_search_mechanics::pipeline_fulltext_score_orders_by_relevance ... ok
+test cdql_search_mechanics::pipeline_range_boundary_values_inclusive ... ok
+test cdql_search_mechanics::pipeline_geo_closer_city_scores_higher ... ok
+test cdql_search_mechanics::pipeline_range_numeric_alice_in_bounds ... ok
+test cdql_search_mechanics::pipeline_fulltext_fuzzy_matches_substring ... ok
+test cdql_search_mechanics::pipeline_fulltext_fuzzy_plan_parses_correctly ... ok
+test cdql_search_mechanics::pipeline_range_plan_parses_numeric_correctly ... ok
+test cdql_search_mechanics::pipeline_range_salary_filters_correctly ... ok
+test cdql_search_mechanics::pipeline_geo_missing_coords_returns_none ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+Running tests\test_qa.rs
+running 3 tests
+test test_malformed_payload_error_handling ... ok
+test test_missing_required_fields ... ok
+test test_oom_crash_prevention_heavy_ingestion ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.30s
+
+STATUS: PASS (Phase 3 100% Quality Assured & OOM Handled)

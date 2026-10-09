@@ -1,6 +1,6 @@
 # 🤖 Mode 20: Autonomous Database Paradigm (Self-Driving / Oracle-Style)
 
-This guide details how to configure and run Cluaizd as an Autonomous Database, enabling self-tuning, auto-indexing, and dynamic garbage collection adjustments via DNA lifecycle scripts.
+This guide details how to configure and run Cluaizdb as an Autonomous Database, enabling self-tuning, auto-indexing, and dynamic garbage collection adjustments via DNA lifecycle scripts.
 
 ---
 
@@ -19,7 +19,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enable multi-tenant automatic scaling and configure default telemetry polling:
 

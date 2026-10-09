@@ -1,6 +1,6 @@
 # 🌍 Mode 07: Geo-Spatial Database Paradigm (PostGIS-Style)
 
-This guide details how to configure and run Cluaizd as a Geo-Spatial database, executing coordinates-based boundary calculations (Haversine formula) within Rhai DNA index scripts.
+This guide details how to configure and run Cluaizdb as a Geo-Spatial database, executing coordinates-based boundary calculations (Haversine formula) within Rhai DNA index scripts.
 
 ---
 
@@ -10,7 +10,7 @@ In Geo-Spatial Mode, neurons store geographical coordinates (latitude and longit
 
 ```mermaid
 graph TD
-    Query[Query Lat/Lng] -->|POST /query| Server[Cluaizd Server]
+    Query[Query Lat/Lng] -->|POST /query| Server[Cluaizdb Server]
     Server -->|Evaluate on_index| DNA[DNA Geo Helper]
     DNA -->|Haversine Formula Check| Radius[Is within radius?]
     Radius -->|Yes| Match[Return Location Node]
@@ -19,7 +19,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Use the standard `dashmap` concurrency model for parallel read calculations:
 

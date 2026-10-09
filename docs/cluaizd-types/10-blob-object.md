@@ -1,6 +1,6 @@
 # 📦 Mode 10: Blob / Object Store Paradigm (AWS S3-Style)
 
-This guide details how to configure and run Cluaizd as a Blob / Object Store, optimizing the storage matrix for heavy binary payloads using ZSTD compression and byte-level decay sweeps.
+This guide details how to configure and run Cluaizdb as a Blob / Object Store, optimizing the storage matrix for heavy binary payloads using ZSTD compression and byte-level decay sweeps.
 
 ---
 
@@ -10,7 +10,7 @@ In Blob Mode, neurons act as binary buckets containing raw media, file streams, 
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Upload Binary Blob| Server[Cluaizd Core]
+    Client[Python Client] -->|Upload Binary Blob| Server[Cluaizdb Core]
     Server -->|Save Raw Bytes| LMDB[(LMDB Hot Tier)]
     LMDB -->|GC Sweep / Age > 30 Days| ZSTD[ZSTD High Compression]
     ZSTD -->|Save Compressed Block| Cold[(LMDB Cold Tier)]
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set default payload format to `flatbuffers` or `json` to allow fast zero-copy read scans:
 

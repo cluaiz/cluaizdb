@@ -1,6 +1,6 @@
 # `where` Command Reference
 
-The `where` clause is the primary filtering operator in the cluaizdd Query Language (CDQL). It allows conditional evaluation of records during a traversal, limiting the output to payloads that satisfy the given conditions.
+The `where` clause is the primary filtering operator in the cluaizdbd Query Language (CDQL). It allows conditional evaluation of records during a traversal, limiting the output to payloads that satisfy the given conditions.
 
 ## Syntax Rules
 
@@ -25,13 +25,13 @@ The `where` clause is the primary filtering operator in the cluaizdd Query Langu
 
 ## Architecture: How it works under the hood
 
-The cluaizd engine handles the `where` clause differently depending on the configured runtime schema and indexing.
+The cluaizdb engine handles the `where` clause differently depending on the configured runtime schema and indexing.
 
 ### 1. Byte-Level Early Rejection
 If the query targets a structured field without indexing, the engine attempts to scan the raw byte-stream for the specific key sequence (e.g., `"status":"active"`) directly within the LMDB memory map. If the bytes do not match, the record is rejected instantly, preventing the CPU cost of deserializing the entire JSON payload into the heap.
 
 ### 2. WASM Predicate Evaluation
-If complex logic is required, the `where` clause can be compiled into a micro-WASM execution affordance. The cluaizd engine passes a memory pointer to the WASM runtime, which evaluates the condition and returns a boolean `true`/`false`. This allows Turing-complete filtering without IPC (Inter-Process Communication) overhead.
+If complex logic is required, the `where` clause can be compiled into a micro-WASM execution affordance. The cluaizdb engine passes a memory pointer to the WASM runtime, which evaluates the condition and returns a boolean `true`/`false`. This allows Turing-complete filtering without IPC (Inter-Process Communication) overhead.
 
 ---
 

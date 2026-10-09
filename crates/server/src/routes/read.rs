@@ -2,7 +2,7 @@ use std::sync::Arc;
 use axum::{Json, extract::{Path, State}, http::{StatusCode, HeaderMap}, response::IntoResponse};
 use uuid::Uuid;
 
-use cluaizd_types::NeuronId;
+use cluaizdb_types::NeuronId;
 use crate::routes::AppState;
 
 /// `GET /neuron/{id}` — Fetch a neuron by its ID.
@@ -74,7 +74,7 @@ pub async fn handle_read(
 
     match engine_lmdb::read_neuron(&shard.env, neuron_id, query_model_hash) {
         Ok(neuron) => (StatusCode::OK, Json(neuron)).into_response(),
-        Err(cluaizd_errors::StorageError::NeuronNotFound(_)) => {
+        Err(cluaizdb_errors::StorageError::NeuronNotFound(_)) => {
             (
                 StatusCode::NOT_FOUND,
                 Json(serde_json::json!({ "error": format!("neuron {} not found", id_str) })),

@@ -1,7 +1,7 @@
 # ⚡ Active DNAs: Compiled WASM Executables
 
 ## Purpose
-The `active_dnas/` directory acts as the highly optimized execution cache for Cluaizd. It holds the pre-compiled WebAssembly (WASM) binaries generated from the raw JSON scripts found in `genomes/` and `dnas/`.
+The `active_dnas/` directory acts as the highly optimized execution cache for Cluaizdb. It holds the pre-compiled WebAssembly (WASM) binaries generated from the raw JSON scripts found in `genomes/` and `dnas/`.
 
 ## Architecture Flow
 

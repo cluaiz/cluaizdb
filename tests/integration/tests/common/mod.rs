@@ -21,7 +21,7 @@ pub async fn wait_for_server() {
         }
         attempts += 1;
         if attempts > 30 {
-            panic!("Server did not start at {} after 3 seconds. Please run `cargo run --bin cluaizd-server` before running tests.", BASE_URL);
+            panic!("Server did not start at {} after 3 seconds. Please run `cargo run --bin cluaizdb-server` before running tests.", BASE_URL);
         }
         tokio::time::sleep(Duration::from_millis(100)).await;
     }

@@ -1,12 +1,12 @@
-# 📊 Chapter 2: Understanding The Pulse (Cluaizd-HEART)
+# 📊 Chapter 2: Understanding The Pulse (Cluaizdb-HEART)
 
 Most databases fail silently. Under heavy load, memory spikes, swap space is consumed, and eventually, the OS kills the database process with an OOM (Out of Memory) error. 
 
-**Cluaizd Neural System Database is alive.** It has a heartbeat, blood pressure, and oxygen levels. We call this the `Cluaizd-HEART` Autonomic Subsystem.
+**Cluaizdb Neural System Database is alive.** It has a heartbeat, blood pressure, and oxygen levels. We call this the `Cluaizdb-HEART` Autonomic Subsystem.
 
 ## The 3 Biomarkers of Your Database
 
-Inside `crates/heart`, Cluaizd constantly monitors the host operating system using the `sysinfo` crate. It translates hardware metrics into biological equivalents:
+Inside `crates/heart`, Cluaizdb constantly monitors the host operating system using the `sysinfo` crate. It translates hardware metrics into biological equivalents:
 
 1. **Blood Pressure (BP)** = CPU Load (%)
    - If your server's CPU hits 90%, the database's BP is critically high.
@@ -19,8 +19,8 @@ Inside `crates/heart`, Cluaizd constantly monitors the host operating system usi
 
 In Java (Elasticsearch) or Go, Garbage Collection pauses the entire application ("Stop the World"). This causes massive latency spikes for your users.
 
-**How Cluaizd fixes this:**
-When `Cluaizd-HEART` detects that Blood Pressure > 90% or SpO2 < 10%, it does **NOT** crash. It does **NOT** pause.
+**How Cluaizdb fixes this:**
+When `Cluaizdb-HEART` detects that Blood Pressure > 90% or SpO2 < 10%, it does **NOT** crash. It does **NOT** pause.
 Instead, it kicks in a `delay_ms` throttle to the background "Dreaming Engine" (our biological Garbage Collector and Edge Forger). 
 
 ```rust

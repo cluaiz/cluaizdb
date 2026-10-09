@@ -19,7 +19,7 @@ Like `on_write`, the `on_delete` script retains the ability to invoke `ctx.abort
 
 ## Example: Cascading Deletions
 
-In relational databases, this requires defining foreign keys and `ON DELETE CASCADE` schemas. In cluaizd, the record itself dictates its cascade logic.
+In relational databases, this requires defining foreign keys and `ON DELETE CASCADE` schemas. In cluaizdb, the record itself dictates its cascade logic.
 
 ```rust
 fn on_delete(ctx) {

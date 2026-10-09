@@ -1,12 +1,12 @@
 # 📦 Binary Serialization Paradigms: FlatBuffers & Protobuf
 
-This guide explains how Cluaizd processes high-performance binary serialization formats (**FlatBuffers** and **Protobuf**), how they interact with dynamic DNA validation hooks, and why FlatBuffers eliminates the need for intermediate "companion objects" (in-memory structs/allocations) during parsing.
+This guide explains how Cluaizdb processes high-performance binary serialization formats (**FlatBuffers** and **Protobuf**), how they interact with dynamic DNA validation hooks, and why FlatBuffers eliminates the need for intermediate "companion objects" (in-memory structs/allocations) during parsing.
 
 ---
 
 ## 🏛️ FlatBuffers vs Protobuf vs JSON
 
-In high-throughput systems (like Robotics sensor fusion, BCI telemetry streams, and high-frequency IoT pipelines), JSON parsing introduces a heavy CPU deserialization tax. Cluaizd supports structured binary formats to optimize ingestion speeds:
+In high-throughput systems (like Robotics sensor fusion, BCI telemetry streams, and high-frequency IoT pipelines), JSON parsing introduces a heavy CPU deserialization tax. Cluaizdb supports structured binary formats to optimize ingestion speeds:
 
 | Feature | JSON | Protocol Buffers (Protobuf) | FlatBuffers |
 | --- | --- | --- | --- |
@@ -50,7 +50,7 @@ Since **FlatBuffers** is zero-copy, the DNA WASM engine reads attributes directl
 
 ```mermaid
 graph TD
-    Client[Python/C++ Client] -->|Structured FlatBuffers bytes| Server[Cluaizd Core]
+    Client[Python/C++ Client] -->|Structured FlatBuffers bytes| Server[Cluaizdb Core]
     Server -->|Direct Pointer Reference| WASM[DNA WASM Sandbox]
     WASM -->|Zero-Copy Offset Read| Check[Evaluate Schema Field]
     Check -->|Pass| Store[LMDB Direct Write]
@@ -64,7 +64,7 @@ graph TD
 
 ```protobuf
 // user.fbs
-namespace Cluaizd.Serial;
+namespace Cluaizdb.Serial;
 
 table UserProfile {
   id: string;
@@ -105,7 +105,7 @@ pub extern "C" fn validate(payload_ptr: *const u8, _payload_len: u32, _vector_pt
 ```protobuf
 // sensor.proto
 syntax = "proto3";
-package cluaizd.sensor;
+package cluaizdb.sensor;
 
 message TelemetryPacket {
   string device_id = 1;

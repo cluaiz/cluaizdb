@@ -1,7 +1,7 @@
 # 🌐 crates/server: The HTTP Nervous System
 
 ## 🎯 Deep Purpose
-The `server` crate is the primary external interface for Cluaizd. It encapsulates the `Axum` HTTP web framework, managing all incoming REST/WebSocket traffic, connection pooling, background worker spawning, and crash recovery. It translates external network requests into internal Rust memory operations.
+The `server` crate is the primary external interface for Cluaizdb. It encapsulates the `Axum` HTTP web framework, managing all incoming REST/WebSocket traffic, connection pooling, background worker spawning, and crash recovery. It translates external network requests into internal Rust memory operations.
 
 ## 🏛️ Architectural Flow
 
@@ -18,7 +18,7 @@ graph LR
 ## 🧬 Significant Files (Deep Code-Level Breakdown)
 
 ### `src/main.rs`
-The absolute entry point of the Cluaizd server process.
+The absolute entry point of the Cluaizdb server process.
 
 **1. WAL Boot Recovery (Crash Safety)**
 - **Core Logic:** Before binding to the TCP port, it opens the Write-Ahead Log (`data/wal`).

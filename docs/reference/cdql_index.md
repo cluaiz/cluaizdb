@@ -1,6 +1,6 @@
 # 📖 CDQL Master Reference (A-Z)
 
-Welcome to the **cluaizd Query Language (CDQL)** syntax dictionary.
+Welcome to the **cluaizdb Query Language (CDQL)** syntax dictionary.
 This is a comprehensive, alphabetical reference of all CDQL keywords, operators, and functions used for querying the database engine.
 
 | Keyword | Description |
@@ -28,4 +28,4 @@ This is a comprehensive, alphabetical reference of all CDQL keywords, operators,
 
 > **Looking for Advanced Mathematics? (`SUM`, `AVG`, `GROUP BY`)**
 > 
-> Because cluaizd uses an **Absolute Flexible Architecture**, we do not hardcode hundreds of static mathematical keywords into the CDQL parser. If you need to perform complex aggregations, map-reduce, or custom math, you simply inject a **WASM Execution Affordance** (Script) into the record's `dna` field. The engine executes your custom logic directly inside the database memory space at zero-copy speeds.
+> Because cluaizdb uses an **Absolute Flexible Architecture**, we do not hardcode hundreds of static mathematical keywords into the CDQL parser. If you need to perform complex aggregations, map-reduce, or custom math, you simply inject a **WASM Execution Affordance** (Script) into the record's `dna` field. The engine executes your custom logic directly inside the database memory space at zero-copy speeds.

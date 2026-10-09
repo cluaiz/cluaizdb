@@ -4,7 +4,7 @@ use bytes::Bytes;
 use serde::{Deserialize, Serialize};
 use tracing::warn;
 
-use cluaizd_types::{PayloadType, UniversalNeuron, NeuronDna, NeuronEdge};
+use cluaizdb_types::{PayloadType, UniversalNeuron, NeuronDna, NeuronEdge};
 use genome::{GenomeWriteAction, Durability};
 use crate::routes::AppState;
 
@@ -104,7 +104,7 @@ pub async fn handle_write(
         for e in req_edges {
             if let Ok(uuid) = uuid::Uuid::parse_str(&e.target_id) {
                 edges.push(NeuronEdge {
-                    target_id: cluaizd_types::NeuronId::from_bytes(*uuid.as_bytes()),
+                    target_id: cluaizdb_types::NeuronId::from_bytes(*uuid.as_bytes()),
                     weight: e.weight,
                     last_accessed_ns: now_ns,
                 });

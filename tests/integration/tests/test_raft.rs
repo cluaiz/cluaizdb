@@ -1,4 +1,4 @@
-use cluaizd_consensus_raft::{RaftNode, RequestVoteArgs};
+use cluaizdb_consensus_raft::{RaftNode, RequestVoteArgs};
 
 #[test]
 fn test_raft_election_integration() {

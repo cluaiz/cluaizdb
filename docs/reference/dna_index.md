@@ -1,7 +1,7 @@
 # 🧬 DNA Execution Affordances (A-Z)
 
-Welcome to the **cluaizd DNA Reference**. 
-Because cluaizd is built on an **Absolute Flexible Architecture**, it intentionally avoids bloating the CDQL parser with hundreds of hardcoded math functions, triggers, or map-reduce commands. 
+Welcome to the **cluaizdb DNA Reference**. 
+Because cluaizdb is built on an **Absolute Flexible Architecture**, it intentionally avoids bloating the CDQL parser with hundreds of hardcoded math functions, triggers, or map-reduce commands. 
 
 Instead, developers inject **Execution Affordances (DNA)** directly into records using one of the **4 Execution Engines (CDQL, WASM, Auto-WASM, Rhai)**. The Database Engine executes these scripts at zero-copy speeds in a secure sandbox.
 

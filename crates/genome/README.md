@@ -1,7 +1,7 @@
 # 🧠 crates/genome: The DNA Execution Engine
 
 ## 🎯 Deep Purpose
-The `genome` crate is the dynamic brain of Cluaizd. If `engine-lmdb` is the static physical brain tissue (disk), `genome` is the electrical impulses. It is responsible for parsing CDQL queries, compiling JSON/Rhai scripts into WASM, and executing sandboxed logic for every single database operation.
+The `genome` crate is the dynamic brain of Cluaizdb. If `engine-lmdb` is the static physical brain tissue (disk), `genome` is the electrical impulses. It is responsible for parsing CDQL queries, compiling JSON/Rhai scripts into WASM, and executing sandboxed logic for every single database operation.
 
 ## 🏛️ Architectural Flow
 
@@ -43,4 +43,4 @@ This file contains the core `GenomeExecutor` which acts as the gatekeeper for al
 
 ### `src/wasm_executor.rs`
 - **Core Logic:** Manages the `wasmtime` engine instances.
-- **Why?** Rhai is fast, but interpreted. For absolute peak performance, Cluaizd compiles logic to WASM. This file handles the complex memory-sharing (linear memory mapping) required to pass a Rust `[u8]` byte array into a WASM sandbox securely.
+- **Why?** Rhai is fast, but interpreted. For absolute peak performance, Cluaizdb compiles logic to WASM. This file handles the complex memory-sharing (linear memory mapping) required to pass a Rust `[u8]` byte array into a WASM sandbox securely.

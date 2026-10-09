@@ -1,6 +1,6 @@
 # 🔄 Mode 19: Event-Sourcing / Log-Structured Database Paradigm (Kafka-Style)
 
-This guide details how to configure and run Cluaizd as an Event-Sourcing / Log-Structured Database, appending state transition events and compiling materialized logs via DNA hooks.
+This guide details how to configure and run Cluaizdb as an Event-Sourcing / Log-Structured Database, appending state transition events and compiling materialized logs via DNA hooks.
 
 ---
 
@@ -10,7 +10,7 @@ In Event-Sourcing Mode, we do not store the static final state of a record. Inst
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Append Change Event| Server[Cluaizd Core]
+    Client[Python Client] -->|Append Change Event| Server[Cluaizdb Core]
     Server -->|Save Event to Log| LMDB[(LMDB Append-Only Store)]
     LMDB -->|Query Replay| Replay[Compile Current State]
     Replay -->|Return Consolidated State| Client
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enable lock-free writing via `dashmap` to optimize high-throughput event logging:
 

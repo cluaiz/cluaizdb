@@ -1,6 +1,6 @@
 # 🌌 Mode 18: Spatial / Geographic Database Paradigm (Oracle Spatial-Style)
 
-This guide details how to configure and run Cluaizd as a Spatial-Geographic Database, computing 3D topological dimensions and vector geometry bounds within DNA scripts.
+This guide details how to configure and run Cluaizdb as a Spatial-Geographic Database, computing 3D topological dimensions and vector geometry bounds within DNA scripts.
 
 ---
 
@@ -10,7 +10,7 @@ Unlike simple Geo-Spatial checks that only calculate 2D flat coordinates, Spatia
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Validate 3D Coordinate| Server[Cluaizd Core]
+    Client[Python Client] -->|Validate 3D Coordinate| Server[Cluaizdb Core]
     Server -->|Evaluate Coordinates| DNA[DNA Spatial Validator]
     DNA -->|SIMD Distance Check| Math[Topological Radius Validation]
     Math -->|Return Intersection| Client
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enable lock-free read scaling via `dashmap` for parallel distance queries:
 

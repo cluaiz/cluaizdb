@@ -43,7 +43,7 @@ impl Default for Telemetry {
     }
 }
 
-/// Cluaizd-HEART Autonomic Controller
+/// Cluaizdb-HEART Autonomic Controller
 pub struct Heart {
     pub telemetry: Arc<RwLock<Telemetry>>,
     pub booster_state: Arc<RwLock<BoosterState>>,
@@ -62,7 +62,7 @@ impl Heart {
         let telemetry = Arc::clone(&self.telemetry);
 
         tokio::spawn(async move {
-            info!("Cluaizd-HEART Telemetry loop started.");
+            info!("Cluaizdb-HEART Telemetry loop started.");
 
             // Configure sysinfo to fetch CPU, Memory, and Processes
             use sysinfo::ProcessRefreshKind;

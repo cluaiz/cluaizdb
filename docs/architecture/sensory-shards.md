@@ -91,7 +91,7 @@ For maximum performance on the `sensory_tissue` shard (bypassing TCP/HTTP entire
 
 ```c
 // Open the sensory shard directly from C code
-cluaizddHandle* handle = cluaizd_open("./out/sensory_tissue", 8192);
+cluaizdbdHandle* handle = cluaizdb_open("./out/sensory_tissue", 8192);
 
 // Write 256,000 BCI readings/second directly via memory-mapped I/O
 for (int i = 0; i < 256000; i++) {
@@ -99,10 +99,10 @@ for (int i = 0; i < 256000; i++) {
     snprintf(payload, sizeof(payload),
         "{\"electrode\": %d, \"value\": %.4f, \"ts\": %lld}",
         electrode_id[i], voltage[i], timestamp_ns[i]);
-    cluaizd_write(handle, "bci_stream", payload);
+    cluaizdb_write(handle, "bci_stream", payload);
 }
 
-cluaizd_close(handle);
+cluaizdb_close(handle);
 ```
 
 This bypasses Axum, the HTTP stack, and the shard routing layer entirely. The C-FFI writes directly to LMDB's memory-mapped file.

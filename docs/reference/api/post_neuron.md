@@ -1,6 +1,6 @@
 # `POST /neuron` Ingestion API
 
-The `/neuron` HTTP route is the primary ingestion point for cluaizd. It is designed to handle massive throughput bursts by immediately dumping network packets into the Write-Ahead Log (WAL).
+The `/neuron` HTTP route is the primary ingestion point for cluaizdb. It is designed to handle massive throughput bursts by immediately dumping network packets into the Write-Ahead Log (WAL).
 
 ## Architectural Execution
 

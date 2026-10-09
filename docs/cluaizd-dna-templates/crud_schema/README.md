@@ -1,15 +1,15 @@
 # 🧱 CRUD Schema Validation
 
 ## 1. Overview
-The **CRUD Schema Validation** template utilizes the `on_write` DNA hook. It transforms Cluaizd from a schema-less database into a strictly typed datastore by enforcing JSON schema rules before any insert or update is committed.
+The **CRUD Schema Validation** template utilizes the `on_write` DNA hook. It transforms Cluaizdb from a schema-less database into a strictly typed datastore by enforcing JSON schema rules before any insert or update is committed.
 
 ## 2. Purpose
 Why was this created?
-Cluaizd operates in "Static Heap" mode by default—it accepts any raw bytes. However, traditional business applications (HR software, billing, identity management) break if data structures mutate unpredictably. For example, a `User` record must always have an `email` (string) and an `age` (integer).
+Cluaizdb operates in "Static Heap" mode by default—it accepts any raw bytes. However, traditional business applications (HR software, billing, identity management) break if data structures mutate unpredictably. For example, a `User` record must always have an `email` (string) and an `age` (integer).
 Instead of trusting the backend Node.js or Python server to validate this (which can be bypassed by a rogue microservice or direct database access), you push the schema enforcement directly into the database engine. The database physically rejects malformed transactions.
 
 ## 3. Mechanism (How it works)
-1. **The Interception:** When a client attempts to insert or update a node, the Cluaizd engine intercepts the payload *before* it enters the Write-Ahead Log (WAL).
+1. **The Interception:** When a client attempts to insert or update a node, the Cluaizdb engine intercepts the payload *before* it enters the Write-Ahead Log (WAL).
 2. **The Deserialization:** The engine parses the raw bytes into a JSON object and passes it to the `on_write` script.
 3. **The Validation Loop:** The script iterates over the `required_fields` defined in its `config.json`.
 4. **The Type Check:** It checks if the field exists and if its type matches (e.g., is `age` actually an integer?).
@@ -19,7 +19,7 @@ Instead of trusting the backend Node.js or Python server to validate this (which
 ```mermaid
 sequenceDiagram
     participant API Client
-    participant Engine as Cluaizd Core
+    participant Engine as Cluaizdb Core
     participant DNA as Schema Validator
     participant WAL as Write-Ahead Log
 

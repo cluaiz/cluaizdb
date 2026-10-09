@@ -1,7 +1,7 @@
-# 🧬 cluaizd-types: The Universal Neuron Architecture
+# 🧬 cluaizdb-types: The Universal Neuron Architecture
 
 ## 🎯 Deep Purpose
-The `cluaizd-types` crate defines the absolute atomic data structure of the entire database: the `UniversalNeuron`. This single crate dictates the schema of data both in RAM and on disk. There are no relational tables; there are only Neurons.
+The `cluaizdb-types` crate defines the absolute atomic data structure of the entire database: the `UniversalNeuron`. This single crate dictates the schema of data both in RAM and on disk. There are no relational tables; there are only Neurons.
 
 ## 🏛️ Architectural Flow
 

@@ -1,6 +1,6 @@
 # 📜 Mode 17: Ledger / Blockchain Database Paradigm (Amazon QLDB-Style)
 
-This guide details how to configure and run Cluaizd as a Ledger / Blockchain Database, enforcing immutable transaction blocks and cryptographically verifiable audit logs via DNA validation scripts.
+This guide details how to configure and run Cluaizdb as a Ledger / Blockchain Database, enforcing immutable transaction blocks and cryptographically verifiable audit logs via DNA validation scripts.
 
 ---
 
@@ -10,7 +10,7 @@ In Ledger Mode, writes are strictly append-only. To prevent modifications (tumor
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Attempt Edit/Delete| Server[Cluaizd Server]
+    Client[Python Client] -->|Attempt Edit/Delete| Server[Cluaizdb Server]
     Server -->|Evaluate on_write DNA| DNA[DNA Ledger Guard]
     DNA -->|Detected Update/Delete| Abort[Abort Write / 400 Bad Request]
     DNA -->|Append Only| LMDB[(LMDB Data Store)]
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set concurrency mode to `mutex` to serialize writes and maintain cryptographic block integrity:
 

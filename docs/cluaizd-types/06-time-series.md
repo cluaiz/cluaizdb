@@ -1,6 +1,6 @@
 # ⏱️ Mode 06: Time-Series Database Paradigm (InfluxDB-Style)
 
-This guide details how to configure and run Cluaizd as a Time-Series Database, focusing on high-frequency metrics logging, time-window aggregations, and automatic downsampling via DNA lifecycle rules.
+This guide details how to configure and run Cluaizdb as a Time-Series Database, focusing on high-frequency metrics logging, time-window aggregations, and automatic downsampling via DNA lifecycle rules.
 
 ---
 
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enable lock-free writing via `dashmap` to support high-throughput append-only workloads:
 

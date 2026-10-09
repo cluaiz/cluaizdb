@@ -1,7 +1,7 @@
 use tracing::debug;
 
-use cluaizd_errors::StorageError;
-use cluaizd_types::UniversalNeuron;
+use cluaizdb_errors::StorageError;
+use cluaizdb_types::UniversalNeuron;
 
 use crate::env::LmdbEnv;
 
@@ -20,9 +20,9 @@ pub fn write_neuron(env: &LmdbEnv, neuron: &UniversalNeuron) -> Result<(), Stora
 
     env.db
         .put(&mut wtxn, &neuron.id, neuron)
-        .map_err(|e| StorageError::WriteTxnFailed(e.to_string()))?;
+        .map_err(|e: heed::Error| StorageError::WriteTxnFailed(e.to_string()))?;
 
-    wtxn.commit().map_err(|e| StorageError::WriteTxnFailed(e.to_string()))?;
+    wtxn.commit().map_err(|e: heed::Error| StorageError::WriteTxnFailed(e.to_string()))?;
 
     debug!(neuron_id = %neuron.id, "Neuron written to LMDB");
     Ok(())
@@ -33,7 +33,7 @@ pub fn write_neuron(env: &LmdbEnv, neuron: &UniversalNeuron) -> Result<(), Stora
 #[cfg(test)]
 mod tests {
     use bytes::Bytes;
-    use cluaizd_types::PayloadType;
+    use cluaizdb_types::PayloadType;
 
     use super::*;
     use crate::env::LmdbEnv;

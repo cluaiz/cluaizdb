@@ -1,6 +1,6 @@
 # 🔍 Mode 09: Full-Text Search Database Paradigm (Elasticsearch-Style)
 
-This guide details how to configure and run Cluaizd as a Full-Text Search engine, indexing and tokenizing text strings within DNA write hooks.
+This guide details how to configure and run Cluaizdb as a Full-Text Search engine, indexing and tokenizing text strings within DNA write hooks.
 
 ---
 
@@ -10,7 +10,7 @@ In Full-Text Search Mode, the database acts as an inverted index. When a documen
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Insert Text| Server[Cluaizd Server]
+    Client[Python Client] -->|Insert Text| Server[Cluaizdb Server]
     Server -->|Tokenize & Filter| DNA[DNA Text Tokenizer]
     DNA -->|Generate Token Lookup Keys| Indexes[Write Token Index Neurons]
     Indexes -->|Save| LMDB[(LMDB Data Store)]
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set concurrency mode to `dashmap` to optimize concurrent index lookups:
 
@@ -109,7 +109,7 @@ def index_document(doc_text: str):
         })
 
 # Usage
-index_document("Cluaizd is a nervous system database")
+index_document("Cluaizdb is a nervous system database")
 ```
 
 ---

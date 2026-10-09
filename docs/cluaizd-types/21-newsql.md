@@ -1,6 +1,6 @@
 # 🌐 Mode 21: NewSQL Database Paradigm (Google Spanner-Style)
 
-This guide details how to configure and run Cluaizd as a NewSQL Database, combining horizontal distributed scaling with strict $100\%$ ACID transactional guarantees.
+This guide details how to configure and run Cluaizdb as a NewSQL Database, combining horizontal distributed scaling with strict $100\%$ ACID transactional guarantees.
 
 ---
 
@@ -10,7 +10,7 @@ In NewSQL Mode, the database partitions data across multiple shards (nodes) usin
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Insert Transaction| Server[Cluaizd Node]
+    Client[Python Client] -->|Insert Transaction| Server[Cluaizdb Node]
     Server -->|Write to WAL & Call fsync| WAL[WAL Sync]
     WAL -->|Write to LMDB Core| LMDB[(LMDB Store)]
     LMDB -->|Confirm ACID Commit| Client
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enforce strict serializability and transaction sequencing via `mutex`:
 

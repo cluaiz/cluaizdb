@@ -20,7 +20,7 @@ By attaching this DNA script, the graph cleans itself autonomously. Edges that a
 ```mermaid
 sequenceDiagram
     participant GC as GC Thread
-    participant Engine as Cluaizd Core
+    participant Engine as Cluaizdb Core
     participant DNA as Graph Decay Script
     participant Memory as RCU Edge Array
 

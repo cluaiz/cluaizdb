@@ -1,6 +1,6 @@
 # 🧮 Mode 24: Array / Tensor / Multidimensional Database Paradigm (SciDB-Style)
 
-This guide details how to configure and run Cluaizd as a Multidimensional Array / Tensor Database, optimized for dense scientific grids, matrix calculations, and ML model weight allocations.
+This guide details how to configure and run Cluaizdb as a Multidimensional Array / Tensor Database, optimized for dense scientific grids, matrix calculations, and ML model weight allocations.
 
 ---
 
@@ -10,7 +10,7 @@ In Array Mode, instead of flat tables or simple vectors, we store $N\text{-Dimen
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Upload 3D Tensor Block| Server[Cluaizd Core]
+    Client[Python Client] -->|Upload 3D Tensor Block| Server[Cluaizdb Core]
     Server -->|Save Dense Binary Matrix| LMDB[(LMDB Data Store)]
     LMDB -->|Query Sub-grid Slice| Slice[Extract and return subarray]
     Slice -->|Zero-Copy Return| Client
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set default serialization format to `flatbuffers` or `json` to permit high-speed binary array transfers:
 

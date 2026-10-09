@@ -3,10 +3,10 @@ use std::path::Path;
 use heed::{Database, Env, EnvOpenOptions, RoTxn, RwTxn};
 use tracing::info;
 
-use cluaizd_errors::StorageError;
+use cluaizdb_errors::StorageError;
 
 use heed::types::*;
-use cluaizd_types::NeuronId;
+use cluaizdb_types::NeuronId;
 use crate::codecs::UniversalNeuronCodec;
 
 /// The LMDB environment wrapper.
@@ -20,7 +20,7 @@ pub struct LmdbEnv {
     /// Value: UniversalNeuron (zero-copy bincode via custom codec)
     pub(crate) db: Database<SerdeBincode<NeuronId>, UniversalNeuronCodec>,
     /// In-memory vector index for rapid similarity search.
-    pub hnsw_index: std::sync::Arc<cluaizd_index_mvhsnw::HnswIndex<cluaizd_index_mvhsnw::CosineDistance>>,
+    pub hnsw_index: std::sync::Arc<cluaizdb_index_mvhsnw::HnswIndex<cluaizdb_index_mvhsnw::CosineDistance>>,
 }
 
 impl LmdbEnv {
@@ -50,15 +50,15 @@ impl LmdbEnv {
                 })?
         };
 
-        let mut wtxn = env.write_txn().map_err(|e| StorageError::WriteTxnFailed(e.to_string()))?;
+        let mut wtxn = env.write_txn().map_err(|e: heed::Error| StorageError::WriteTxnFailed(e.to_string()))?;
         let db = env
             .create_database(&mut wtxn, Some("neurons"))
-            .map_err(|e| StorageError::WriteTxnFailed(e.to_string()))?;
-        wtxn.commit().map_err(|e| StorageError::WriteTxnFailed(e.to_string()))?;
+            .map_err(|e: heed::Error| StorageError::WriteTxnFailed(e.to_string()))?;
+        wtxn.commit().map_err(|e: heed::Error| StorageError::WriteTxnFailed(e.to_string()))?;
 
         info!(path = %path.display(), "LMDB environment opened successfully");
 
-        let hnsw_index = std::sync::Arc::new(cluaizd_index_mvhsnw::HnswIndex::new());
+        let hnsw_index = std::sync::Arc::new(cluaizdb_index_mvhsnw::HnswIndex::new());
 
         Ok(Self { env, db, hnsw_index })
     }

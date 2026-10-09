@@ -1,6 +1,6 @@
 # 🔄 Mode 22: Streaming / Reactive Database Paradigm (RisingWave-Style)
 
-This guide details how to configure and run Cluaizd as a Streaming / Reactive Database, maintaining live materialized views over continuous event streams using dynamic DNA query processors.
+This guide details how to configure and run Cluaizdb as a Streaming / Reactive Database, maintaining live materialized views over continuous event streams using dynamic DNA query processors.
 
 ---
 
@@ -10,7 +10,7 @@ In Streaming Mode, queries are pre-compiled and register hooks that listen to in
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Publish Event| Server[Cluaizd Server]
+    Client[Python Client] -->|Publish Event| Server[Cluaizdb Server]
     Server -->|Write Event & Trigger Hook| DNA[DNA Streaming Processor]
     DNA -->|Update Materialized View Node| MV[Materialized View Neuron]
     MV -->|Instant Read Return| Reader[Reader Client]
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Use high-throughput `dashmap` concurrency settings for live parallel streaming ingestion:
 

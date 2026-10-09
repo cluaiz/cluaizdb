@@ -15,78 +15,78 @@ The C-FFI completely bypasses the HTTP server, Axum router, and JSON serializati
 
 ```bash
 # Compile as a dynamic shared library
-cargo build --release -p cluaizd-ffi
+cargo build --release -p cluaizdb-ffi
 
 # Output locations:
-# Windows:  target/release/cluaizd.dll
-# Linux:    target/release/libcluaizd.so
-# macOS:    target/release/libcluaizd.dylib
+# Windows:  target/release/cluaizdb.dll
+# Linux:    target/release/libcluaizdb.so
+# macOS:    target/release/libcluaizdb.dylib
 ```
 
-Copy the output library and `ffi/cluaizd.h` into your project.
+Copy the output library and `ffi/cluaizdb.h` into your project.
 
 ---
 
-## Full API Reference (`cluaizd.h`)
+## Full API Reference (`cluaizdb.h`)
 
 ```c
-#include "cluaizd.h"
+#include "cluaizdb.h"
 
 // ─────────────────────────────────────────────
-// cluaizd_open()
+// cluaizdb_open()
 // Open (or create) an LMDB shard at the given path.
 //
 // @path:        Filesystem path to the LMDB directory (created if missing)
 // @map_size_mb: Maximum database size in MB (e.g. 8192 = 8 GB)
 // @return:      Opaque handle, or NULL on failure
 // ─────────────────────────────────────────────
-cluaizddHandle* cluaizd_open(const char* path, unsigned long map_size_mb);
+cluaizdbdHandle* cluaizdb_open(const char* path, unsigned long map_size_mb);
 
 // ─────────────────────────────────────────────
-// cluaizd_write()
+// cluaizdb_write()
 // Write raw bytes into LMDB. 
 // Note: If the neuron has a label that matches an Auto-WASM/WASM module in the `active_dnas/` directory,
 // this function WILL trigger the RAM-Cached validation hook at microsecond speed!
 //
-// @handle:       Handle from cluaizd_open()
+// @handle:       Handle from cluaizdb_open()
 // @neuron_id:    String key (any unique identifier)
 // @payload_json: JSON string payload
 // @return:       0 on success, -1 on failure
 // ─────────────────────────────────────────────
-int cluaizd_write(cluaizddHandle* handle, const char* neuron_id, const char* payload_json);
+int cluaizdb_write(cluaizdbdHandle* handle, const char* neuron_id, const char* payload_json);
 
 // ─────────────────────────────────────────────
-// cluaizd_read()
+// cluaizdb_read()
 // Direct LMDB key lookup — O(1) Fast-Path.
 //
-// @handle:    Handle from cluaizd_open()
+// @handle:    Handle from cluaizdb_open()
 // @neuron_id: The key to look up
-// @return:    Heap-allocated JSON string. CALLER MUST FREE with cluaizd_free_string().
+// @return:    Heap-allocated JSON string. CALLER MUST FREE with cluaizdb_free_string().
 // ─────────────────────────────────────────────
-char* cluaizd_read(cluaizddHandle* handle, const char* neuron_id);
+char* cluaizdb_read(cluaizdbdHandle* handle, const char* neuron_id);
 
 // ─────────────────────────────────────────────
-// cluaizd_query()
+// cluaizdb_query()
 // Execute a CDQL query string against this shard.
 //
-// @handle: Handle from cluaizd_open()
+// @handle: Handle from cluaizdb_open()
 // @cdql:   CDQL query string
-// @return: Heap-allocated JSON array string. CALLER MUST FREE with cluaizd_free_string().
+// @return: Heap-allocated JSON array string. CALLER MUST FREE with cluaizdb_free_string().
 // ─────────────────────────────────────────────
-char* cluaizd_query(cluaizddHandle* handle, const char* cdql);
+char* cluaizdb_query(cluaizdbdHandle* handle, const char* cdql);
 
 // ─────────────────────────────────────────────
-// cluaizd_free_string()
-// Free a string returned by cluaizd_read() or cluaizd_query().
+// cluaizdb_free_string()
+// Free a string returned by cluaizdb_read() or cluaizdb_query().
 // ALWAYS call this to prevent memory leaks.
 // ─────────────────────────────────────────────
-void cluaizd_free_string(char* ptr);
+void cluaizdb_free_string(char* ptr);
 
 // ─────────────────────────────────────────────
-// cluaizd_close()
+// cluaizdb_close()
 // Flush all pending writes and close the LMDB environment.
 // ─────────────────────────────────────────────
-void cluaizd_close(cluaizddHandle* handle);
+void cluaizdb_close(cluaizdbdHandle* handle);
 ```
 
 ---
@@ -94,13 +94,13 @@ void cluaizd_close(cluaizddHandle* handle);
 ## C++ Example: Sensor Ingestion
 
 ```cpp
-#include "cluaizd.h"
+#include "cluaizdb.h"
 #include <cstdio>
 #include <cstring>
 
 int main() {
     // Open a dedicated sensory shard (isolated from main database)
-    cluaizddHandle* handle = cluaizd_open("./neuron/sensory_tissue", 8192);
+    cluaizdbdHandle* handle = cluaizdb_open("./neuron/sensory_tissue", 8192);
     if (!handle) {
         fprintf(stderr, "Failed to open CLUAIZD\n");
         return 1;
@@ -115,35 +115,35 @@ int main() {
             "{\"sensor\": \"temp_01\", \"value\": %.2f, \"ts\": %lld}",
             20.0 + (i % 10) * 0.5, (long long)i * 1000000LL);
 
-        if (cluaizd_write(handle, id, payload) != 0) {
+        if (cluaizdb_write(handle, id, payload) != 0) {
             fprintf(stderr, "Write failed at index %d\n", i);
             break;
         }
     }
 
     // Direct key lookup — bypasses CDQL entirely
-    char* result = cluaizd_read(handle, "reading_0000500");
+    char* result = cluaizdb_read(handle, "reading_0000500");
     if (result) {
         printf("Record: %s\n", result);
-        cluaizd_free_string(result);  // Always free!
+        cluaizdb_free_string(result);  // Always free!
     }
 
     // CDQL query via FFI
-    char* query_result = cluaizd_query(handle,
+    char* query_result = cluaizdb_query(handle,
         "find * -> filter sensor: \"temp_01\" -> limit 10");
     if (query_result) {
         printf("Query: %s\n", query_result);
-        cluaizd_free_string(query_result);  // Always free!
+        cluaizdb_free_string(query_result);  // Always free!
     }
 
-    cluaizd_close(handle);
+    cluaizdb_close(handle);
     return 0;
 }
 ```
 
 **Compile:**
 ```bash
-gcc -o sensor_app sensor_app.c -L./target/release -lcluaizd -Wl,-rpath,./target/release
+gcc -o sensor_app sensor_app.c -L./target/release -lcluaizdb -Wl,-rpath,./target/release
 ```
 
 ---
@@ -155,38 +155,38 @@ import ctypes
 import json
 
 # Load the shared library
-cluaizd = ctypes.CDLL("./target/release/libcluaizd.so")
+cluaizdb = ctypes.CDLL("./target/release/libcluaizdb.so")
 
 # Configure return types (CRITICAL — without this, Python will crash)
-cluaizd.cluaized_open.restype = ctypes.c_void_p
-cluaizd.cluaized_open.argtypes = [ctypes.c_char_p, ctypes.c_ulong]
+cluaizdb.cluaizdbb_open.restype = ctypes.c_void_p
+cluaizdb.cluaizdbb_open.argtypes = [ctypes.c_char_p, ctypes.c_ulong]
 
-cluaizd.cluaized_write.restype = ctypes.c_int
-cluaizd.cluaized_write.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+cluaizdb.cluaizdbb_write.restype = ctypes.c_int
+cluaizdb.cluaizdbb_write.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 
-cluaizd.cluaized_read.restype = ctypes.c_char_p
-cluaizd.cluaized_read.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+cluaizdb.cluaizdbb_read.restype = ctypes.c_char_p
+cluaizdb.cluaizdbb_read.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 
-cluaizd.cluaized_query.restype = ctypes.c_char_p
-cluaizd.cluaized_query.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+cluaizdb.cluaizdbb_query.restype = ctypes.c_char_p
+cluaizdb.cluaizdbb_query.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 
-cluaizd.cluaized_free_string.argtypes = [ctypes.c_char_p]
-cluaizd.cluaized_close.argtypes = [ctypes.c_void_p]
+cluaizdb.cluaizdbb_free_string.argtypes = [ctypes.c_char_p]
+cluaizdb.cluaizdbb_close.argtypes = [ctypes.c_void_p]
 
 # Open database
-handle = cluaizd.cluaized_open(b"./neuron/sensory_tissue", 4096)
+handle = cluaizdb.cluaizdbb_open(b"./neuron/sensory_tissue", 4096)
 
 # Write data
 payload = json.dumps({"electrode": 42, "voltage_uv": 0.42, "ts": 1717789200}).encode()
-cluaizd.cluaized_write(handle, b"bci_reading_001", payload)
+cluaizdb.cluaizdbb_write(handle, b"bci_reading_001", payload)
 
 # Read back (direct O(1) lookup)
-result_bytes = cluaizd.cluaized_read(handle, b"bci_reading_001")
+result_bytes = cluaizdb.cluaizdbb_read(handle, b"bci_reading_001")
 if result_bytes:
     print(json.loads(result_bytes))
 
 # Close
-cluaizd.cluaized_close(handle)
+cluaizdb.cluaizdbb_close(handle)
 ```
 
 ---
@@ -196,8 +196,8 @@ cluaizd.cluaized_close(handle)
 | Method | Throughput | Latency | Overhead |
 |---|---|---|---|
 | HTTP REST (`/neuron`) | ~50K writes/s | ~100µs | TCP + JSON + Axum routing |
-| **C-FFI (`cluaizd_write`)** | **~1M writes/s** | **~1µs** | **None — direct mmap** |
+| **C-FFI (`cluaizdb_write`)** | **~1M writes/s** | **~1µs** | **None — direct mmap** |
 | C-FFI + Ring Buffer | ~2M writes/s | ~0.5µs | Amortized batching |
 
 > [!CAUTION]
-> `cluaizd_write()` bypasses the slow JSON API and CDQL planner, but **it DOES execute WASM validation hooks** if the neuron matches a label in the `active_dnas/` RAM Cache. This ensures data integrity even at 1,000,000 writes/sec!
+> `cluaizdb_write()` bypasses the slow JSON API and CDQL planner, but **it DOES execute WASM validation hooks** if the neuron matches a label in the `active_dnas/` RAM Cache. This ensures data integrity even at 1,000,000 writes/sec!

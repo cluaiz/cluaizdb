@@ -1,6 +1,6 @@
 # 📦 Data Types Reference (A-Z)
 
-Welcome to the **cluaizd Data Types Reference**.
+Welcome to the **cluaizdb Data Types Reference**.
 Understanding how the Engine serializes and stores specific data structures in the LMDB memory map is crucial for optimizing your schemas and maximizing query performance.
 
 ## Types Index

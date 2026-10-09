@@ -90,7 +90,7 @@ embedding = model.encode(doc).tolist()
 
 # Store in CLUAIZD
 requests.post("http://localhost:7331/neuron", json={
-    "id": "doc_cluaizd_intro",
+    "id": "doc_cluaizdb_intro",
     "tier": "Hot",
     "raw_payload": list(doc.encode("utf-8")),
     "vector_data": embedding,

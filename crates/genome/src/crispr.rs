@@ -1,6 +1,6 @@
 use rhai::Engine;
-use cluaizd_errors::StorageError;
-use cluaizd_types::NeuronDna;
+use cluaizdb_errors::StorageError;
+use cluaizdb_types::NeuronDna;
 
 /// The CRISPR Sandbox ensures that injected DNA (Rhai scripts) is syntactically
 /// valid and safe before being committed to the database genome.

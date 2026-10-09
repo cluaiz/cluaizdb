@@ -1,4 +1,4 @@
-use cluaizd_types::UniversalNeuron;
+use cluaizdb_types::UniversalNeuron;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum GraphMutation {
@@ -104,7 +104,7 @@ pub fn create_rhai_engine() -> rhai::Engine {
         for val in b {
             vec_b.push(val.as_float().unwrap_or(0.0) as f32);
         }
-        cluaizd_types::distance::cosine_similarity(&vec_a, &vec_b) as f64
+        cluaizdb_types::distance::cosine_similarity(&vec_a, &vec_b) as f64
     });
 
     // Register euclidean_distance helper
@@ -117,7 +117,7 @@ pub fn create_rhai_engine() -> rhai::Engine {
         for val in b {
             vec_b.push(val.as_float().unwrap_or(0.0) as f32);
         }
-        cluaizd_types::distance::euclidean_distance(&vec_a, &vec_b) as f64
+        cluaizdb_types::distance::euclidean_distance(&vec_a, &vec_b) as f64
     });
 
     // Register GraphContext and connection helpers
@@ -157,7 +157,7 @@ impl GenomeExecutor {
     /// - `Ok(GenomeWriteAction::Defer)`             -> Defer write (lazy to WAL only)
     /// - `Ok(GenomeWriteAction::Abort(reason))`     -> Abort write (validation failed)
     /// - `Err`                                      -> Internal engine error
-    pub fn execute_on_write(neuron: &UniversalNeuron, bp: f32, spo2: f32) -> Result<GenomeWriteAction, cluaizd_errors::StorageError> {
+    pub fn execute_on_write(neuron: &UniversalNeuron, bp: f32, spo2: f32) -> Result<GenomeWriteAction, cluaizdb_errors::StorageError> {
         if let Some(dna) = &neuron.dna {
             if let Some(write_script) = &dna.on_write {
                 
@@ -179,7 +179,7 @@ impl GenomeExecutor {
                     scope.push("system_metrics", metrics);
 
                     // Expose payload string if text
-                    if neuron.payload_type == cluaizd_types::PayloadType::Text {
+                    if neuron.payload_type == cluaizdb_types::PayloadType::Text {
                         if let Ok(text) = String::from_utf8(neuron.raw_payload.to_vec()) {
                             scope.push("payload", text);
                         }
@@ -201,7 +201,7 @@ impl GenomeExecutor {
                             }
                             return Ok(GenomeWriteAction::Allow(durability));
                         }
-                        Err(e) => return Err(cluaizd_errors::StorageError::DnaValidationFailed(format!("Rhai error: {}", e))),
+                        Err(e) => return Err(cluaizdb_errors::StorageError::DnaValidationFailed(format!("Rhai error: {}", e))),
                     }
                 }
                 
@@ -229,7 +229,7 @@ impl GenomeExecutor {
 
     /// Evaluates the DNA ruleset when a neuron is read.
     /// Used to increment strengthen_factor or block access.
-    pub fn execute_on_read(neuron: &mut UniversalNeuron) -> Result<(), cluaizd_errors::StorageError> {
+    pub fn execute_on_read(neuron: &mut UniversalNeuron) -> Result<(), cluaizdb_errors::StorageError> {
         if let Some(dna) = &neuron.dna {
             if let Some(read_script) = &dna.on_read {
                 if dna.engine == "rhai" {
@@ -242,7 +242,7 @@ impl GenomeExecutor {
                     scope.push("neuron", ctx);
 
                     // Expose payload string if text
-                    if neuron.payload_type == cluaizd_types::PayloadType::Text {
+                    if neuron.payload_type == cluaizdb_types::PayloadType::Text {
                         if let Ok(text) = String::from_utf8(neuron.raw_payload.to_vec()) {
                             scope.push("payload", text);
                         }
@@ -252,7 +252,7 @@ impl GenomeExecutor {
                         Ok(result) => {
                             if let Some(action) = result.get("action").map(|v| v.to_string()) {
                                 if action == "Block" {
-                                    return Err(cluaizd_errors::StorageError::DnaValidationFailed("Rhai Blocked read".to_string()));
+                                    return Err(cluaizdb_errors::StorageError::DnaValidationFailed("Rhai Blocked read".to_string()));
                                 }
                             }
                             if let Some(weight_inc) = result.get("increase_weight").and_then(|v| v.as_float().ok()) {
@@ -264,7 +264,7 @@ impl GenomeExecutor {
                                 }
                             }
                         }
-                        Err(e) => return Err(cluaizd_errors::StorageError::DnaValidationFailed(format!("Rhai error: {}", e))),
+                        Err(e) => return Err(cluaizdb_errors::StorageError::DnaValidationFailed(format!("Rhai error: {}", e))),
                     }
                 } else if dna.engine == "wasm" {
                     if let Some(ref wasm_bytes) = dna.wasm_module {
@@ -291,7 +291,7 @@ impl GenomeExecutor {
     /// Returns:
     /// - `Ok(true)` -> Retain neuron (mutations may have been applied to `neuron`)
     /// - `Ok(false)` -> Delete neuron immediately (Apoptosis)
-    pub fn execute_on_lifecycle(neuron: &mut UniversalNeuron, current_time_ns: u64) -> Result<bool, cluaizd_errors::StorageError> {
+    pub fn execute_on_lifecycle(neuron: &mut UniversalNeuron, current_time_ns: u64) -> Result<bool, cluaizdb_errors::StorageError> {
         if let Some(dna) = &neuron.dna {
             if let Some(lifecycle_script) = &dna.on_lifecycle {
                 if dna.engine == "rhai" {
@@ -319,10 +319,10 @@ impl GenomeExecutor {
 
                             // Explicit Tier Transitions
                             if let Some(new_tier) = result.get("new_tier").and_then(|v| v.clone().into_string().ok()) {
-                                if new_tier == "Warm" && neuron.tier != cluaizd_types::StorageTier::Warm {
-                                    neuron.tier = cluaizd_types::StorageTier::Warm;
-                                } else if new_tier == "Cold" && neuron.tier != cluaizd_types::StorageTier::Cold {
-                                    neuron.tier = cluaizd_types::StorageTier::Cold;
+                                if new_tier == "Warm" && neuron.tier != cluaizdb_types::StorageTier::Warm {
+                                    neuron.tier = cluaizdb_types::StorageTier::Warm;
+                                } else if new_tier == "Cold" && neuron.tier != cluaizdb_types::StorageTier::Cold {
+                                    neuron.tier = cluaizdb_types::StorageTier::Cold;
                                 }
                             }
 
@@ -344,7 +344,7 @@ impl GenomeExecutor {
                                 }
                             }
                         }
-                        Err(e) => return Err(cluaizd_errors::StorageError::DnaValidationFailed(format!("Rhai error: {}", e))),
+                        Err(e) => return Err(cluaizdb_errors::StorageError::DnaValidationFailed(format!("Rhai error: {}", e))),
                     }
                 }
             }
@@ -358,7 +358,7 @@ impl GenomeExecutor {
         neuron: &UniversalNeuron,
         current_path: Vec<String>,
         ctx: &mut GraphContext,
-    ) -> Result<bool, cluaizd_errors::StorageError> {
+    ) -> Result<bool, cluaizdb_errors::StorageError> {
         if let Some(dna) = &neuron.dna {
             if let Some(step_script) = &dna.on_path_step {
                 if dna.engine == "rhai" {
@@ -389,7 +389,7 @@ impl GenomeExecutor {
                             }
                             return Ok(true);
                         }
-                        Err(e) => return Err(cluaizd_errors::StorageError::DnaValidationFailed(format!("Rhai path_step error: {}", e))),
+                        Err(e) => return Err(cluaizdb_errors::StorageError::DnaValidationFailed(format!("Rhai path_step error: {}", e))),
                     }
                 }
             }
@@ -402,7 +402,7 @@ impl GenomeExecutor {
         neuron: &UniversalNeuron,
         winning_path: Vec<String>,
         ctx: &mut GraphContext,
-    ) -> Result<(), cluaizd_errors::StorageError> {
+    ) -> Result<(), cluaizdb_errors::StorageError> {
         if let Some(dna) = &neuron.dna {
             if let Some(resolve_script) = &dna.on_path_resolve {
                 if dna.engine == "rhai" {
@@ -426,7 +426,7 @@ impl GenomeExecutor {
                         scope2.push("ctx", ctx.clone());
                         scope2.push("neuron", neuron_map);
                         if let Err(e2) = engine.eval_with_scope::<rhai::Dynamic>(&mut scope2, resolve_script) {
-                            return Err(cluaizd_errors::StorageError::DnaValidationFailed(format!("Rhai path_resolve error: {} / {}", e, e2)));
+                            return Err(cluaizdb_errors::StorageError::DnaValidationFailed(format!("Rhai path_resolve error: {} / {}", e, e2)));
                         }
                     }
                 }

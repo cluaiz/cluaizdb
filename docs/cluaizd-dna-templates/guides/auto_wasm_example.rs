@@ -1,4 +1,4 @@
-// cluaizd-dna-templates/auto_wasm_example.rs
+// cluaizdb-dna-templates/auto_wasm_example.rs
 // Rust code script to be sent for live Auto-WASM compilation
 
 use std::slice;

@@ -1,13 +1,13 @@
-# 🛠️ cluaizd-common: Shared Utilities & Constants
+# 🛠️ cluaizdb-common: Shared Utilities & Constants
 
 ## 🎯 Deep Purpose
-The `cluaizd-common` crate acts as the repository for shared global constants and stateless utility functions used across the Cluaizd ecosystem. By placing these shared variables in a centralized, low-dependency crate, we avoid code duplication and ensure absolute consistency (e.g., maximum payload sizes or vector dimensions) across the FFI, Server, and Storage crates without inducing circular dependencies.
+The `cluaizdb-common` crate acts as the repository for shared global constants and stateless utility functions used across the Cluaizdb ecosystem. By placing these shared variables in a centralized, low-dependency crate, we avoid code duplication and ensure absolute consistency (e.g., maximum payload sizes or vector dimensions) across the FFI, Server, and Storage crates without inducing circular dependencies.
 
 ## 🏛️ Architectural Flow
 
 ```mermaid
 graph LR
-    A["crates/genome (WASM checks)"] -->|Reads Constants| B["cluaizd-common"]
+    A["crates/genome (WASM checks)"] -->|Reads Constants| B["cluaizdb-common"]
     C["crates/storage (LMDB Writes)"] -->|Reads Constants| B
     D["crates/server (HTTP Validation)"] -->|Reads Constants| B
 ```

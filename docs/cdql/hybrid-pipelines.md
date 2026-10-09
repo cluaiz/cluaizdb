@@ -31,7 +31,7 @@ Step 2: -> traverse(edge: "bought_by")
   └─ Working set: 8,400 users who bought red products
 
 Step 3: -> similar_to(vector: [...], metric: "cosine")
-  └─ Passes the vector to the `cluaizd-index-mvhsnw` HNSW Engine
+  └─ Passes the vector to the `cluaizdb-index-mvhsnw` HNSW Engine
   └─ Graph-based approximate nearest neighbor search bypasses flat scans
   └─ Returns top-K by cosine score in <1ms
   └─ Working set: 10 most relevant users

@@ -11,7 +11,7 @@ use tracing::{info, warn};
 
 use crate::routes::AppState;
 
-/// System telemetry data mapping to Cluaizd-HEART biomarkers.
+/// System telemetry data mapping to Cluaizdb-HEART biomarkers.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HeartTelemetry {
     pub heart_rate_bpm: u32,
@@ -42,7 +42,7 @@ pub async fn handle_ws(
 }
 
 async fn handle_socket(state: Arc<AppState>, socket: WebSocket) {
-    info!("Cluaizd-HEART WebSocket telemetry client connected");
+    info!("Cluaizdb-HEART WebSocket telemetry client connected");
 
     // Spawn a receiver task to handle incoming controls
     let (mut sender, mut receiver) = socket.split();
@@ -80,7 +80,7 @@ async fn handle_socket(state: Arc<AppState>, socket: WebSocket) {
     let state_tx = Arc::clone(&state);
     let tx_task = tokio::spawn(async move {
         loop {
-            // Read real metrics from Cluaizd-HEART autonomic controller
+            // Read real metrics from Cluaizdb-HEART autonomic controller
             let tel = {
                 let lock = state_tx.heart_telemetry.read().await;
                 *lock
@@ -114,6 +114,6 @@ async fn handle_socket(state: Arc<AppState>, socket: WebSocket) {
         _ = rx_task => {},
         _ = tx_task => {},
     }
-    info!("Cluaizd-HEART WebSocket client disconnected");
+    info!("Cluaizdb-HEART WebSocket client disconnected");
 }
 

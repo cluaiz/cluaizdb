@@ -1,7 +1,7 @@
 # 🔌 Integration & End-to-End Tests
 
 ## 🎯 Purpose
-This workspace treats the Cluaizd database as a black box. It interacts purely via the external HTTP API to ensure that end-users receive expected results.
+This workspace treats the Cluaizdb database as a black box. It interacts purely via the external HTTP API to ensure that end-users receive expected results.
 
 ## 🧬 What we test here
 1. **HTTP Endpoints:** `POST /neuron` and `POST /query`.

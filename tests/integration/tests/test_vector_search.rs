@@ -1,5 +1,5 @@
-use cluaizd_index_mvhsnw::{HnswIndex, CosineDistance};
-use cluaizd_types::NeuronId;
+use cluaizdb_index_mvhsnw::{HnswIndex, CosineDistance};
+use cluaizdb_types::NeuronId;
 use std::sync::Arc;
 
 #[test]

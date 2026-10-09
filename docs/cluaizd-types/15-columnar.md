@@ -1,6 +1,6 @@
 # 🧱 Mode 15: Columnar / Column-Oriented Database Paradigm (ClickHouse-Style)
 
-This guide details how to configure and run Cluaizd as a Columnar Database, optimizing high-speed analytical queries (OLAP) and aggregations.
+This guide details how to configure and run Cluaizdb as a Columnar Database, optimizing high-speed analytical queries (OLAP) and aggregations.
 
 ---
 
@@ -10,14 +10,14 @@ In Columnar Mode, instead of storing a complete row in a single neuron payload, 
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Fetch Column 'Ages'| Server[Cluaizd Server]
+    Client[Python Client] -->|Fetch Column 'Ages'| Server[Cluaizdb Server]
     Server -->|Directly Scan Column Array| reader[LMDB Scan]
     reader -->|Compute Sum/Average| Results[Return Result]
 ```
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Use parallel read scaling via `dashmap` to optimize analytical query runs:
 

@@ -1,7 +1,7 @@
 use std::ffi::{c_char, c_void, CString};
 use std::slice;
 
-use cluaizd_types::{NeuronId, UniversalNeuron};
+use cluaizdb_types::{NeuronId, UniversalNeuron};
 use crate::env::LmdbEnv;
 use crate::reader::read_neuron;
 
@@ -92,8 +92,8 @@ mod tests {
     use super::*;
     use std::ptr;
     use bytes::Bytes;
-    use cluaizd_types::PayloadType;
-    use cluaizd_types::UniversalNeuron;
+    use cluaizdb_types::PayloadType;
+    use cluaizdb_types::UniversalNeuron;
     use crate::writer::write_neuron;
 
     #[test]
@@ -219,11 +219,11 @@ pub unsafe extern "C" fn cluaizd_ffi_execute_parameterized(
                 }
                 // --------------------------------------------
 
-                let neuron = cluaizd_types::UniversalNeuron::new(
+                let neuron = cluaizdb_types::UniversalNeuron::new(
                     bytes::Bytes::from(payload_str),
                     vector_data,
                     [0u8; 32],
-                    cluaizd_types::PayloadType::Text,
+                    cluaizdb_types::PayloadType::Text,
                 );
 
                 if crate::writer::write_neuron(env, &neuron).is_err() {

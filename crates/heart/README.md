@@ -1,7 +1,7 @@
 # ❤️ crates/heart: The Autonomic Telemetry Controller
 
 ## 🎯 Deep Purpose
-The `heart` crate is an autonomic biological monitor for the database engine. Instead of relying on external tools like Datadog or Prometheus to monitor health, Cluaizd monitors its own physical host machine in real-time. It measures CPU load, RAM availability, and disk I/O, exposing this data directly to the DNA execution engine to enable self-throttling and self-healing.
+The `heart` crate is an autonomic biological monitor for the database engine. Instead of relying on external tools like Datadog or Prometheus to monitor health, Cluaizdb monitors its own physical host machine in real-time. It measures CPU load, RAM availability, and disk I/O, exposing this data directly to the DNA execution engine to enable self-throttling and self-healing.
 
 ## 🏛️ Architectural Flow
 
@@ -25,7 +25,7 @@ Contains the core `Telemetry` struct and the background polling loop.
 - **Core Logic:** Maps standard computing metrics to biological terms.
   - `bp_systolic` (Blood Pressure) = Global CPU Load (0-100%).
   - `spo2` (Oxygen) = Global Available RAM (0-100%).
-  - `process_bp` = CPU load specifically caused by the Cluaizd process.
+  - `process_bp` = CPU load specifically caused by the Cluaizdb process.
 - **Execution Flow:** The `start_heartbeat` function spawns a detached Tokio task. Inside a `loop`, it calls `sys.refresh_cpu_usage()` and `sys.refresh_memory()` every 500 milliseconds. It locks the `Arc<RwLock>` just long enough to update the struct, then sleeps.
 - **Why?** Lock contention is a massive performance killer. By updating the lock only twice a second, worker threads checking the telemetry (e.g., during a CDQL query) almost never hit a blocked lock. This provides "eventually consistent" hardware metrics at near-zero CPU cost.
 

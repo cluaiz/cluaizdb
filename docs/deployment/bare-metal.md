@@ -23,11 +23,11 @@ The most common way to deploy CLUAIZD on a production server.
 ### Build the Release Binary
 ```bash
 # Clone the repository
-git clone https://github.com/cluaiz/cluaizd.git
-cd cluaizd
+git clone https://github.com/cluaiz/cluaizdb.git
+cd cluaizdb
 
 # Build the highly optimized release binary
-cargo build --release -p cluaizd-server
+cargo build --release -p cluaizdb-server
 ```
 
 ### Install as a Systemd Service
@@ -35,14 +35,14 @@ To ensure CLUAIZD runs in the background and restarts on failure, create a `syst
 
 1. Copy the binary to a system path:
    ```bash
-   sudo cp target/release/cluaizd-server /usr/local/bin/cluaizd
+   sudo cp target/release/cluaizdb-server /usr/local/bin/cluaizdb
    ```
 2. Create a data directory:
    ```bash
-   sudo mkdir -p /var/lib/cluaizd
-   sudo chown $USER:$USER /var/lib/cluaizd
+   sudo mkdir -p /var/lib/cluaizdb
+   sudo chown $USER:$USER /var/lib/cluaizdb
    ```
-3. Create the service file `/etc/systemd/system/cluaizd.service`:
+3. Create the service file `/etc/systemd/system/cluaizdb.service`:
    ```ini
    [Unit]
    Description=CLUAIZD Nanosecond Database
@@ -51,8 +51,8 @@ To ensure CLUAIZD runs in the background and restarts on failure, create a `syst
    [Service]
    Type=simple
    User=root
-   WorkingDirectory=/var/lib/cluaizd
-   ExecStart=/usr/local/bin/cluaizd
+   WorkingDirectory=/var/lib/cluaizdb
+   ExecStart=/usr/local/bin/cluaizdb
    Restart=always
    Environment="RUST_LOG=info"
 
@@ -62,8 +62,8 @@ To ensure CLUAIZD runs in the background and restarts on failure, create a `syst
 4. Start the server:
    ```bash
    sudo systemctl daemon-reload
-   sudo systemctl enable cluaizd
-   sudo systemctl start cluaizd
+   sudo systemctl enable cluaizdb
+   sudo systemctl start cluaizdb
    ```
 
 You can now access the database at `http://localhost:7331`.
@@ -90,6 +90,6 @@ For robotics and IoT devices, CLUAIZD is lightweight enough to run directly on A
 
 If you are building an AI agent or a desktop/mobile app and want to use CLUAIZD as your local knowledge engine:
 
-- **Mac/Windows Laptops**: Simply compile with `cargo build --release` and spawn the `cluaizd` binary as a child process from your main application (e.g., via Python's `subprocess` or Node.js `child_process`).
+- **Mac/Windows Laptops**: Simply compile with `cargo build --release` and spawn the `cluaizdb` binary as a child process from your main application (e.g., via Python's `subprocess` or Node.js `child_process`).
 - **CLI Management**: You can manage the local instance using our CLI tools or directly via the `http://localhost:7331` endpoints. 
 - **Data Location**: Set the `CLUAIZD_STORAGE_DATA_DIR` environment variable to a folder inside your app's `AppData` or `~/.config` directory to keep the local machine clean.

@@ -1,6 +1,6 @@
 # 💎 Mode 14: Object-Oriented Database Paradigm (OODBMS / db4o-Style)
 
-This guide details how to configure and run Cluaizd as an Object-Oriented Database, storing direct program classes and objects without mapping transformations.
+This guide details how to configure and run Cluaizdb as an Object-Oriented Database, storing direct program classes and objects without mapping transformations.
 
 ---
 
@@ -10,14 +10,14 @@ In Object-Oriented Mode, programming objects (e.g. instance of a Python/C++ Clas
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Serialize Python Class Instance| Server[Cluaizd Server]
+    Client[Python Client] -->|Serialize Python Class Instance| Server[Cluaizdb Server]
     Server -->|Save Raw Object Bytes| LMDB[(LMDB Data Store)]
     LMDB -->|Load Object| Client
 ```
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enforce sequential execution boundaries via `mutex` to prevent conflicting class model writes:
 

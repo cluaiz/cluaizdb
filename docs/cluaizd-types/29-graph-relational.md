@@ -1,6 +1,6 @@
 # 🕸️ Mode 29: Graph-Relational Hybrid Engine Paradigm (EdgeDB-Style)
 
-This guide details how to configure and run Cluaizd as a Graph-Relational Hybrid Engine, combining strict relational schema validation with dynamic graph connections.
+This guide details how to configure and run Cluaizdb as a Graph-Relational Hybrid Engine, combining strict relational schema validation with dynamic graph connections.
 
 ---
 
@@ -10,7 +10,7 @@ In Graph-Relational Mode, we eliminate the mismatch between tabular rows and gra
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Insert Node| Server[Cluaizd Core]
+    Client[Python Client] -->|Insert Node| Server[Cluaizdb Core]
     Server -->|Validate Strict Schema| DNA[DNA Relational Schema Guard]
     DNA -->|Type Pass| Graph[Create Directed Edge Relationship]
     Graph -->|Commit| LMDB[(LMDB Data Store)]
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Use the strict `mutex` concurrency model to enforce transaction serializability across relational objects:
 

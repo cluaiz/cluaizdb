@@ -1,6 +1,6 @@
-//! `cluaizd-types`
+//! `cluaizdb-types`
 //!
-//! Core data types for the Cluaizd Nervous System Database.
+//! Core data types for the Cluaizdb Nervous System Database.
 //! All other crates in this workspace depend on this crate.
 //!
 //! Public API surface is intentionally flat — import everything from here.

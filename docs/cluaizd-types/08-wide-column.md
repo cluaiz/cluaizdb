@@ -1,6 +1,6 @@
 # 🏛️ Mode 08: Wide-Column Store Paradigm (Cassandra-Style)
 
-This guide details how to configure and run Cluaizd as a Wide-Column Store, utilizing key partitioning and dynamic secondary index filtering.
+This guide details how to configure and run Cluaizdb as a Wide-Column Store, utilizing key partitioning and dynamic secondary index filtering.
 
 ---
 
@@ -10,14 +10,14 @@ In Wide-Column Mode, we group records using structured partition keys (e.g. `par
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Scan Partition 'sensor_1'| Server[Cluaizd Server]
+    Client[Python Client] -->|Scan Partition 'sensor_1'| Server[Cluaizdb Server]
     Server -->|Scan type Binary| reader[LMDB Scan]
     reader -->|Filter by Partition Key| Results[Return Columns List]
 ```
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enable multi-threaded write scaling via `dashmap`:
 

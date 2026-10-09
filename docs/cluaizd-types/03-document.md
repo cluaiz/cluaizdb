@@ -1,6 +1,6 @@
 # 📑 Mode 03: Document Store Paradigm (MongoDB-Style)
 
-This guide details how to configure and run Cluaizd as a high-performance Document Database, utilizing schema-less JSON payloads and dynamic DNA rules to perform deep filtering and verification.
+This guide details how to configure and run Cluaizdb as a high-performance Document Database, utilizing schema-less JSON payloads and dynamic DNA rules to perform deep filtering and verification.
 
 ---
 
@@ -10,7 +10,7 @@ In Document Mode, records are stored as JSON strings in the neuron's `raw_payloa
 
 ```mermaid
 graph TD
-    Client[Python/JS Client] -->|Insert JSON Document| Server[Cluaizd Server]
+    Client[Python/JS Client] -->|Insert JSON Document| Server[Cluaizdb Server]
     Server -->|Run WASM/Rhai Schema Check| DNA[DNA Validator]
     DNA -->|Pass| Store[LMDB Store]
     DNA -->|Fail| Abort[Return 400 Bad Request]
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set the default serialization format to `json` for document indexing:
 

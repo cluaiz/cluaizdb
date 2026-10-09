@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use cluaizd_types::NeuronId;
+use cluaizdb_types::NeuronId;
 
 /// The type of operation recorded in the WAL.
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -1,6 +1,6 @@
-//! `cluaizd-errors`
+//! `cluaizdb-errors`
 //!
-//! Centralized error definitions for all crates in the Cluaizd CLUAIZD workspace.
+//! Centralized error definitions for all crates in the Cluaizdb CLUAIZD workspace.
 //! Every crate uses these types for consistent, structured error propagation.
 //! Never use `anyhow` inside library crates — only at the binary layer.
 

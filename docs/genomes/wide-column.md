@@ -42,9 +42,9 @@ CLUAIZD handles this through:
 
 ```c
 // BCI C++ firmware writing to CLUAIZD at 256,000 writes/second
-#include "cluaizd.h"
+#include "cluaizdb.h"
 
-cluaizddHandle* handle = cluaizd_open("./out/sensory_tissue", 8192);
+cluaizdbdHandle* handle = cluaizdb_open("./out/sensory_tissue", 8192);
 
 while (recording) {
     char payload[256];
@@ -52,7 +52,7 @@ while (recording) {
         "{\"electrode\": %d, \"value\": %.4f, \"ts\": %lld}",
         electrode_id, sample_voltage, timestamp_ns);
     
-    cluaizd_write(handle, "bci_stream", payload);
+    cluaizdb_write(handle, "bci_stream", payload);
 }
 ```
 

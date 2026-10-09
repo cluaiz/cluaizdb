@@ -21,7 +21,7 @@ The Engine hands the data to the Operating System and immediately replies to the
 
 ## Configuration Syntax
 
-Found in `cluaizd.toml` under the `[storage.wal]` section:
+Found in `cluaizdb.toml` under the `[storage.wal]` section:
 
 ```toml
 [storage.wal]

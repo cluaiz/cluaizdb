@@ -1,4 +1,4 @@
-// cluaizd-dna-templates/time_series_decay.rhai
+// cluaizdb-dna-templates/time_series_decay.rhai
 // Automatic data lifecycle tiering and downsampling template
 
 let age_ns = neuron.age_ns;

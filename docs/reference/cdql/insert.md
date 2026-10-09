@@ -1,6 +1,6 @@
 # `insert` Command Reference
 
-In the cluaizd ecosystem, data ingestion (insertion) bypasses the CDQL text parser entirely. Instead of a text-based `INSERT INTO` command, record creation is handled via high-throughput HTTP POST routes or WebSocket streams to maximize binary ingestion speed.
+In the cluaizdb ecosystem, data ingestion (insertion) bypasses the CDQL text parser entirely. Instead of a text-based `INSERT INTO` command, record creation is handled via high-throughput HTTP POST routes or WebSocket streams to maximize binary ingestion speed.
 
 ## Syntax & Routing
 
@@ -24,13 +24,13 @@ Content-Type: application/json
 
 ## Architecture: How it works under the hood
 
-Insertion in cluaizd is designed to handle millions of writes per second without blocking read operations.
+Insertion in cluaizdb is designed to handle millions of writes per second without blocking read operations.
 
 ### 1. The Write-Ahead Log (WAL)
 Upon receiving the payload, the compute node immediately appends the serialized byte array to an append-only Write-Ahead Log (WAL) on the physical disk. This ensures `fsync` durability—if the server crashes in the next microsecond, no data is lost.
 
 ### 2. LMDB Append & B-Tree Rebalancing
-After the WAL is secured, the data is mapped into the primary Zero-Copy LMDB environment. If indices are present, the internal B-Tree structures are updated. Cluaizd utilizes LMDB's MVCC (Multi-Version Concurrency Control) so that concurrent `find` queries never lock during an `insert`.
+After the WAL is secured, the data is mapped into the primary Zero-Copy LMDB environment. If indices are present, the internal B-Tree structures are updated. Cluaizdb utilizes LMDB's MVCC (Multi-Version Concurrency Control) so that concurrent `find` queries never lock during an `insert`.
 
 ### 3. Execution Affordance Trigger (DNA)
 If the payload contains a `dna` script (e.g., an `on_write` trigger), the WASM runtime is invoked immediately after memory mapping, allowing the record to actively mutate other records or trigger WebHooks.

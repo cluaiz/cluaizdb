@@ -1,16 +1,16 @@
 # 🌉 Mode 25: Federated / Virtual Database Paradigm (Presto-Style)
 
-This guide details how to configure and run Cluaizd as a Federated / Virtual Database, resolving queries across external systems using routing links.
+This guide details how to configure and run Cluaizdb as a Federated / Virtual Database, resolving queries across external systems using routing links.
 
 ---
 
 ## 🏛️ Conceptual Mapping & Architecture
 
-In Federated Mode, Cluaizd act as a virtual data gateway. Instead of holding raw records locally, neurons store connections, APIs, and credentials pointing to external databases (e.g. Postgres, MongoDB, S3). When a query is run, the DNA `on_read` hook resolves the request, fetches the remote data, and returns it dynamically.
+In Federated Mode, Cluaizdb act as a virtual data gateway. Instead of holding raw records locally, neurons store connections, APIs, and credentials pointing to external databases (e.g. Postgres, MongoDB, S3). When a query is run, the DNA `on_read` hook resolves the request, fetches the remote data, and returns it dynamically.
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Query Virtual Node| Server[Cluaizd Gateway]
+    Client[Python Client] -->|Query Virtual Node| Server[Cluaizdb Gateway]
     Server -->|Evaluate on_read DNA| DNA[DNA Federated Router]
     DNA -->|API Request| Remote[Remote DB: Postgres/Mongo/S3]
     Remote -->|Return Data| DNA
@@ -19,7 +19,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set concurrency settings to `dashmap` to optimize parallel remote API gateway calls:
 

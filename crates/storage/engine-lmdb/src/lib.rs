@@ -30,5 +30,8 @@ pub use sandbox::DeepArcherSandbox;
 pub use manifest::{GeneRegistryManifest, GeneTrait, ManifestError};
 pub use specular::SpecularGraph;
 
-pub mod transit;  
+pub mod transit;
+pub mod group_commit;
+
+pub use group_commit::*;
  

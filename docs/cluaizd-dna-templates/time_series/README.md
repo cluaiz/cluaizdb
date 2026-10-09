@@ -6,7 +6,7 @@ The **Time Series Downsampling** template utilizes the `on_lifecycle` DNA hook t
 ## 2. Purpose
 Why was this created?
 If your server records CPU temperature every second, that's 86,400 data points per day. For the last 24 hours, you need that per-second granularity for real-time alerting. But looking at data from 30 days ago, you only care about the *hourly average*.
-Standard Time Series databases (like InfluxDB) have hardcoded downsampling rules. Cluaizd allows you to script exactly how the downsampling occurs, allowing you to use custom math (e.g., taking the 95th percentile instead of a simple average) directly inside the Garbage Collection pipeline.
+Standard Time Series databases (like InfluxDB) have hardcoded downsampling rules. Cluaizdb allows you to script exactly how the downsampling occurs, allowing you to use custom math (e.g., taking the 95th percentile instead of a simple average) directly inside the Garbage Collection pipeline.
 
 ## 3. Mechanism (How it works)
 1. **The GC Sweep:** The background Garbage Collection thread continuously evaluates neurons.
@@ -19,7 +19,7 @@ Standard Time Series databases (like InfluxDB) have hardcoded downsampling rules
 ```mermaid
 sequenceDiagram
     participant GC as GC Thread
-    participant Engine as Cluaizd Core
+    participant Engine as Cluaizdb Core
     participant DNA as Downsampling Script
     participant Disk as LMDB
 
@@ -68,7 +68,7 @@ Explore the actual code used to implement this template. Each file demonstrates 
 
 > [!TIP]
 > **Recommended Engine: `CDQL`**
-> For data aggregation, always use `CDQL`. The Cluaizd Query Optimizer can execute CDQL `GROUP_BY` and `AGGREGATE` functions 10x faster than a custom loop written in WASM because it utilizes internal vectorized CPU instructions. 
+> For data aggregation, always use `CDQL`. The Cluaizdb Query Optimizer can execute CDQL `GROUP_BY` and `AGGREGATE` functions 10x faster than a custom loop written in WASM because it utilizes internal vectorized CPU instructions. 
 
 **Best Practice: Staggered Downsampling**
 In production, don't just have one downsampling rule. Chain them together! For example, write a script that downsamples to *Hourly* after 7 days, and then another block that downsamples to *Daily* after 90 days. This creates a beautifully optimized storage curve.

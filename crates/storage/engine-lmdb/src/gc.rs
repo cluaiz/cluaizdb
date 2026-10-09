@@ -1,5 +1,5 @@
 use bytes::Bytes;
-use cluaizd_types::{StorageTier, UniversalNeuron};
+use cluaizdb_types::{StorageTier, UniversalNeuron};
 use rhai::{Engine, Map, Scope};
 use std::sync::Arc;
 use std::time::Duration;

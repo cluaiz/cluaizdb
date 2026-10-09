@@ -1,6 +1,6 @@
 # `force` Command Reference
 
-The `force` parameter is an action directive used within the `/crispr` API subsystem. It instructs the cluaizd engine to explicitly write a directed graph edge between two independent records, bypassing any background execution scripts or automated routing.
+The `force` parameter is an action directive used within the `/crispr` API subsystem. It instructs the cluaizdb engine to explicitly write a directed graph edge between two independent records, bypassing any background execution scripts or automated routing.
 
 ## Syntax Rules
 
@@ -20,7 +20,7 @@ POST /crispr/force/[ ORIGIN_UUID ]
 ## Architecture: How it works under the hood
 
 ### 1. The Adjacency Matrix Append
-Graph relationships in cluaizd are not stored in a separate relational table. Instead, every record contains an embedded Adjacency Array. When `force` is called, the engine opens a write transaction, expands the Origin record's allocated block by a few bytes, and appends the `target_id` and `weight`.
+Graph relationships in cluaizdb are not stored in a separate relational table. Instead, every record contains an embedded Adjacency Array. When `force` is called, the engine opens a write transaction, expands the Origin record's allocated block by a few bytes, and appends the `target_id` and `weight`.
 
 ### 2. Write-Ahead Log (WAL) Durability
 Even though edge creation modifies an existing record, the entire modification is appended to the WAL to guarantee crash-resilience. The WAL ensures that if the server loses power exactly when the edge is formed, the relationship is fully restored upon reboot.

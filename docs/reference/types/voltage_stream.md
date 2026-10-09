@@ -1,6 +1,6 @@
 # `voltage_stream` Data Type
 
-The `voltage_stream` format is a specialized IoT datatype in Cluaizd.
+The `voltage_stream` format is a specialized IoT datatype in Cluaizdb.
 
 ## Architectural Storage
 

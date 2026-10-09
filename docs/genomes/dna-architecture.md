@@ -104,7 +104,7 @@ Every Genome can implement up to **5 hooks**. Each hook is a Rhai script string 
 
 ## The 4 Execution Engines
 
-Cluaizd supports 4 distinct execution modes for DNA validation and filtering. These modes give developers the flexibility to choose between ease-of-use and maximum performance.
+Cluaizdb supports 4 distinct execution modes for DNA validation and filtering. These modes give developers the flexibility to choose between ease-of-use and maximum performance.
 
 ### 1. `cdql` (Native JSON Translation)
 **Best for:** 90% of users who only need declarative data filtering.
@@ -118,7 +118,7 @@ Cluaizd supports 4 distinct execution modes for DNA validation and filtering. Th
 
 ### 3. `auto-wasm` (Auto-Compiled Rust)
 **Best for:** Developers who want complex math and strict typing but don't want to compile WASM themselves.
-**How it works:** The user uploads a raw Rust script. Our `cluaizd` server automatically compiles it into a `.wasm` binary in the background and saves it to the `active_dnas/` directory.
+**How it works:** The user uploads a raw Rust script. Our `cluaizdb` server automatically compiles it into a `.wasm` binary in the background and saves it to the `active_dnas/` directory.
 **Hot-Reload:** Yes! The File Watcher detects the new binary and Hot-Reloads it into RAM instantly with zero downtime.
 **Learn More:** See the [Auto-WASM Guide](auto-wasm-guide.md) to understand why defining strict struct types is crucial.
 
@@ -131,13 +131,13 @@ Cluaizd supports 4 distinct execution modes for DNA validation and filtering. Th
 
 ## ⚡ Zero-Downtime RAM Hot-Reloading
 
-One of Cluaizd's most powerful features is **Absolute Zero Path Hot-Reloading** for WASM modules.
+One of Cluaizdb's most powerful features is **Absolute Zero Path Hot-Reloading** for WASM modules.
 
-Historically, databases require a full restart to load new plugins, or they suffer massive SSD I/O bottlenecks by reading plugins from the disk on every query. Cluaizd solves this using a background RAM synchronization engine.
+Historically, databases require a full restart to load new plugins, or they suffer massive SSD I/O bottlenecks by reading plugins from the disk on every query. Cluaizdb solves this using a background RAM synchronization engine.
 
 ### How it Works:
 1. **The `active_dnas/` Directory:** The server creates an isolated directory in the root folder.
-2. **Global RAM Cache:** Cluaizd initializes a highly-concurrent, thread-safe `DashMap` in RAM that holds pre-compiled WASM modules.
+2. **Global RAM Cache:** Cluaizdb initializes a highly-concurrent, thread-safe `DashMap` in RAM that holds pre-compiled WASM modules.
 3. **The File Watcher:** A background `tokio` thread uses OS-level events (`notify` crate / FSEvents) to monitor `active_dnas/`.
 4. **Instant Swap:** When a new `.wasm` file is uploaded (either manually or via the `auto-wasm` API), the watcher detects it and instantly swaps the compiled `Module` inside the RAM cache. 
 

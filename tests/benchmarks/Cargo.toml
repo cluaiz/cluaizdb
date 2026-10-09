@@ -5,11 +5,19 @@ edition = "2021"
 publish = false
 
 [dev-dependencies]
-criterion = "0.5"
+criterion = { version = "0.5", features = ["async_tokio"] }
 tokio = { workspace = true, features = ["full"] }
 reqwest = { version = "0.11", features = ["blocking", "json"] }
 serde_json = { workspace = true }
+engine-lmdb = { path = "../../crates/storage/engine-lmdb" }
+cluaizdb-types = { workspace = true }
+bytes = { workspace = true }
+tempfile = "3.10"
 
 [[bench]]
 name = "core_benchmarks"
+harness = false
+
+[[bench]]
+name = "in_process_bench"
 harness = false

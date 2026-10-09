@@ -1,12 +1,12 @@
 # ⚡ Mode 01: Key-Value Store Paradigm (Redis-Style)
 
-This guide details how to configure and run Cluaizd as a hyper-performance, memory-mapped key-value store (analogous to Redis or Memcached), leveraging the zero-copy LMDB engine and bypassing complex query compilation for absolute raw speed.
+This guide details how to configure and run Cluaizdb as a hyper-performance, memory-mapped key-value store (analogous to Redis or Memcached), leveraging the zero-copy LMDB engine and bypassing complex query compilation for absolute raw speed.
 
 ---
 
 ## 🏛️ Conceptual Mapping & Architecture
 
-In Key-Value mode, Cluaizd operates as a direct $O(1)$ mapping of unique keys to raw binary or string values. By bypassing the DNA evaluation hooks for simple lookups, the engine reaches sub-microsecond access latencies directly on local hardware.
+In Key-Value mode, Cluaizdb operates as a direct $O(1)$ mapping of unique keys to raw binary or string values. By bypassing the DNA evaluation hooks for simple lookups, the engine reaches sub-microsecond access latencies directly on local hardware.
 
 ```mermaid
 graph TD
@@ -22,7 +22,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Configure the tenant shard to use the lock-free `dashmap` concurrency engine and keep payloads in raw binary formatting for minimal translation tax:
 

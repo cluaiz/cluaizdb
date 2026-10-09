@@ -5,7 +5,7 @@ The `on_read` execution affordance is invoked during a `find` query, immediately
 ## Architectural Execution
 
 ### 1. Zero-Copy Interception
-During a massive sequential scan (`find * limit 100000`), invoking a WASM hook on every single record could introduce catastrophic latency. Cluaizd solves this via **JIT Compilation and Memory Aliasing**. The `on_read` script is compiled once per query batch. As the engine streams over the LMDB memory map, the WASM runtime merely shifts its internal pointer window to look at the next record.
+During a massive sequential scan (`find * limit 100000`), invoking a WASM hook on every single record could introduce catastrophic latency. Cluaizdb solves this via **JIT Compilation and Memory Aliasing**. The `on_read` script is compiled once per query batch. As the engine streams over the LMDB memory map, the WASM runtime merely shifts its internal pointer window to look at the next record.
 
 ### 2. Ephemeral Mutation
 Unlike `on_write`, any modifications made to the payload inside the `on_read` hook are **strictly ephemeral**. The engine allocates a tiny scratchpad buffer for the modified output. The physical disk and primary memory map are never altered.

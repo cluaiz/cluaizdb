@@ -15,7 +15,7 @@ find similar using cosine_distance [ limit <K> ]
 Cosine Distance is fundamentally a measurement of orientation, ignoring the magnitude (length) of the vectors.
 
 ### 1. The Mathematical Computation
-The formula used internally by the cluaizd is:
+The formula used internally by the cluaizdb is:
 
 $$ 1 - \frac{A \cdot B}{||A|| \cdot ||B||} $$
 

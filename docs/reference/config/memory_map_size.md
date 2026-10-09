@@ -1,6 +1,6 @@
 # `memory_map_size` Configuration
 
-The `memory_map_size` parameter in `cluaizd.toml` dictates the maximum virtual address space the LMDB engine is allowed to reserve from the Operating System.
+The `memory_map_size` parameter in `cluaizdb.toml` dictates the maximum virtual address space the LMDB engine is allowed to reserve from the Operating System.
 
 ## Architectural Implication
 
@@ -12,7 +12,7 @@ If the database file grows beyond the allocated `memory_map_size`, the Engine wi
 
 ## Configuration Syntax
 
-Found in `cluaizd.toml` under the `[storage]` section:
+Found in `cluaizdb.toml` under the `[storage]` section:
 
 ```toml
 [storage]

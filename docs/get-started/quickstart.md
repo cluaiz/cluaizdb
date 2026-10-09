@@ -9,14 +9,14 @@ Get CLUAIZD running and your first data in under **60 seconds**.
 ## Step 1: Run the Server
 
 ```bash
-git clone https://github.com/cluaiz/cluaizd.git
-cd cluaizd
-cargo run -p cluaizd-server
+git clone https://github.com/cluaiz/cluaizdb.git
+cd cluaizdb
+cargo run -p cluaizdb-server
 ```
 
 You should see:
 ```
-INFO cluaizd CLUAIZD Server v0.0.1 starting
+INFO cluaizdb CLUAIZD Server v0.0.1 starting
 INFO Running WAL crash recovery...
 INFO WAL boot recovery complete ✅
 INFO Server listening on 0.0.0.0:7331
@@ -49,7 +49,7 @@ curl -X POST http://localhost:7331/neuron \
 
 ## 3. Query via CDQL
 
-Now, we can query our neuron using the cluaizd Neural Query Language (CDQL). 
+Now, we can query our neuron using the cluaizdb Neural Query Language (CDQL). 
 
 ```bash
 curl -X POST http://localhost:7331/query \

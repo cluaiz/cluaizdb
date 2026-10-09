@@ -1,26 +1,26 @@
 [package]
-name = "cluaizd-server"
+name = "cluaizdb-server"
 version = "0.1.0"
 edition = "2021"
 license = "BSL-1.1"
-description = "HTTP/gRPC server daemon for Cluaizd CLUAIZD"
+description = "HTTP/gRPC server daemon for Cluaizdb CLUAIZD"
 
 [[bin]]
-name = "cluaizd-server"
+name = "cluaizdb-server"
 path = "src/main.rs"
 
 [dependencies]
 bincode = "1"
 
 # Internal Modules
-cluaizd-types = { workspace = true }
-cluaizd-errors = { workspace = true }
+cluaizdb-types = { workspace = true }
+cluaizdb-errors = { workspace = true }
 genome = { workspace = true }
 heart = { workspace = true }
 engine-lmdb = { path = "../storage/engine-lmdb" }
 wal = { path = "../storage/wal" }
-cluaizd-index-mvhsnw = { path = "../storage/index-mvhsnw" }
-cluaizd-graph-engine = { path = "../storage/graph-engine" }
+cluaizdb-index-mvhsnw = { path = "../storage/index-mvhsnw" }
+cluaizdb-graph-engine = { path = "../storage/graph-engine" }
 tokio        = { workspace = true }
 serde        = { workspace = true }
 serde_json   = { workspace = true }

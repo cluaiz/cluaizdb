@@ -1,6 +1,6 @@
 # 🕸️ Mode 13: Network Database Paradigm (IDMS-Style)
 
-This guide details how to configure and run Cluaizd as a Network Database, establishing multi-owner relationships (M:N mappings) using flexible adjacency matrices and validation hooks.
+This guide details how to configure and run Cluaizdb as a Network Database, establishing multi-owner relationships (M:N mappings) using flexible adjacency matrices and validation hooks.
 
 ---
 
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Enforce sequential database transitions using `mutex`:
 

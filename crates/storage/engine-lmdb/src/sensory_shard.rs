@@ -2,8 +2,8 @@ use std::path::Path;
 
 use tracing::debug;
 
-use cluaizd_errors::StorageError;
-use cluaizd_types::{NeuronId, PayloadType, UniversalNeuron};
+use cluaizdb_errors::StorageError;
+use cluaizdb_types::{NeuronId, PayloadType, UniversalNeuron};
 
 use crate::env::LmdbEnv;
 
@@ -51,7 +51,7 @@ impl SensoryShard {
         &self,
         raw_stream: bytes::Bytes,
         source_device_id: Option<&str>,
-        dna: Option<cluaizd_types::NeuronDna>,
+        dna: Option<cluaizdb_types::NeuronDna>,
     ) -> Result<NeuronId, StorageError> {
         use crate::writer::write_neuron;
 

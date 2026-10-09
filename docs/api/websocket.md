@@ -4,7 +4,7 @@
 
 ## What is the HEART WebSocket?
 
-CLUAIZD maps all its internal performance metrics to **biological biomarkers** through the `Cluaizd-HEART` system. Instead of showing you boring CPU% graphs, it expresses database load as:
+CLUAIZD maps all its internal performance metrics to **biological biomarkers** through the `Cluaizdb-HEART` system. Instead of showing you boring CPU% graphs, it expresses database load as:
 
 - **Heart Rate (BPM):** Maps to the number of active shards. More shards = faster heartbeat.
 - **Blood Pressure:** Maps to write/read throughput pressure.

@@ -1,5 +1,5 @@
-use cluaizd_graph_engine::{GraphEngine, NeuronFetcher, TraversalConfig};
-use cluaizd_types::{NeuronId, UniversalNeuron, NeuronEdge, PayloadType};
+use cluaizdb_graph_engine::{GraphEngine, NeuronFetcher, TraversalConfig};
+use cluaizdb_types::{NeuronId, UniversalNeuron, NeuronEdge, PayloadType};
 use bytes::Bytes;
 use std::sync::Arc;
 use std::collections::HashMap;

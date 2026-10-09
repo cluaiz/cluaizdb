@@ -1,11 +1,11 @@
 # `ctx.abort` Engine API
 
-The `ctx.abort()` instruction is a critical safety mechanism exposed to WASM and Rhai execution affordances. It commands the cluaizd to instantly halt the current execution thread and rollback any pending memory mutations.
+The `ctx.abort()` instruction is a critical safety mechanism exposed to WASM and Rhai execution affordances. It commands the cluaizdb to instantly halt the current execution thread and rollback any pending memory mutations.
 
 ## Architectural Execution
 
 ### 1. The WAL Rollback Mechanism
-Because cluaizd uses a Write-Ahead Log (WAL), data integrity is paramount. If an `on_write` or `on_delete` script invokes `ctx.abort()`, the engine simply discards the uncommitted buffer sitting in RAM. The physical WAL append operation is bypassed entirely, meaning the disk never registers the invalid transaction.
+Because cluaizdb uses a Write-Ahead Log (WAL), data integrity is paramount. If an `on_write` or `on_delete` script invokes `ctx.abort()`, the engine simply discards the uncommitted buffer sitting in RAM. The physical WAL append operation is bypassed entirely, meaning the disk never registers the invalid transaction.
 
 ### 2. Lock Release
 In high-concurrency environments, writes may temporarily lock specific B-Tree nodes. Calling `ctx.abort()` immediately signals the Engine's Thread Manager to release these Mutex locks, preventing deadlocks or prolonged system stalls caused by faulty WASM scripts.

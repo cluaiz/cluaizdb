@@ -1,6 +1,6 @@
 # `similar_to` Command Reference
 
-The `similar_to` keyword switches the Cluaizd query executor from standard exact-match logic (JSON/Text) to High-Dimensional Vector Similarity Search. It is designed specifically for AI workflows, RAG (Retrieval-Augmented Generation), and semantic search.
+The `similar_to` keyword switches the Cluaizdb query executor from standard exact-match logic (JSON/Text) to High-Dimensional Vector Similarity Search. It is designed specifically for AI workflows, RAG (Retrieval-Augmented Generation), and semantic search.
 
 ## Syntax Rules
 
@@ -17,7 +17,7 @@ The `similar_to` keyword switches the Cluaizd query executor from standard exact
 
 ## Architecture: How it works under the hood
 
-In Phase 5, Cluaizd upgraded from flat O(N) scans to a **Multi-Version Hierarchical Navigable Small World (MV-HNSW)** index.
+In Phase 5, Cluaizdb upgraded from flat O(N) scans to a **Multi-Version Hierarchical Navigable Small World (MV-HNSW)** index.
 
 ### 1. The MV-HNSW Graph
 Instead of scanning every record, `similar_to` navigates a multi-layered proximity graph in RAM. The search drops through sparse top layers to quickly zoom in on the target region, then traverses the dense bottom layer to find the exact nearest neighbors.

@@ -1,6 +1,6 @@
 # `update` Command Reference
 
-The `update` command in CDQL modifies existing records in place. The cluaizd engine handles updates via Multi-Version Concurrency Control (MVCC) to ensure that reads are never blocked by concurrent writes.
+The `update` command in CDQL modifies existing records in place. The cluaizdb engine handles updates via Multi-Version Concurrency Control (MVCC) to ensure that reads are never blocked by concurrent writes.
 
 ## Syntax Rules
 

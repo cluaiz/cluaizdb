@@ -2,7 +2,7 @@ use std::sync::Arc;
 use axum::{Json, extract::State, http::{StatusCode, HeaderMap}, response::IntoResponse};
 use serde::{Deserialize, Serialize};
 
-use cluaizd_types::UniversalNeuron;
+use cluaizdb_types::UniversalNeuron;
 use crate::routes::AppState;
 use genome::cdql::{parser::{parse, CdqlValue, CompareOp}, planner::{build_plan, PlanStep}, eval_full_text, eval_geo_near, eval_range};
 
@@ -203,7 +203,7 @@ fn execute_cdql(
             PlanStep::FilterResults { field, op, value } => {
                 working_set = working_set.into_iter().filter(|n| {
                     let payload_str = String::from_utf8_lossy(&n.raw_payload).to_string();
-                    matches_filter(n, &cluaizd_types_filter_ref(field, op, value), &payload_str)
+                    matches_filter(n, &cluaizdb_types_filter_ref(field, op, value), &payload_str)
                 }).collect();
             }
 
@@ -294,14 +294,14 @@ fn execute_cdql(
             // ── Graph: multi-hop BFS traversal via adjacency list ─────────────────────
             PlanStep::GraphTraverse { edge: _, min_hops: _, max_hops, min_weight } => {
                 struct MemFetcher<'a> { index: &'a std::collections::HashMap<String, &'a UniversalNeuron> }
-                impl<'a> cluaizd_graph_engine::NeuronFetcher for MemFetcher<'a> {
-                    fn fetch(&self, id: &cluaizd_types::NeuronId) -> Option<UniversalNeuron> {
+                impl<'a> cluaizdb_graph_engine::NeuronFetcher for MemFetcher<'a> {
+                    fn fetch(&self, id: &cluaizdb_types::NeuronId) -> Option<UniversalNeuron> {
                         self.index.get(&id.to_string()).map(|n| (*n).clone())
                     }
                 }
                 let fetcher = std::sync::Arc::new(MemFetcher { index: &neuron_index });
-                let graph = cluaizd_graph_engine::GraphEngine::new(fetcher);
-                let config = cluaizd_graph_engine::TraversalConfig {
+                let graph = cluaizdb_graph_engine::GraphEngine::new(fetcher);
+                let config = cluaizdb_graph_engine::TraversalConfig {
                     max_depth: *max_hops,
                     min_weight: *min_weight as f32,
                     limit: effective_limit,
@@ -571,7 +571,7 @@ fn matches_filter(
 }
 
 /// Helper to build a temporary Filter reference for inline use
-fn cluaizd_types_filter_ref<'a>(
+fn cluaizdb_types_filter_ref<'a>(
     field: &'a str,
     op: &'a CompareOp,
     value: &'a CdqlValue,

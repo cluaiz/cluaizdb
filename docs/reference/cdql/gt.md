@@ -19,7 +19,7 @@ where [ FIELD ] $gt [ VALUE ]
 Evaluating a `$gt` condition requires the engine to ensure type-safety at runtime without heavily penalizing query speed.
 
 ### 1. Zero-Allocation Type Coercion
-When the cluaizd engine reads a value from the storage layer (e.g., an integer field like `age: 25`), it does not instantiate a full JSON Object on the heap. Instead, the parser reads the raw byte-stream. When it encounters the `$gt` operator in the query tree, it performs a zero-allocation cast, comparing the raw parsed integer directly against the query parameter.
+When the cluaizdb engine reads a value from the storage layer (e.g., an integer field like `age: 25`), it does not instantiate a full JSON Object on the heap. Instead, the parser reads the raw byte-stream. When it encounters the `$gt` operator in the query tree, it performs a zero-allocation cast, comparing the raw parsed integer directly against the query parameter.
 
 ### 2. B-Tree Range Scans
 If the field specified in the `$gt` clause is indexed, the engine leverages the B-Tree index to perform an optimized Range Scan. Instead of checking every record, the iterator seeks the exact node where the boundary condition is met and streams all subsequent records sequentially until the end of the index or the `limit` is reached.

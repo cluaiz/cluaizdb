@@ -1,8 +1,8 @@
-# 🧬 Cluaizd DNA Templates: The A-to-Z Developer Guide
+# 🧬 Cluaizdb DNA Templates: The A-to-Z Developer Guide
 
-Welcome to the **Cluaizd DNA Ecosystem**. This directory is not just a collection of examples; it is the fundamental manual for engineering intelligence directly into your database shards.
+Welcome to the **Cluaizdb DNA Ecosystem**. This directory is not just a collection of examples; it is the fundamental manual for engineering intelligence directly into your database shards.
 
-If you are coming from traditional database architectures (PostgreSQL, MongoDB, Redis), you must unlearn the concept of "Database Constraints" and "Middleware Services". In Cluaizd, the engine itself is completely agnostic to business logic. It does not know what a "User" is, what "Spam" is, or what "Time-To-Live (TTL)" means.
+If you are coming from traditional database architectures (PostgreSQL, MongoDB, Redis), you must unlearn the concept of "Database Constraints" and "Middleware Services". In Cluaizdb, the engine itself is completely agnostic to business logic. It does not know what a "User" is, what "Spam" is, or what "Time-To-Live (TTL)" means.
 
 **Everything—every validation, every connection, every memory decay—is defined by you using DNA Templates.**
 
@@ -10,7 +10,7 @@ If you are coming from traditional database architectures (PostgreSQL, MongoDB, 
 
 ## 🏗️ 1. What is a DNA Template?
 
-A DNA Template is a script (written in Rhai, CDQL, or compiled to WASM) that intercepts raw memory operations inside the Cluaizd Rust engine. 
+A DNA Template is a script (written in Rhai, CDQL, or compiled to WASM) that intercepts raw memory operations inside the Cluaizdb Rust engine. 
 
 When you attach a DNA template to a workspace or a specific node, you are effectively giving that partition a "brain". The engine will pause its execution pipeline at specific lifecycle hooks, inject the physical memory (payloads, vectors, graph edges) into your script, and wait for your script's decision before proceeding.
 
@@ -28,12 +28,12 @@ When you attach a DNA template to a workspace or a specific node, you are effect
 
 ## ⚙️ 2. The Engine Synchronization Matrix
 
-Writing a DNA script is only 50% of the architecture. The other 50% is how your script interacts with the Cluaizd Rust Engine's physical memory settings. **Your `config.json` must explicitly define the `[database]` engine settings required for your template to run efficiently.**
+Writing a DNA script is only 50% of the architecture. The other 50% is how your script interacts with the Cluaizdb Rust Engine's physical memory settings. **Your `config.json` must explicitly define the `[database]` engine settings required for your template to run efficiently.**
 
 If you pair a heavy computational DNA script with the wrong engine memory setting, you will bottleneck the entire cluster.
 
 ### A. Serialization & Memory: `payload_format`
-When the engine hands data to your DNA script, it must serialize it. You must configure `payload_format` in your `cluaizd.toml` or DNA `config.json` overrides.
+When the engine hands data to your DNA script, it must serialize it. You must configure `payload_format` in your `cluaizdb.toml` or DNA `config.json` overrides.
 
 - **`payload_format = "flatbuffers"` (The High-Performance Default)**
   - **Why:** Flatbuffers allow the DNA script to read properties of the payload *without* deserializing the whole object. This is **Zero-Copy**.
@@ -65,6 +65,6 @@ Inside this directory, you will find three master templates. Each folder contain
 Each folder contains the template written in 3 ways so you can choose your weapon:
 - **`*.rhai`**: Fast, easy to read, dynamic scripting.
 - **`*.cdql`**: Native query language for declarative logic.
-- **`*.auto_wasm.rs`**: Rust code that Cluaizd will automatically compile to WASM for absolute C-level execution speed.
+- **`*.auto_wasm.rs`**: Rust code that Cluaizdb will automatically compile to WASM for absolute C-level execution speed.
 
 Dive into the folders above to begin engineering your nervous system.

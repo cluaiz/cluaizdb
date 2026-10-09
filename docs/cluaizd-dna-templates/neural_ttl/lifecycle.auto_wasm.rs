@@ -2,7 +2,7 @@
 // 🕰️ Biological Forgetting (Auto-WASM Rust Edition)
 // ==============================================================================
 
-use cluaizd_dna_sdk::prelude::*;
+use cluaizdb_dna_sdk::prelude::*;
 use serde::Deserialize;
 
 #[derive(Deserialize)]

@@ -3,7 +3,7 @@
 Welcome to the absolute beginning. In this chapter, we will not use any heavy math or complex vector searches. We are just going to boot up the engine and inject a simple "Hello World" DNA.
 
 By the end of this tutorial, you will understand how to:
-1. Boot the cluaizd Server.
+1. Boot the cluaizdb Server.
 2. Insert a basic Neuron (Data).
 3. Query the Database.
 
@@ -14,7 +14,7 @@ By the end of this tutorial, you will understand how to:
 Open your terminal, navigate to your workspace, and run:
 
 ```bash
-cargo run -p cluaizd-server
+cargo run -p cluaizdb-server
 ```
 
 You will see logs indicating that the `LMDB environment` has opened and the server is listening on `0.0.0.0:7331`.
@@ -22,7 +22,7 @@ You will see logs indicating that the `LMDB environment` has opened and the serv
 ## 2. Injecting Your First Neuron
 
 In a traditional database like SQL, you would `CREATE TABLE` and then `INSERT`. 
-In Cluaizd, we just **fire a Neuron**.
+In Cluaizdb, we just **fire a Neuron**.
 
 Open another terminal (or use Postman) and send a `POST` request to `/neuron`:
 
@@ -30,7 +30,7 @@ Open another terminal (or use Postman) and send a `POST` request to `/neuron`:
 curl -X POST http://localhost:7331/neuron \
 -H "Content-Type: application/json" \
 -d '{
-  "raw_payload": "Hello Cluaizd! This is my first data.",
+  "raw_payload": "Hello Cluaizdb! This is my first data.",
   "vector_data": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
   "model_creator_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "payload_type": "text",
@@ -44,7 +44,7 @@ You will receive a response like `{"neuron_id":"019ea3d1...", "status":"created"
 
 ## 3. Querying the Database (CDQL)
 
-Now, how do we get that data back? We use **CDQL** (cluaizd Query Language).
+Now, how do we get that data back? We use **CDQL** (cluaizdb Query Language).
 
 Send a `POST` request to `/query`:
 

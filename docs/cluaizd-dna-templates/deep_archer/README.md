@@ -9,7 +9,7 @@ In modern Agentic architectures, LLMs and autonomous agents generate thousands o
 If you allow this garbage into your database, your semantic vector space becomes polluted. Deep Archer ensures that only high-quality, safe, and novel data reaches your disk.
 
 ## 3. Mechanism (How it works)
-When a client sends a `WRITE` request, the Cluaizd Engine does not immediately commit it to the Write-Ahead Log (WAL). Instead:
+When a client sends a `WRITE` request, the Cluaizdb Engine does not immediately commit it to the Write-Ahead Log (WAL). Instead:
 1. The engine maps the incoming data to memory.
 2. The `on_write` hook triggers the Deep Archer script.
 3. The script executes the **Kairos Validation Matrix**:
@@ -22,7 +22,7 @@ When a client sends a `WRITE` request, the Cluaizd Engine does not immediately c
 ```mermaid
 sequenceDiagram
     participant Client as AI Agent
-    participant Engine as Cluaizd Core
+    participant Engine as Cluaizdb Core
     participant DNA as Deep Archer Script
     participant LMDB as Disk Storage
     participant API as Fact-Check Microservice

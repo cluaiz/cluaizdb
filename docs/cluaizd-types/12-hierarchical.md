@@ -1,6 +1,6 @@
 # 🌲 Mode 12: Hierarchical Database Paradigm (Windows Registry-Style)
 
-This guide details how to configure and run Cluaizd as a Hierarchical Database, establishing parent-child 1:N tree layouts using neuron adjacencies and directional traversals.
+This guide details how to configure and run Cluaizdb as a Hierarchical Database, establishing parent-child 1:N tree layouts using neuron adjacencies and directional traversals.
 
 ---
 
@@ -17,7 +17,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set concurrency model to `mutex` to prevent conflicting configuration writes across tree parent nodes:
 

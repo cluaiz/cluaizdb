@@ -17,9 +17,9 @@ async fn main() -> Result<()> {
         .init();
 
     let config = config::ServerConfig::load();
-    info!("Loaded configuration from cluaizd.toml: {:?}", config);
+    info!("Loaded configuration from cluaizdb.toml: {:?}", config);
 
-    info!("Cluaizd CLUAIZD Server v0.0.1 — starting");
+    info!("Cluaizdb CLUAIZD Server v0.0.1 — starting");
 
     let shards_path = Path::new("data/shards");
     let sensory_path = Path::new("data/sensory");
@@ -37,7 +37,7 @@ async fn main() -> Result<()> {
             let mut replayed_count = 0usize;
             let result = wal::recover_from_wal(wal_path, &mut |entry| {
                 if let wal::WalOperation::Write { payload } = &entry.operation {
-                    if let Ok(neuron) = serde_json::from_slice::<cluaizd_types::UniversalNeuron>(payload) {
+                    if let Ok(neuron) = serde_json::from_slice::<cluaizdb_types::UniversalNeuron>(payload) {
                         // Check if this neuron is already in LMDB (idempotent replay)
                         if engine_lmdb::read_neuron(&env, neuron.id, None).is_err() {
                             engine_lmdb::write_neuron(&env, &neuron)?;
@@ -61,7 +61,7 @@ async fn main() -> Result<()> {
         Err(e) => warn!("Could not open default shard for WAL recovery (clean boot?): {}", e),
     }
 
-    info!("Starting Cluaizd-HEART Autonomic Telemetry Engine");
+    info!("Starting Cluaizdb-HEART Autonomic Telemetry Engine");
     let data_dir = Path::new("data");
     let heart = heart::Heart::new(data_dir);
     heart.start_heartbeat();
@@ -113,7 +113,7 @@ async fn main() -> Result<()> {
     // Build the Axum router with all routes.
     let app = routes::build_router(state);
 
-    // Bind to address configured in cluaizd.toml.
+    // Bind to address configured in cluaizdb.toml.
     let addr = format!("{}:{}", config.server.host, config.server.port);
     let listener = tokio::net::TcpListener::bind(&addr).await?;
     info!(addr = %addr, "Server listening — ready to accept requests");

@@ -159,4 +159,4 @@ find Sensor(id: "temp_01")
 | `find User(id: "abc")` — slow scan | `find id("abc")` — 0ms Fast-Path |
 | `find * -> similar_to() -> filter active: true` | `find User(active: true) -> similar_to()` — filter first! |
 | `traverse(hops: 1..10)` without limit | `traverse(hops: 1..3) -> limit 100` — always cap traversal |
-| HTTP for 256K IoT writes/sec | Use C-FFI `cluaizd_write()` — 20x faster |
+| HTTP for 256K IoT writes/sec | Use C-FFI `cluaizdb_write()` — 20x faster |

@@ -1,10 +1,10 @@
-// cluaizd-dna-templates/wasm_example.rs
+// cluaizdb-dna-templates/wasm_example.rs
 // Rust template for compiling a WASM DNA Module
 
 use std::slice;
 use std::mem;
 
-// 1. Memory Management Exports (Required by Cluaizd WASM Executor)
+// 1. Memory Management Exports (Required by Cluaizdb WASM Executor)
 
 #[no_mangle]
 pub extern "C" fn allocate(size: u32) -> *mut u8 {

@@ -1,6 +1,6 @@
 # 🌌 Mode 27: Native XML Database Paradigm (MarkLogic-Style)
 
-This guide details how to configure and run Cluaizd as a Native XML Database, validating structured XML payloads and tag structures within DNA write hooks.
+This guide details how to configure and run Cluaizdb as a Native XML Database, validating structured XML payloads and tag structures within DNA write hooks.
 
 ---
 
@@ -10,7 +10,7 @@ In Native XML Mode, records are stored as XML strings inside `raw_payload`. Inst
 
 ```mermaid
 graph TD
-    Client[Python Client] -->|Insert XML Document| Server[Cluaizd Core]
+    Client[Python Client] -->|Insert XML Document| Server[Cluaizdb Core]
     Server -->|Evaluate XML Tags| DNA[DNA XML Validator]
     DNA -->|Malformed Tags| Fail[Abort Write / 400 Bad Request]
     DNA -->|Pass| LMDB[(LMDB Data Store)]
@@ -18,7 +18,7 @@ graph TD
 
 ---
 
-## 🗄️ Server Configuration (`cluaizd.toml`)
+## 🗄️ Server Configuration (`cluaizdb.toml`)
 
 Set database concurrency mode to `dashmap` to optimize concurrent read query validation:
 
