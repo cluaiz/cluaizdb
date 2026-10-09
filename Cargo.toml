@@ -19,6 +19,7 @@ members = [
     "kernel-core/ffi",
     "modules/group-commit",
     "modules/index-engine/mvhsnw-vector",
+    "runtimes/wasmtime-sandbox",
     "crates/storage/engine-lmdb",
     "crates/storage/wal",
     "crates/storage/graph-engine",

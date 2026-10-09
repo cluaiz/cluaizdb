@@ -1,0 +1,17 @@
+[package]
+name = "cluaizdb-wasm-sandbox"
+version = "0.2.0"
+edition = "2021"
+description = "Fuel-metered WebAssembly sandbox runtime for CluaizDB Kernel v2 programmable genomes"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+wasmtime = "45.0.1"
+wat = "1.0"
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"
