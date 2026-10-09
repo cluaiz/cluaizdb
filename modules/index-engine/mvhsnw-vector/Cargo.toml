@@ -1,0 +1,11 @@
+[package]
+name = "cluaizdb-index-mvhsnw"
+version = "0.2.0"
+edition = "2021"
+description = "Mutex-hardened HNSW vector index engine for CluaizDB Kernel v2"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+parking_lot = "0.12"
+rand = "0.8"
+serde = { version = "1", features = ["derive"], optional = true }

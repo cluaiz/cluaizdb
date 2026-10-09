@@ -1,0 +1,16 @@
+[package]
+name = "cluaizdb-group-commit"
+version = "0.2.0"
+edition = "2021"
+description = "High-throughput ACID group committer and SSD barrier coordinator for CluaizDB Kernel v2"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+cluaizdb-substrate = { path = "../../kernel-core/substrate" }
+tokio = { version = "1", features = ["sync", "time", "macros", "rt"] }
+thiserror = "2"
+tracing = "0.1"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+tempfile = "3"

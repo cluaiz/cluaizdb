@@ -1,5 +1,9 @@
 [workspace]
 resolver = "2"
+exclude = [
+    "crates/storage/index-mvhsnw",
+    "ffi",
+]
 
 members = [
     # Components (shared libraries, no business logic)
@@ -7,10 +11,16 @@ members = [
     "components/cluaizdb-errors",
     "components/cluaizdb-common",
 
-    # Storage Layer
+    # Protocol Layer (Kernel v2 MCP & ABI)
+    "api/mcp-spec",
+
+    # Storage Layer (Kernel v2 Substrate & Modules)
+    "kernel-core/substrate",
+    "kernel-core/ffi",
+    "modules/group-commit",
+    "modules/index-engine/mvhsnw-vector",
     "crates/storage/engine-lmdb",
     "crates/storage/wal",
-    "crates/storage/index-mvhsnw",
     "crates/storage/graph-engine",
     "crates/storage/time-series",
 
@@ -21,7 +31,7 @@ members = [
     "crates/server",
 
     # CLI binary
-    "apps/cli", "crates/genome", "crates/heart", "dnas/base_document", "dnas/base_sql", "dnas/base_vector", "dnas/base_graph", "ffi",
+    "apps/cli", "crates/genome", "crates/heart", "dnas/base_document", "dnas/base_sql", "dnas/base_vector", "dnas/base_graph",
 
     # Integration Tests & QA
     "tests/integration",
@@ -78,5 +88,5 @@ cluaizd-errors        = { package = "cluaizdb-errors", path = "components/cluaiz
 cluaizd-common        = { package = "cluaizdb-common", path = "components/cluaizdb-common" }
 genome                = { path = "crates/genome" }
 heart                 = { path = "crates/heart" }
-cluaizdb-index-mvhsnw = { path = "crates/storage/index-mvhsnw" }
-cluaizd-index-mvhsnw  = { package = "cluaizdb-index-mvhsnw", path = "crates/storage/index-mvhsnw" }
+cluaizdb-index-mvhsnw = { path = "modules/index-engine/mvhsnw-vector" }
+cluaizd-index-mvhsnw  = { package = "cluaizdb-index-mvhsnw", path = "modules/index-engine/mvhsnw-vector" }

@@ -463,7 +463,7 @@ dependencies = [
  "anyhow",
  "clap",
  "cluaizdb-errors",
- "cluaizdb-ffi",
+ "cluaizdb-ffi 0.1.0",
  "cluaizdb-types",
  "dialoguer",
  "engine-lmdb",
@@ -517,6 +517,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "cluaizdb-ffi"
+version = "0.2.0"
+dependencies = [
+ "cluaizdb-group-commit",
+ "cluaizdb-substrate",
+ "libc",
+ "tempfile",
+]
+
+[[package]]
 name = "cluaizdb-graph-engine"
 version = "0.1.0"
 dependencies = [
@@ -530,16 +540,38 @@ dependencies = [
 ]
 
 [[package]]
-name = "cluaizdb-index-mvhsnw"
-version = "0.1.0"
+name = "cluaizdb-group-commit"
+version = "0.2.0"
 dependencies = [
- "cluaizdb-types",
- "criterion",
- "crossbeam",
+ "cluaizdb-substrate",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "cluaizdb-index-mvhsnw"
+version = "0.2.0"
+dependencies = [
  "parking_lot",
  "rand",
  "serde",
- "tracing",
+]
+
+[[package]]
+name = "cluaizdb-mcp"
+version = "0.2.0"
+dependencies = [
+ "cluaizdb-group-commit",
+ "cluaizdb-index-mvhsnw",
+ "cluaizdb-substrate",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "uuid",
 ]
 
 [[package]]
@@ -574,6 +606,20 @@ dependencies = [
  "uuid",
  "wal",
  "wasmtime",
+]
+
+[[package]]
+name = "cluaizdb-substrate"
+version = "0.2.0"
+dependencies = [
+ "byteorder",
+ "heed",
+ "parking_lot",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "uuid",
 ]
 
 [[package]]

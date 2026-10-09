@@ -1,0 +1,18 @@
+[package]
+name = "cluaizdb-ffi"
+version = "0.2.0"
+edition = "2021"
+description = "C-compatible FFI bindings for CluaizDB Kernel v2 — in-process microsecond memory bridge"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "cluaizdb"
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+cluaizdb-substrate = { path = "../substrate" }
+cluaizdb-group-commit = { path = "../../modules/group-commit" }
+libc = "0.2"
+
+[dev-dependencies]
+tempfile = "3"
