@@ -609,6 +609,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "cluaizdb-server-http"
+version = "0.2.0"
+dependencies = [
+ "axum",
+ "clap",
+ "cluaizdb-group-commit",
+ "cluaizdb-index-mvhsnw",
+ "cluaizdb-mcp",
+ "cluaizdb-substrate",
+ "cluaizdb-wasm-sandbox",
+ "http-body-util",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tokio",
+ "tower",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "cluaizdb-substrate"
 version = "0.2.0"
 dependencies = [

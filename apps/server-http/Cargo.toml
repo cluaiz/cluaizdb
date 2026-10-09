@@ -1,0 +1,30 @@
+[package]
+name = "cluaizdb-server-http"
+version = "0.2.0"
+edition = "2021"
+description = "Sovereign REST & MCP HTTP/Stdio edge server for CluaizDB Kernel v2"
+license = "MIT OR Apache-2.0"
+
+[[bin]]
+name = "cluaizdb-server"
+path = "src/main.rs"
+
+[dependencies]
+cluaizdb-substrate = { path = "../../kernel-core/substrate" }
+cluaizdb-group-commit = { path = "../../modules/group-commit" }
+cluaizdb-index-mvhsnw = { path = "../../modules/index-engine/mvhsnw-vector" }
+cluaizdb-wasm-sandbox = { path = "../../runtimes/wasmtime-sandbox" }
+cluaizdb-mcp = { path = "../../api/mcp-spec" }
+
+tokio = { workspace = true }
+axum = { version = "0.7", features = ["macros", "json"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+clap = { version = "4", features = ["derive"] }
+
+[dev-dependencies]
+tempfile = "3"
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"

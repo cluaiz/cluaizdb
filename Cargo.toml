@@ -29,6 +29,7 @@ members = [
     "crates/consensus/raft-engine",
 
     # Server
+    "apps/server-http",
     "crates/server",
 
     # CLI binary
