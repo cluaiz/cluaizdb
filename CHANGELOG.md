@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dynamic Garbage Collector for automatic payload stripping.
 
 ### Changed
-- Standardized all terminology to strict `cdql` and `cluaizd` naming conventions.
+- Standardized all terminology to strict `cdql` and `cluaizdb` naming conventions.
 - Refactored AST to `CdqlQuery` and unified the namespace.
 
 ### Fixed

@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif type_of(payload) != \"map\" {\n    res.action = \"Abort\";\n    res.error = \"ACID Violation: Payload must be a strictly typed map (table row)\";\n} else {\n    if !payload.contains(\"id\") || !payload.contains(\"created_at\") {\n        res.action = \"Abort\";\n        res.error = \"Schema Violation: Missing required columns 'id' or 'created_at'\";\n    }\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nres",
-  "on_index": null,
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

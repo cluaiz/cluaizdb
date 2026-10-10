@@ -1,10 +1,12 @@
 pub mod db;
 pub mod error;
+pub mod graph;
 pub mod schema;
 pub mod traits;
 
 pub use db::SubstrateEnv;
 pub use error::{Result, SubstrateError};
+pub use graph::{GraphTraversal, TraversalConfig, TraversalDirection, TraversalNode};
 pub use schema::{EdgeMetadata, StatsMetadata};
 pub use traits::StorageSubstrate;
 
@@ -105,5 +107,50 @@ mod tests {
         assert_eq!(in_bob.len(), 2);
         assert!(in_bob.contains(&alice));
         assert!(in_bob.contains(&charlie));
+    }
+
+    #[test]
+    fn test_multihop_graph_traversal_and_shortest_path() {
+        let dir = tempdir().unwrap();
+        let db = SubstrateEnv::open(dir.path(), 10 * 1024 * 1024).unwrap();
+
+        // Graph chain: Node 1 -> Node 2 -> Node 3 -> Node 4
+        let n1 = 1u128;
+        let n2 = 2u128;
+        let n3 = 3u128;
+        let n4 = 4u128;
+        let rel_call = 10u32;
+
+        let meta = EdgeMetadata {
+            weight: 1.0,
+            created_at: 1000,
+            valid_until: 2000,
+        };
+
+        db.add_edge(n1, rel_call, n2, meta).unwrap();
+        db.add_edge(n2, rel_call, n3, meta).unwrap();
+        db.add_edge(n3, rel_call, n4, meta).unwrap();
+
+        // Multi-hop BFS traversal from n1 with max_depth = 3
+        let config = TraversalConfig {
+            max_depth: 3,
+            min_weight: 0.5,
+            limit: 50,
+            edge_type: Some(rel_call),
+            direction: TraversalDirection::Outbound,
+        };
+
+        let nodes = db.traverse_graph(n1, &config).unwrap();
+        assert_eq!(nodes.len(), 3);
+        assert_eq!(nodes[0].node_id, n2);
+        assert_eq!(nodes[0].depth, 1);
+        assert_eq!(nodes[1].node_id, n3);
+        assert_eq!(nodes[1].depth, 2);
+        assert_eq!(nodes[2].node_id, n4);
+        assert_eq!(nodes[2].depth, 3);
+
+        // Shortest Path from n1 to n4
+        let path = db.find_shortest_path(n1, n4, &config).unwrap();
+        assert_eq!(path, Some(vec![n1, n2, n3, n4]));
     }
 }

@@ -1,8 +1,8 @@
 [package]
 name = "cluaizdb-ffi"
-version = "0.2.0"
+version = "0.1.0"
 edition = "2021"
-description = "C-compatible FFI bindings for CluaizDB Kernel v2 — in-process microsecond memory bridge"
+description = "C-compatible FFI bindings for CluaizDB — in-process microsecond memory bridge"
 license = "MIT OR Apache-2.0"
 
 [lib]

@@ -1,7 +1,7 @@
-# 🚀 Apps: The Cluaizd Interface Layer
+# 🚀 Apps: The Cluaizdb Interface Layer
 
 ## Purpose
-The `apps/` directory contains all executable interfaces, binaries, and entry points that interact with the core Cluaizd ecosystem. This isolates user-facing application shells from the core database business logic and engine mechanics.
+The `apps/` directory contains all executable interfaces, binaries, and entry points that interact with the core Cluaizdb ecosystem. This isolates user-facing application shells from the core database business logic and engine mechanics.
 
 ## Architecture Flow
 
@@ -27,4 +27,4 @@ This directory isolates all interactive console tooling.
 **2. Interface vs. Engine Layer**
 - **Core Logic:** Files in `apps/` are strictly forbidden from directly importing low-level traits from `engine-lmdb` or `storage`. 
 - **Execution Flow:** All communication must go through the public HTTP Axum server or the C-ABI FFI wrapper.
-- **Why?** It proves that Cluaizd is a true database server, not just an embedded library. By forcing our own internal tools to use the public APIs, we ensure the APIs are robust, performant, and feature-complete for end-users.
+- **Why?** It proves that Cluaizdb is a true database server, not just an embedded library. By forcing our own internal tools to use the public APIs, we ensure the APIs are robust, performant, and feature-complete for end-users.

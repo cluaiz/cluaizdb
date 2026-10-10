@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"column_family\") {\n    res.action = \"Reject\";\n    res.reason = \"Missing column_family definition\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nif payload.column_family == \"system_events\" {\n    res.match_found = true;\n} else {\n    res.match_found = false;\n}\nres",
-  "on_index": "let res = #{ score: 1.0 };\nif payload.contains(\"ttl\") {\n    res.ttl = payload.ttl;\n}\nres",
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

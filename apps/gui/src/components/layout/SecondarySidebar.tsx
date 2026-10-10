@@ -32,7 +32,7 @@ export function SecondarySidebar() {
   const [orgOpen, setOrgOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
 
-  const orgs = ['Cluaizd Core Shard', 'Research Shard Delta', 'Neural Labs', 'Global Ops Matrix'];
+  const orgs = ['Cluaizdb Core Shard', 'Research Shard Delta', 'Neural Labs', 'Global Ops Matrix'];
   const users = ['Aryan (Owner)', 'Neuron Operator', 'Guest Analyst', 'Root System Admin'];
 
   const getSubnavItems = () => {

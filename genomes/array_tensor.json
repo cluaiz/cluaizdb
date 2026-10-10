@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"shape\") || !payload.contains(\"dimensions\") {\n    res.action = \"Reject\";\n    res.reason = \"Array/Tensor payloads must define shape and dimension metrics\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nif payload.dimensions == query_key {\n    res.match_found = true;\n} else {\n    res.match_found = false;\n}\nres",
-  "on_index": null,
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

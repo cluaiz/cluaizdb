@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"class_name\") {\n    res.action = \"Reject\";\n    res.reason = \"Object-oriented paradigm requires a class_name definition\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nif payload.class_name == query_key {\n    res.match_found = true;\n} else {\n    res.match_found = false;\n}\nres",
-  "on_index": null,
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

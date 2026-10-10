@@ -1,15 +1,15 @@
-# Contributing to Cluaizd
+# Contributing to Cluaizdb
 
-First off, thank you for considering contributing to Cluaizd! It's people like you that make this database engine a powerful reality.
+First off, thank you for considering contributing to Cluaizdb! It's people like you that make this database engine a powerful reality.
 
 ## 🛠️ Development Setup
 
-Cluaizd is built in Rust. You will need the latest stable Rust toolchain.
+Cluaizdb is built in Rust. You will need the latest stable Rust toolchain.
 
 1. **Clone the repo:**
    ```bash
-   git clone https://github.com/cluaiz/cluaizd.git
-   cd cluaizd
+   git clone https://github.com/cluaiz/cluaizdb.git
+   cd cluaizdb
    ```
 
 2. **Build the Server:**

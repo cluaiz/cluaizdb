@@ -12,7 +12,7 @@ export const useWebSocket = (url: string = 'ws://localhost:7331/ws/telemetry') =
       wsRef.current = ws;
 
       ws.onopen = () => {
-        addLog('success', 'Connected to Cluaizd-HEART telemetry server');
+        addLog('success', 'Connected to Cluaizdb-HEART telemetry server');
       };
 
       ws.onmessage = (event) => {

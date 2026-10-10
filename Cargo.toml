@@ -1,52 +1,29 @@
 [workspace]
 resolver = "2"
-exclude = [
-    "crates/storage/index-mvhsnw",
-    "ffi",
-]
 
 members = [
-    # Components (shared libraries, no business logic)
-    "components/cluaizdb-types",
-    "components/cluaizdb-errors",
-    "components/cluaizdb-common",
-
-    # Protocol Layer (Kernel v2 MCP & ABI)
+    # Protocol Layer (MCP)
     "api/mcp-spec",
 
-    # Storage Layer (Kernel v2 Substrate & Modules)
+    # Core Execution & Storage Substrate
     "kernel-core/substrate",
     "kernel-core/ffi",
+
+    # Pure Standalone Modules
     "modules/group-commit",
     "modules/index-engine/mvhsnw-vector",
+    "modules/cdql-query",
+    "modules/time-series",
+
+    # Runtimes
     "runtimes/wasmtime-sandbox",
-    "crates/storage/engine-lmdb",
-    "crates/storage/wal",
-    "crates/storage/graph-engine",
-    "crates/storage/time-series",
 
-    # Consensus Layer
-    "crates/consensus/raft-engine",
-
-    # Server
+    # Applications & CLI
     "apps/server-http",
-    "crates/server",
+    "apps/cli",
 
-    # CLI binary
-    "apps/cli", "crates/genome", "crates/heart", "dnas/base_document", "dnas/base_sql", "dnas/base_vector", "dnas/base_graph",
-
-    # Integration Tests & QA
-    "tests/integration",
-    "tests/chaos",
+    # Hardware Benchmarks
     "tests/benchmarks",
-    "tests/quality",
-    "tests/qa",
-    "tests/api",
-    "tests/sdk",
-    "tests/apps",
-    "tests/fuzz",
-    "tests/migration",
-    "tests/replication",
 ]
 
 # Shared dependency versions for all crates.

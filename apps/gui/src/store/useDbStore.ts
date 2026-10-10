@@ -121,7 +121,7 @@ export const useDbStore = create<DatabaseState>((set) => ({
   setActiveDbEngine: (engine) => set({ activeDbEngine: engine }),
 
   logs: [
-    { time: new Date().toLocaleTimeString(), type: 'info', message: 'Cluaizd-HEART engine boot initialized' },
+    { time: new Date().toLocaleTimeString(), type: 'info', message: 'Cluaizdb-HEART engine boot initialized' },
     { time: new Date().toLocaleTimeString(), type: 'success', message: 'LMDB memory mapped page registers loaded' }
   ],
   addLog: (type, message) => set((state) => ({
@@ -137,7 +137,7 @@ export const useDbStore = create<DatabaseState>((set) => ({
   activeSettingsSubView: 'engine',
   setActiveSettingsSubView: (subView) => set({ activeSettingsSubView: subView }),
   
-  activeOrg: 'Cluaizd Core Shard',
+  activeOrg: 'Cluaizdb Core Shard',
   setActiveOrg: (org) => set({ activeOrg: org }),
   
   activeUser: 'Aryan (Owner)',

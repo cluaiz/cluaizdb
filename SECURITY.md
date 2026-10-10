@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Currently, Cluaizd is in active development. Only the latest release on the `main` branch is officially supported for security updates.
+Currently, Cluaizdb is in active development. Only the latest release on the `main` branch is officially supported for security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,9 +11,9 @@ Currently, Cluaizd is in active development. Only the latest release on the `mai
 
 ## Reporting a Vulnerability
 
-We take the security of Cluaizd and the data it handles very seriously. 
+We take the security of Cluaizdb and the data it handles very seriously. 
 
-If you discover a security vulnerability within Cluaizd, please **do not open a public issue**. Instead, send an email to the maintainers at **support@cluaiz.com**.
+If you discover a security vulnerability within Cluaizdb, please **do not open a public issue**. Instead, send an email to the maintainers at **support@cluaiz.com**.
 
 Please include:
 1. A detailed description of the vulnerability. 

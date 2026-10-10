@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"valid_from\") || !payload.contains(\"valid_to\") {\n    res.action = \"Reject\";\n    res.reason = \"Temporal data must explicitly state valid_from and valid_to epochs\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\n// Read matches if query_key (epoch) falls within the temporal validity window\nif payload.valid_from <= query_key && payload.valid_to >= query_key {\n    res.match_found = true;\n} else {\n    res.match_found = false;\n}\nres",
-  "on_index": null,
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

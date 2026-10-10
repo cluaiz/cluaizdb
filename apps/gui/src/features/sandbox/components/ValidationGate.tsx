@@ -69,7 +69,7 @@ export const ValidationGate: React.FC = () => {
         <div className="bg-cyber-bg/50 border-2 border-cyber-border/40 p-2.5 [border-radius:0px_!important] flex flex-col gap-1 text-[11px] font-mono mt-2 text-cyber-text/85">
           <div className="flex justify-between">
             <span className="text-cyber-text/50">Target Shard:</span>
-            <span>cluaizd.mdb</span>
+            <span>cluaizdb.mdb</span>
           </div>
           <div className="flex justify-between">
             <span className="text-cyber-text/50">Selected Neuron:</span>

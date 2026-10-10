@@ -27,7 +27,7 @@ export default function App() {
 
     const mockNodes = [
       // IDENTITY CLUSTER
-      { id: '1', name: 'Cluaizd Core identity', label: 'OrgNeuron', cluster: 'IDENTITY', isRoot: true },
+      { id: '1', name: 'Cluaizdb Core identity', label: 'OrgNeuron', cluster: 'IDENTITY', isRoot: true },
       { id: '2', name: 'Aryan Owner Node', label: 'BossNeuron', cluster: 'IDENTITY' },
       { id: '3', name: 'Engineering Core', label: 'DeptNeuron', cluster: 'IDENTITY' },
       // WORKFORCE CLUSTER
@@ -35,7 +35,7 @@ export default function App() {
       { id: '5', name: 'Read/Write Synapse', label: 'SkillNeuron', cluster: 'WORKFORCE' },
       { id: '6', name: 'LMDB Driver Interface', label: 'ToolNeuron', cluster: 'WORKFORCE' },
       // KNOWLEDGE CLUSTER
-      { id: '7', name: 'cluaizd_manual.pdf', label: 'PageNeuron', cluster: 'KNOWLEDGE' },
+      { id: '7', name: 'cluaizdb_manual.pdf', label: 'PageNeuron', cluster: 'KNOWLEDGE' },
       { id: '8', name: 'Hot state caching rules', label: 'PageNeuron', cluster: 'KNOWLEDGE' },
       // MEMORY CLUSTER
       { id: '9', name: 'Active Admin Session', label: 'SessionNode', cluster: 'MEMORY' },

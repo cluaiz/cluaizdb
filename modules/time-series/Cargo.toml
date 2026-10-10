@@ -1,0 +1,11 @@
+[package]
+name = "cluaizdb-time-series"
+version = "0.1.0"
+edition = "2021"
+description = "Time-series compression engine for CluaizDB using Gorilla protocol"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+bytes = "1"
+thiserror = "2"
+serde = { version = "1", features = ["derive"] }

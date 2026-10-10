@@ -1,7 +1,8 @@
 use crate::error::Result;
+use crate::graph::{GraphTraversal, TraversalConfig, TraversalNode};
 use crate::schema::{EdgeMetadata, StatsMetadata};
 
-/// The fundamental, zero-opinion storage trait for CluaizDB Kernel v2.
+/// The fundamental, zero-opinion storage trait for CluaizDB.
 /// Abstracting this interface satisfies the Ironclad DRY principle, allowing
 /// hot-swapping or mocking without modifying dependent runtimes.
 pub trait StorageSubstrate: Send + Sync {
@@ -20,6 +21,20 @@ pub trait StorageSubstrate: Send + Sync {
     fn delete_edge(&self, src_id: u128, type_id: u32, dst_id: u128) -> Result<bool>;
     fn get_outbound_edges(&self, src_id: u128, type_id: Option<u32>) -> Result<Vec<(u128, EdgeMetadata)>>;
     fn get_inbound_edges(&self, dst_id: u128, type_id: Option<u32>) -> Result<Vec<u128>>;
+
+    // Multi-hop Graph Traversal Algorithms
+    fn traverse_graph(&self, start_id: u128, config: &TraversalConfig) -> Result<Vec<TraversalNode>> {
+        GraphTraversal::bfs(self, start_id, config)
+    }
+
+    fn find_shortest_path(
+        &self,
+        start_id: u128,
+        target_id: u128,
+        config: &TraversalConfig,
+    ) -> Result<Option<Vec<u128>>> {
+        GraphTraversal::shortest_path(self, start_id, target_id, config)
+    }
 
     // Sandboxed WASM Genomes
     fn put_genome(&self, wasm_id: u64, bytecode: &[u8]) -> Result<()>;

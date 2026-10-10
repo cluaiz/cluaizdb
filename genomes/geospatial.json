@@ -1,8 +1,0 @@
-{
-  "on_write": null,
-  "on_read": null,
-  "on_index": "let res = #{ distance: 0.0 };\nlet dx = vector_data[0] - query_vector[0];\nlet dy = vector_data[1] - query_vector[1];\nres.distance = sqrt((dx * dx) + (dy * dy));\nres",
-  "on_lifecycle": "let res = #{};\nif current_tier == \"Hot\" {\n    res.new_tier = \"Warm\";\n    res.clear_payload = true;\n}\nres",
-  "parameters": {},
-  "engine": "rhai"
-}

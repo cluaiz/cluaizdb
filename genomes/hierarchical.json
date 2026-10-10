@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"parent_id\") {\n    res.action = \"Reject\";\n    res.reason = \"Hierarchical nodes must specify a parent_id (or root)\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nif payload.parent_id == query_key {\n    res.match_found = true;\n} else {\n    res.match_found = false;\n}\nres",
-  "on_index": null,
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

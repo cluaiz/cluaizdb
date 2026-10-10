@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"geometry\") {\n    res.action = \"Reject\";\n    res.reason = \"Spatial Geographic objects require a GeoJSON geometry field\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\n// Placeholder for polygon intersection\nres.match_found = true;\nres",
-  "on_index": "let res = #{ score: 1.0 };\nif payload.geometry.type == \"Point\" {\n    res.point = payload.geometry.coordinates;\n}\nres",
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

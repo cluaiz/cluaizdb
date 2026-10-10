@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"epoch\") || !payload.contains(\"coordinates\") {\n    res.action = \"Reject\";\n    res.reason = \"Spatial-Temporal payloads must provide both time (epoch) and space (coordinates)\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nres.match_found = true;\nres",
-  "on_index": "let res = #{ score: 1.0 };\nres",
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

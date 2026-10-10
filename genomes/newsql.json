@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"transaction_id\") {\n    res.action = \"Reject\";\n    res.reason = \"NewSQL records require strict transaction_id tracking\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nif payload.transaction_id == query_key {\n    res.match_found = true;\n} else {\n    res.match_found = false;\n}\nres",
-  "on_index": null,
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

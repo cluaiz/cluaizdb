@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"node_label\") || !payload.contains(\"foreign_keys\") {\n    res.action = \"Reject\";\n    res.reason = \"Graph-Relational hybrid requires both node context and relational foreign keys\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nif payload.node_label == query_key || payload.foreign_keys.contains(query_key) {\n    res.match_found = true;\n} else {\n    res.match_found = false;\n}\nres",
-  "on_index": null,
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

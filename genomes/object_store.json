@@ -1,8 +1,0 @@
-{
-  "on_write": null,
-  "on_read": null,
-  "on_index": null,
-  "on_lifecycle": "let res = #{};\nif current_tier == \"Hot\" {\n    res.new_tier = \"Cold\";\n}\nres",
-  "parameters": {},
-  "engine": "rhai"
-}

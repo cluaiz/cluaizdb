@@ -1,9 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif payload.size > 1024 {\n    res.action = \"Reject\";\n    res.reason = \"Embedded databases have strict payload size constraints (Max 1KB)\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nres.match_found = true;\nres",
-  "on_index": null,
-  "on_lifecycle": "let res = #{};\nres.clear_payload = true; // Auto-purge old embedded records to save RAM\nres",
-  "parameters": {},
-  "engine": "rhai"
-}
-

@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"block_hash\") || !payload.contains(\"prev_hash\") {\n    res.action = \"Reject\";\n    res.reason = \"Ledger nodes must contain block_hash and prev_hash for cryptographic linkage\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nif payload.block_hash == query_key || payload.prev_hash == query_key {\n    res.match_found = true;\n} else {\n    res.match_found = false;\n}\nres",
-  "on_index": null,
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

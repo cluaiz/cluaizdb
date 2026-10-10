@@ -1,8 +1,0 @@
-{
-  "on_write": "let res = #{ action: \"Allow\" };\nif !payload.contains(\"key\") || !payload.contains(\"value\") {\n    res.action = \"Reject\";\n    res.reason = \"Missing key or value fields for KV paradigm\";\n}\nres",
-  "on_read": "let res = #{ payload: payload };\nif payload.key == query_key {\n    res.match_found = true;\n} else {\n    res.match_found = false;\n}\nres",
-  "on_index": null,
-  "on_lifecycle": null,
-  "parameters": {},
-  "engine": "rhai"
-}

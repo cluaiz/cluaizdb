@@ -1,6 +1,6 @@
 # 🏛️ CLUAIZ CLUAIZD: THE VISUAL MATRIX (FRONTEND MONOREPO)
 
-This is the self-contained, isolated frontend monorepo for the **Cluaizd Nervous System Database (CLUAIZD)**. It powers the cognitive visual console, featuring **Cluaizd-HEART** (real-time biomarker telemetry) and **Cluaizd-JUJU** (3D infinite synaptic mesh graph).
+This is the self-contained, isolated frontend monorepo for the **Cluaizdb Nervous System Database (CLUAIZD)**. It powers the cognitive visual console, featuring **Cluaizdb-HEART** (real-time biomarker telemetry) and **Cluaizdb-JUJU** (3D infinite synaptic mesh graph).
 
 The codebase is engineered around strict **DRY (Don't Repeat Yourself)** principles, a decoupled **Feature-Driven Architecture**, and a **Pixelated Voxel/Minecraft Neobrutalist design standard** matching the master `cluaiz.com` layout.
 
@@ -30,7 +30,7 @@ apps/gui/
 ├── package.json                # Monorepo root (workspaces: ["apps/*"])
 ├── package-lock.json
 │
-├── src/                        # The Shared Core (@cluaizd/gui)
+├── src/                        # The Shared Core (@cluaizdb/gui)
 │   ├── index.ts                # Entrypoint (exports App component)
 │   ├── App.tsx                 # Master Bento Grid Dashboard Layout
 │   ├── App.css                 # Main dashboard layout styles
@@ -41,7 +41,7 @@ apps/gui/
 │   │       └── Button.tsx      # Cyber-themed responsive Button
 │   │
 │   ├── features/               # Domain-Driven Functional Modules
-│   │   ├── telemetry/          # Cluaizd-HEART Telemetry Stream (BPM, BP, SpO2)
+│   │   ├── telemetry/          # Cluaizdb-HEART Telemetry Stream (BPM, BP, SpO2)
 │   │   │   ├── components/HeartPanel.tsx
 │   │   │   └── hooks/useWebSocket.ts
 │   │   │
@@ -51,7 +51,7 @@ apps/gui/
 │   │   ├── sandbox/            # Deep Archer Volatile Sandbox State
 │   │   │   └── components/ValidationGate.tsx
 │   │   │
-│   │   └── graph/              # Cluaizd-JUJU 3D Synaptic Mesh Renderer
+│   │   └── graph/              # Cluaizdb-JUJU 3D Synaptic Mesh Renderer
 │   │       └── Geist/JujuCanvas.tsx
 │   │
 │   ├── store/                  # Unified State Management
@@ -65,13 +65,13 @@ apps/gui/
 │
 └── apps/                       # Thin Platform Wrappers (Shells)
     ├── shell-web/              # Vite Web Application Shell
-    │   ├── package.json        # Declares workspace dependency "@cluaizd/gui"
+    │   ├── package.json        # Declares workspace dependency "@cluaizdb/gui"
     │   ├── tsconfig.json       # Includes shared parent "../../src"
     │   ├── vite.config.ts      # Bypasses type definitions mapping
     │   └── src/main.tsx        # Boots shared App and CSS
     │
     └── shell-desktop/          # Vite + Tauri Desktop Application Shell
-        ├── package.json        # Declares workspace dependency "@cluaizd/gui"
+        ├── package.json        # Declares workspace dependency "@cluaizdb/gui"
         ├── src-tauri/          # Desktop compilation assets
         ├── tsconfig.json       # Includes shared parent "../../src"
         └── src/main.tsx        # Boots shared App and CSS
@@ -131,4 +131,4 @@ npm run build:desktop
 
 ---
 
-**Cluaizd Technology © 2026** — _CLUAIZD Visual Matrix_
+**Cluaizdb Technology © 2026** — _CLUAIZD Visual Matrix_

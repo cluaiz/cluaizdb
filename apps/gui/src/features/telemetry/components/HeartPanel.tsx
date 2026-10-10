@@ -38,7 +38,7 @@ export const HeartPanel: React.FC<HeartPanelProps> = ({ sendCommand }) => {
         <div className="flex items-center gap-2">
           <Heart className="w-5 h-5 text-cyber-neonGreen animate-pulse" />
           <span className="font-mono text-xs uppercase tracking-wider text-cyber-neonGreen font-bold">
-            Cluaizd-HEART Engine Telemetry
+            Cluaizdb-HEART Engine Telemetry
           </span>
         </div>
         <div className="w-2 h-2 rounded-full bg-cyber-neonGreen animate-ping" />
