@@ -1,23 +1,30 @@
 [package]
-name = "cli"
-version = "0.1.0"
+name = "cluaizdb-cli"
+version = "0.2.0"
 edition = "2021"
+description = "High-performance administration CLI for CluaizDB Kernel v2"
+license = "MIT OR Apache-2.0"
 
 [[bin]]
-name = "cluaizd"
+name = "cluaizdb"
 path = "src/main.rs"
 
 [dependencies]
-cluaizd-types  = { workspace = true }
-cluaizd-errors = { workspace = true }
-anyhow         = { workspace = true }
-clap           = { version = "4.4", features = ["derive"] }
-uuid           = { workspace = true }
-serde          = { workspace = true }
-serde_json     = { workspace = true }
-toml           = { version = "0.8", features = ["preserve_order"] }
-engine-lmdb    = { path = "../../crates/storage/engine-lmdb" }
-genome         = { path = "../../crates/genome" }
-wal            = { path = "../../crates/storage/wal" }
-cluaizd-ffi    = { path = "../../ffi" }
-dialoguer = "0.12.0"
+cluaizdb-substrate = { path = "../../kernel-core/substrate" }
+cluaizdb-group-commit = { path = "../../modules/group-commit" }
+cluaizdb-index-mvhsnw = { path = "../../modules/index-engine/mvhsnw-vector" }
+cluaizdb-mcp = { path = "../../api/mcp-spec" }
+cluaizdb-wasm-sandbox = { path = "../../runtimes/wasmtime-sandbox" }
+cluaizdb-server-http = { path = "../server-http" }
+axum = "0.7"
+
+tokio = { workspace = true }
+anyhow = { workspace = true }
+clap = { version = "4", features = ["derive"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"

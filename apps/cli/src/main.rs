@@ -1,203 +1,257 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
-use std::sync::atomic::Ordering;
-
-mod commands;
-mod engine;
-mod utils;
-
-use utils::printer::{JSON_MODE, VERBOSE_MODE};
+use std::sync::Arc;
+use cluaizdb_substrate::{StorageSubstrate, SubstrateEnv};
+use cluaizdb_group_commit::{GroupCommitter, GroupCommitConfig};
+use cluaizdb_index_mvhsnw::{CosineDistance, HnswIndex};
+use cluaizdb_mcp::{McpHandler, JsonRpcRequest};
+use cluaizdb_server_http::{create_router, AppState};
+use cluaizdb_wasm_sandbox::{SandboxConfig, WasmGenomeRunner};
 
 #[derive(Parser)]
 #[command(
-    name = "cluaizd",
-    about = "Cluaizd Enterprise CLI — full database control without a GUI",
-    version = "0.1.0",
-    long_about = None
+    name = "cluaizdb",
+    about = "CluaizDB Kernel v2 CLI — Microsecond programmable database substrate",
+    version = "0.2.0"
 )]
 struct Cli {
-    /// Path to the shard directory (for db/query commands)
-    #[arg(short, long, default_value = "./data/shards", global = true)]
-    path: PathBuf,
+    /// Path to physical database directory
+    #[arg(short, long, default_value = "./data/cluaizdb", global = true)]
+    data_dir: PathBuf,
 
-    /// Output results as structured JSON (for scripting and CI/CD pipelines)
+    /// Maximum memory-map size in bytes (default: 10 GB)
+    #[arg(long, default_value_t = 10 * 1024 * 1024 * 1024, global = true)]
+    map_size: usize,
+
+    /// Output results as JSON
     #[arg(long, global = true, default_value_t = false)]
     json: bool,
 
-    /// Print verbose debug information
-    #[arg(long, short = 'v', global = true, default_value_t = false)]
-    verbose: bool,
-
     #[command(subcommand)]
-    command: TopCommand,
+    command: Commands,
 }
 
 #[derive(Subcommand)]
-enum TopCommand {
-    /// Manage cluaizd.toml configuration
-    Config {
-        #[command(subcommand)]
-        action: ConfigCmd,
+enum Commands {
+    /// Start the sovereign CluaizDB server daemon (REST & MCP)
+    Serve {
+        #[arg(short, long, default_value = "0.0.0.0")]
+        host: String,
+
+        #[arg(short, long, default_value_t = 8080)]
+        port: u16,
     },
-    /// Manage the Cluaizd server daemon
-    Server {
-        #[command(subcommand)]
-        action: ServerCmd,
+
+    /// Durably store a record into Substrate
+    Put {
+        #[arg(short, long, default_value_t = 1)]
+        col: u32,
+
+        #[arg(short, long)]
+        id: String,
+
+        #[arg(short, long)]
+        payload: String,
     },
-    /// Database shard operations (FFI direct — no server needed)
-    Db {
-        #[command(subcommand)]
-        action: DbCmd,
+
+    /// Retrieve a record by ID directly from memory page-cache (< 5 µs recall)
+    Get {
+        #[arg(short, long, default_value_t = 1)]
+        col: u32,
+
+        #[arg(short, long)]
+        id: String,
     },
-    /// WAL (Write-Ahead Log) inspection and diagnostics
-    Wal {
-        #[command(subcommand)]
-        action: WalCmd,
+
+    /// Delete a record by ID
+    Delete {
+        #[arg(short, long, default_value_t = 1)]
+        col: u32,
+
+        #[arg(short, long)]
+        id: String,
     },
-    /// Run a CDQL query directly via FFI (no server needed)
-    Query {
-        /// The CDQL query string to execute
-        cdql: String,
+
+    /// Index a search term into composite secondary index
+    IndexTerm {
+        #[arg(short, long, default_value_t = 1)]
+        col: u32,
+
+        #[arg(short, long)]
+        term: String,
+
+        #[arg(short, long)]
+        id: String,
     },
-    /// Manage WASM DNA modules
-    Dna {
-        #[command(subcommand)]
-        action: DnaCmd,
+
+    /// Seek record IDs matching an indexed term (< 5 µs recall)
+    SeekTerm {
+        #[arg(short, long, default_value_t = 1)]
+        col: u32,
+
+        #[arg(short, long)]
+        term: String,
     },
-    /// Start the Cluaizd server daemon directly
-    Run {
-        /// Path to the cluaizd-server binary
-        #[arg(long, default_value = "./target/debug/cluaizd-server")]
-        bin: PathBuf,
+
+    /// List all native Model Context Protocol (MCP) tools
+    McpList,
+
+    /// Execute an MCP tool call
+    McpCall {
+        #[arg(short, long)]
+        tool: String,
+
+        #[arg(short, long, default_value = "{}")]
+        args: String,
     },
 }
 
-#[derive(Subcommand)]
-enum ConfigCmd {
-    /// Print the full cluaizd.toml
-    Show,
-    /// Get a specific config value using dot-notation (e.g. `server.port`)
-    Get { key: String },
-    /// Set a config value using dot-notation (e.g. `server.port 8080`)
-    /// If the value is omitted, an interactive dropdown will be shown for supported keys.
-    Set { 
-        key: String, 
-        value: Option<String> 
-    },
-}
-
-#[derive(Subcommand)]
-enum ServerCmd {
-    /// Start the server as a background daemon
-    Start {
-        /// Path to the cluaizd-server binary
-        #[arg(long, default_value = "./target/debug/cluaizd-server")]
-        bin: PathBuf,
-    },
-    /// Stop the running server daemon gracefully
-    Stop,
-    /// Show the server's current status (PID, port, log path)
-    Status,
-    /// Tail the server's log file
-    Logs {
-        /// Number of lines to show from the end of the log
-        #[arg(long, default_value_t = 50)]
-        lines: usize,
-    },
-}
-
-#[derive(Subcommand)]
-enum DbCmd {
-    /// Check shard health and total neuron count
-    Health,
-    /// Inspect a specific neuron by UUID
-    Inspect { id: String },
-    /// Print detailed shard statistics (file size, tier breakdown)
-    Stats,
-    /// Create a live safe backup of the shard
-    Backup {
-        /// Destination directory for the backup
-        dest: PathBuf,
-    },
-    /// Create a compacted copy of the shard (removes free pages)
-    Compact,
-}
-
-#[derive(Subcommand)]
-enum WalCmd {
-    /// Inspect WAL files and print uncommitted entries
-    Inspect {
-        /// Maximum number of entries to display
-        #[arg(long, default_value_t = 100)]
-        limit: usize,
-    },
-}
-
-#[derive(Subcommand)]
-enum DnaCmd {
-    /// List all active WASM DNAs in active_dnas/
-    List,
-    /// Deploy a compiled .wasm file to the active_dnas/ hot-reload cache
-    Deploy {
-        /// Path to the compiled .wasm file
-        wasm: PathBuf,
-    },
-    /// Remove a DNA from the active_dnas/ cache
-    Remove { name: String },
-}
-
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     let cli = Cli::parse();
 
-    // Set global flags from parsed CLI args (atomic, no Mutex needed)
-    JSON_MODE.store(cli.json, Ordering::Relaxed);
-    VERBOSE_MODE.store(cli.verbose, Ordering::Relaxed);
-
-    utils::printer::Printer::print_verbose(&format!("Shard path: {:?}", cli.path));
-    utils::printer::Printer::print_verbose(&format!("JSON mode:  {}", cli.json));
+    std::fs::create_dir_all(&cli.data_dir)
+        .with_context(|| format!("Failed to create data directory {:?}", cli.data_dir))?;
 
     match cli.command {
-        // ─── Config ─────────────────────────────────────────────────────────
-        TopCommand::Config { action } => match action {
-            ConfigCmd::Show               => commands::config::show(),
-            ConfigCmd::Get { key }        => commands::config::get(&key),
-            ConfigCmd::Set { key, value } => commands::config::set(&key, value),
-        },
+        Commands::Serve { host, port } => {
+            println!("🚀 Starting CluaizDB Kernel v2 Server on {}:{}", host, port);
+            let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
+            let committer = GroupCommitter::new(db.clone(), GroupCommitConfig::default());
+            let vector_index = Arc::new(HnswIndex::<CosineDistance>::new());
+            let wasm_runner = Arc::new(WasmGenomeRunner::new(SandboxConfig::default())?);
 
-        // ─── Server ─────────────────────────────────────────────────────────
-        TopCommand::Server { action } => match action {
-            ServerCmd::Start { bin }   => commands::server::start(&bin),
-            ServerCmd::Stop            => commands::server::stop(),
-            ServerCmd::Status          => commands::server::status(),
-            ServerCmd::Logs { lines }  => commands::server::logs(lines),
-        },
+            let state = Arc::new(AppState::new(db, committer, vector_index, wasm_runner));
+            let router = create_router(state);
 
-        // ─── Database ───────────────────────────────────────────────────────
-        TopCommand::Db { action } => match action {
-            DbCmd::Health              => commands::health::run(&cli.path),
-            DbCmd::Inspect { id }      => commands::inspect::run(&cli.path, &id),
-            DbCmd::Stats               => commands::db_ops::stats(&cli.path),
-            DbCmd::Backup { dest }     => commands::db_ops::backup(&cli.path, &dest),
-            DbCmd::Compact             => commands::db_ops::compact(&cli.path),
-        },
+            let addr: std::net::SocketAddr = format!("{}:{}", host, port).parse()?;
+            let listener = tokio::net::TcpListener::bind(addr).await?;
+            println!("📡 Listening at http://{}", addr);
+            axum::serve(listener, router).await?;
+        }
 
-        // ─── WAL ────────────────────────────────────────────────────────────
-        TopCommand::Wal { action } => match action {
-            WalCmd::Inspect { limit }  => commands::wal_ops::inspect(limit),
-        },
+        Commands::Put { col, id, payload } => {
+            let record_id: u128 = id.parse().context("Invalid record_id: must be 128-bit decimal")?;
+            let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
+            let committer = GroupCommitter::new(db, GroupCommitConfig::default());
 
-        // ─── Query ──────────────────────────────────────────────────────────
-        TopCommand::Query { cdql }     => commands::query::run(&cli.path, &cdql),
+            committer.write(col, record_id, payload.into_bytes()).await?;
 
-        // ─── DNA ────────────────────────────────────────────────────────────
-        TopCommand::Dna { action } => match action {
-            DnaCmd::List               => commands::dna::list(),
-            DnaCmd::Deploy { wasm }    => commands::dna::deploy(&wasm),
-            DnaCmd::Remove { name }    => commands::dna::remove(&name),
-        },
+            if cli.json {
+                println!("{}", serde_json::json!({ "status": "committed", "col": col, "id": id }));
+            } else {
+                println!("✅ [OK] Record {} durably written to collection {}", id, col);
+            }
+        }
 
-        // ─── Direct Server Run ──────────────────────────────────────────────
-        TopCommand::Run { bin }        => commands::server::start(&bin),
+        Commands::Get { col, id } => {
+            let record_id: u128 = id.parse().context("Invalid record_id: must be 128-bit decimal")?;
+            let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
+
+            match db.get_record(col, record_id)? {
+                Some(bytes) => {
+                    let payload_str = String::from_utf8(bytes).unwrap_or_else(|_| "<binary>".to_string());
+                    if cli.json {
+                        println!("{}", serde_json::json!({ "found": true, "col": col, "id": id, "payload": payload_str }));
+                    } else {
+                        println!("⚡ Record {}:", id);
+                        println!("{}", payload_str);
+                    }
+                }
+                None => {
+                    if cli.json {
+                        println!("{}", serde_json::json!({ "found": false, "id": id }));
+                    } else {
+                        println!("❌ Record {} not found", id);
+                    }
+                }
+            }
+        }
+
+        Commands::Delete { col, id } => {
+            let record_id: u128 = id.parse().context("Invalid record_id")?;
+            let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
+            let deleted = db.delete_record(col, record_id)?;
+
+            if cli.json {
+                println!("{}", serde_json::json!({ "deleted": deleted, "id": id }));
+            } else {
+                if deleted {
+                    println!("🗑️ [OK] Deleted record {}", id);
+                } else {
+                    println!("❌ Record {} not found", id);
+                }
+            }
+        }
+
+        Commands::IndexTerm { col, term, id } => {
+            let record_id: u128 = id.parse().context("Invalid record_id")?;
+            let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
+            db.index_term(col, term.as_bytes(), record_id)?;
+
+            if cli.json {
+                println!("{}", serde_json::json!({ "status": "indexed", "term": term, "id": id }));
+            } else {
+                println!("🔍 [OK] Indexed term '{}' -> {}", term, id);
+            }
+        }
+
+        Commands::SeekTerm { col, term } => {
+            let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
+            let results = db.seek_index(col, term.as_bytes())?;
+
+            if cli.json {
+                let id_strings: Vec<String> = results.iter().map(|id| id.to_string()).collect();
+                println!("{}", serde_json::json!({ "term": term, "matches": id_strings }));
+            } else {
+                println!("🔍 Term '{}' matched {} record(s):", term, results.len());
+                for id in results {
+                    println!("   • {}", id);
+                }
+            }
+        }
+
+        Commands::McpList => {
+            let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
+            let committer = GroupCommitter::new(db.clone(), GroupCommitConfig::default());
+            let vector_index = Arc::new(HnswIndex::<CosineDistance>::new());
+            let handler = McpHandler::new(db, committer, vector_index);
+
+            let req = JsonRpcRequest {
+                jsonrpc: "2.0".to_string(),
+                id: Some(serde_json::json!(1)),
+                method: "tools/list".to_string(),
+                params: None,
+            };
+
+            let resp = handler.handle_request(req).await;
+            println!("{}", serde_json::to_string_pretty(&resp)?);
+        }
+
+        Commands::McpCall { tool, args } => {
+            let parsed_args: serde_json::Value = serde_json::from_str(&args)
+                .context("Failed to parse args as JSON object")?;
+
+            let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
+            let committer = GroupCommitter::new(db.clone(), GroupCommitConfig::default());
+            let vector_index = Arc::new(HnswIndex::<CosineDistance>::new());
+            let handler = McpHandler::new(db, committer, vector_index);
+
+            let req = JsonRpcRequest {
+                jsonrpc: "2.0".to_string(),
+                id: Some(serde_json::json!(1)),
+                method: "tools/call".to_string(),
+                params: Some(serde_json::json!({
+                    "name": tool,
+                    "arguments": parsed_args
+                })),
+            };
+
+            let resp = handler.handle_request(req).await;
+            println!("{}", serde_json::to_string_pretty(&resp)?);
+        }
     }
+
+    Ok(())
 }

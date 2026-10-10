@@ -1,65 +1,44 @@
-# `apps/cli` — Cluaizd Enterprise CLI
-
-## Purpose
-
-The `cli` crate is the **primary administrative interface** for Cluaizd. It provides direct, FFI-linked access to the storage engine without requiring the HTTP server to be running. This makes it suitable for:
-
-- **Headless server administration** (Docker, SSH, CI/CD pipelines)
-- **Database diagnostics** (shard stats, WAL inspection, tier breakdown)
-- **Scripting and automation** via `--json` structured output mode
+# 💻 apps/cli: CluaizDB Kernel v2 Administration CLI
+> **Binary:** `cluaizdb` / `cluaizdb.exe`  
+> **Recall Target:** `< 5 µs` Point Recall & Physical SSD Durability  
+> **Interface:** Terminal Commands & Structured `--json` Pipeline Mode
 
 ---
 
-## Architectural Flow
+## 🎯 1. Purpose
+`apps/cli` is the official administrative command-line interface for CluaizDB Kernel v2. It provides zero-overhead, headless database control directly linking to `cluaizdb-substrate`, `cluaizdb-group-commit`, and `cluaizdb-mcp`.
 
-```mermaid
-graph TD
-    A["User Terminal"] --> B["cluaizd-cli (clap parser)"]
-    B --> C["main.rs (Command Router)"]
-    C --> D["commands/"]
-    D --> E["engine/ffi_bridge.rs"]
-    E --> F["engine-lmdb (LMDB mmap)"]
-    D --> G["wal crate (WAL reader)"]
-    D --> H["genome crate (CDQL parser)"]
+---
+
+## 🛠️ 2. Core Commands
+
+```bash
+# 1. Start Server Daemon (REST + MCP)
+cluaizdb serve --port 8080 --data-dir ./data/cluaizdb
+
+# 2. Store Record (Durable Group Commit ~121 µs)
+cluaizdb put --col 1 --id 42 --payload '{"status":"active"}'
+
+# 3. Retrieve Record (< 5 µs Memory Page-Cache Recall)
+cluaizdb get --col 1 --id 42
+
+# 4. Secondary Index Term
+cluaizdb index-term --col 1 --term "user:alice" --id 42
+
+# 5. Seek Term Index (< 5 µs)
+cluaizdb seek-term --col 1 --term "user:alice"
+
+# 6. Delete Record
+cluaizdb delete --col 1 --id 42
+
+# 7. Model Context Protocol (MCP) Inspection
+cluaizdb mcp-list
+cluaizdb mcp-call --tool db_inspect_node --args '{"term":"user:alice"}'
 ```
 
 ---
 
-## Module Structure
-
-| Module | Purpose |
-|---|---|
-| `main.rs` | CLI entry point; parses args, sets global flags, routes to commands |
-| `commands/config.rs` | Read/write `cluaizd.toml` via dot-notation |
-| `commands/server.rs` | Start/stop/status/logs for the server daemon |
-| `commands/health.rs` | FFI shard health check (neuron count) |
-| `commands/inspect.rs` | FFI neuron lookup by UUID |
-| `commands/db_ops.rs` | Shard backup, compact, and stats |
-| `commands/wal_ops.rs` | WAL entry inspection and corruption detection |
-| `commands/query.rs` | Direct CDQL execution via FFI (no HTTP) |
-| `commands/dna.rs` | WASM DNA module deployment management |
-| `engine/ffi_bridge.rs` | Safe wrapper around `engine-lmdb` FFI calls |
-| `utils/printer.rs` | Structured output (supports `--json` and `--verbose` modes) |
-
----
-
-## Global Flags
-
-| Flag | Effect |
-|---|---|
-| `--json` | All output is structured JSON (`{"status":"ok","data":{...}}`) |
-| `--verbose` / `-v` | Debug messages are printed (shard path, map size, etc.) |
-| `--path <dir>` | Override shard directory (default: `./data/shards`) |
-
----
-
-## Significant Files
-
-### `engine/ffi_bridge.rs`
-Opens a direct memory-mapped LMDB connection (`LmdbEnv::open`) using the same C bindings as the server. Executes all reads without allocating on the network stack. The `TierBreakdown` struct aggregates neuron counts by `StorageTier` (Hot/Warm/Cold) for the `db stats` command.
-
-### `utils/printer.rs`
-Uses two `AtomicBool` globals (`JSON_MODE`, `VERBOSE_MODE`) set once at startup from CLI flags. This avoids threading `bool` arguments through every function call. All output routes through `Printer::print_json()`, `print_success()`, `print_error()`, or `print_verbose()`.
-
-### `commands/wal_ops.rs`
-Calls `wal::recover_from_wal()` to iterate WAL entries. Reports `skipped_corrupt` count to surface data integrity issues before they become silent failures.
+## ⚙️ 3. Global Flags
+- `--data-dir <path>`: Physical LMDB storage directory (default: `./data/cluaizdb`).
+- `--map-size <bytes>`: Maximum virtual memory map size (default: 10 GB).
+- `--json`: Format output as machine-readable JSON for CI/CD scripting.
