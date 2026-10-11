@@ -7,6 +7,7 @@ members = [
 
     # Core Execution & Storage Substrate
     "kernel-core/substrate",
+    "kernel-core/cognitives",
     "kernel-core/ffi",
 
     # Pure Standalone Modules

@@ -379,6 +379,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "cluaizdb-cognitives"
+version = "0.1.0"
+dependencies = [
+ "cluaizdb-substrate",
+ "cluaizdb-wasm-sandbox",
+ "crossbeam-queue",
+ "parking_lot",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "wasmtime",
+]
+
+[[package]]
 name = "cluaizdb-ffi"
 version = "0.1.0"
 dependencies = [
