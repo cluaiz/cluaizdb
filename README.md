@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="assets/banner.png" alt="CluaizDB Banner" width="100%">
+  <img
+    src="assets/cluaizdb-banner.png"
+    alt="CluaizDB — Programmable AI Database Substrate"
+    width="100%"
+  />
 </p>
 
 <h1 align="center">

@@ -192,7 +192,7 @@ checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
 name = "benchmarks"
-version = "0.2.0"
+version = "0.1.0"
 dependencies = [
  "cluaizdb-ffi",
  "cluaizdb-group-commit",
@@ -346,8 +346,14 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 name = "cluaizdb-cdql"
 version = "0.1.0"
 dependencies = [
+ "cluaizdb-index-mvhsnw",
+ "cluaizdb-substrate",
+ "cluaizdb-time-series",
+ "cluaizdb-wasm-sandbox",
  "serde",
  "serde_json",
+ "tempfile",
+ "wat",
 ]
 
 [[package]]
@@ -357,6 +363,7 @@ dependencies = [
  "anyhow",
  "axum",
  "clap",
+ "cluaizdb-cdql",
  "cluaizdb-group-commit",
  "cluaizdb-index-mvhsnw",
  "cluaizdb-mcp",
@@ -375,15 +382,17 @@ dependencies = [
 name = "cluaizdb-ffi"
 version = "0.1.0"
 dependencies = [
+ "cluaizdb-cdql",
  "cluaizdb-group-commit",
  "cluaizdb-substrate",
  "libc",
+ "serde_json",
  "tempfile",
 ]
 
 [[package]]
 name = "cluaizdb-group-commit"
-version = "0.2.0"
+version = "0.1.0"
 dependencies = [
  "cluaizdb-substrate",
  "tempfile",
@@ -394,7 +403,7 @@ dependencies = [
 
 [[package]]
 name = "cluaizdb-index-mvhsnw"
-version = "0.2.0"
+version = "0.1.0"
 dependencies = [
  "parking_lot",
  "rand",
@@ -403,7 +412,7 @@ dependencies = [
 
 [[package]]
 name = "cluaizdb-mcp"
-version = "0.2.0"
+version = "0.1.0"
 dependencies = [
  "cluaizdb-group-commit",
  "cluaizdb-index-mvhsnw",
@@ -418,10 +427,11 @@ dependencies = [
 
 [[package]]
 name = "cluaizdb-server-http"
-version = "0.2.0"
+version = "0.1.0"
 dependencies = [
  "axum",
  "clap",
+ "cluaizdb-cdql",
  "cluaizdb-group-commit",
  "cluaizdb-index-mvhsnw",
  "cluaizdb-mcp",
@@ -462,7 +472,7 @@ dependencies = [
 
 [[package]]
 name = "cluaizdb-wasm-sandbox"
-version = "0.2.0"
+version = "0.1.0"
 dependencies = [
  "serde",
  "serde_json",
