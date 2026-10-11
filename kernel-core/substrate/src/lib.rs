@@ -8,13 +8,14 @@ pub use db::SubstrateEnv;
 pub use error::{Result, SubstrateError};
 pub use graph::{GraphTraversal, TraversalConfig, TraversalDirection, TraversalNode};
 pub use schema::{EdgeMetadata, StatsMetadata};
-pub use traits::StorageSubstrate;
+pub use traits::{StorageSubstrate, SubstrateHook};
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use tempfile::tempdir;
     use std::time::Instant;
+    use std::sync::Arc;
 
     #[test]
     fn test_substrate_crud_and_latency() {
@@ -153,4 +154,153 @@ mod tests {
         let path = db.find_shortest_path(n1, n4, &config).unwrap();
         assert_eq!(path, Some(vec![n1, n2, n3, n4]));
     }
+
+    #[test]
+    fn test_reactive_substrate_hooks() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+
+        struct AuditHook {
+            puts: AtomicUsize,
+            deletes: AtomicUsize,
+        }
+
+        impl SubstrateHook for AuditHook {
+            fn on_record_put(&self, _col: u32, _id: u128, _payload: &[u8]) {
+                self.puts.fetch_add(1, Ordering::SeqCst);
+            }
+            fn on_record_delete(&self, _col: u32, _id: u128) {
+                self.deletes.fetch_add(1, Ordering::SeqCst);
+            }
+        }
+
+        let dir = tempdir().unwrap();
+        let db = SubstrateEnv::open(dir.path(), 10 * 1024 * 1024).unwrap();
+
+        let hook = Arc::new(AuditHook {
+            puts: AtomicUsize::new(0),
+            deletes: AtomicUsize::new(0),
+        });
+
+        db.register_hook(hook.clone());
+
+        db.put_record(1, 101, b"hello").unwrap();
+        db.put_record(1, 102, b"world").unwrap();
+        assert_eq!(hook.puts.load(Ordering::SeqCst), 2);
+
+        db.delete_record(1, 101).unwrap();
+        assert_eq!(hook.deletes.load(Ordering::SeqCst), 1);
+    }
+
+    #[test]
+    fn test_atomic_index_cleanup_on_delete() {
+        let dir = tempdir().unwrap();
+        let db = SubstrateEnv::open(dir.path(), 10 * 1024 * 1024).unwrap();
+        let col_id = 1;
+        let record_id = 999u128;
+        let term = b"role:architect";
+
+        // Put record and index term
+        db.put_record(col_id, record_id, b"{\"role\": \"architect\"}").unwrap();
+        db.index_term(col_id, term, record_id).unwrap();
+
+        // Verify index finds record
+        let matches = db.seek_index(col_id, term).unwrap();
+        assert_eq!(matches, vec![record_id]);
+
+        // Delete record
+        let deleted = db.delete_record(col_id, record_id).unwrap();
+        assert!(deleted);
+
+        // Verify index is atomically purged — ZERO ghost pointers!
+        let post_delete_matches = db.seek_index(col_id, term).unwrap();
+        assert!(post_delete_matches.is_empty(), "Ghost pointer detected! Deleted record still indexed.");
+    }
+
+    #[test]
+    fn test_vector_storage_and_atomic_cleanup() {
+        let dir = tempdir().unwrap();
+        let db = SubstrateEnv::open(dir.path(), 10 * 1024 * 1024).unwrap();
+        let col_id = 42;
+        let record_id = 777u128;
+        let vec = vec![0.1f32, 0.2, 0.3, 0.99];
+
+        // Put vector
+        db.put_vector(col_id, record_id, &vec).unwrap();
+
+        // Get vector
+        let retrieved = db.get_vector(col_id, record_id).unwrap().expect("Vector not found");
+        assert_eq!(retrieved.len(), 4);
+        assert!((retrieved[0] - 0.1).abs() < 1e-6);
+        assert!((retrieved[3] - 0.99).abs() < 1e-6);
+
+        // Scan vectors
+        let scanned = db.scan_vectors(col_id, 10).unwrap();
+        assert_eq!(scanned.len(), 1);
+        assert_eq!(scanned[0].0, record_id);
+
+        // Put record as well
+        db.put_record(col_id, record_id, b"payload").unwrap();
+
+        // Delete record must atomically purge vector
+        let deleted = db.delete_record(col_id, record_id).unwrap();
+        assert!(deleted);
+        assert!(db.get_vector(col_id, record_id).unwrap().is_none());
+        assert!(db.scan_vectors(col_id, 10).unwrap().is_empty());
+    }
+
+    #[test]
+    fn test_timeseries_chunk_storage() {
+        let dir = tempdir().unwrap();
+        let db = SubstrateEnv::open(dir.path(), 10 * 1024 * 1024).unwrap();
+        let series_id = 1001u64;
+
+        // Insert chunks at timestamps 1000, 2000, 3000
+        db.put_timeseries_chunk(series_id, 1000, b"chunk_1").unwrap();
+        db.put_timeseries_chunk(series_id, 2000, b"chunk_2").unwrap();
+        db.put_timeseries_chunk(series_id, 3000, b"chunk_3").unwrap();
+
+        // Scan time range 1500 to 3500
+        let chunks = db.scan_timeseries_chunks(series_id, 1500, 3500).unwrap();
+        assert_eq!(chunks.len(), 2);
+        assert_eq!(chunks[0].0, 2000);
+        assert_eq!(chunks[0].1, b"chunk_2");
+        assert_eq!(chunks[1].0, 3000);
+        assert_eq!(chunks[1].1, b"chunk_3");
+    }
+
+    #[test]
+    fn test_collection_registry() {
+        let dir = tempdir().unwrap();
+        let db = SubstrateEnv::open(dir.path(), 10 * 1024 * 1024).unwrap();
+
+        // 1. Create collections
+        let id_users = db.get_or_create_collection("users").unwrap();
+        let id_chats = db.get_or_create_collection("chats").unwrap();
+        let id_memories = db.get_or_create_collection("memories").unwrap();
+
+        assert_eq!(id_users, 1);
+        assert_eq!(id_chats, 2);
+        assert_eq!(id_memories, 3);
+
+        // 2. Idempotent call returns existing ID
+        assert_eq!(db.get_or_create_collection("users").unwrap(), 1);
+        assert_eq!(db.get_or_create_collection("chats").unwrap(), 2);
+
+        // 3. Bi-directional lookup
+        assert_eq!(db.get_collection_id("users").unwrap(), Some(1));
+        assert_eq!(db.get_collection_id("chats").unwrap(), Some(2));
+        assert_eq!(db.get_collection_id("non_existent").unwrap(), None);
+
+        assert_eq!(db.get_collection_name(1).unwrap(), Some("users".to_string()));
+        assert_eq!(db.get_collection_name(2).unwrap(), Some("chats".to_string()));
+        assert_eq!(db.get_collection_name(999).unwrap(), None);
+
+        // 4. List all collections
+        let list = db.list_collections().unwrap();
+        assert_eq!(list.len(), 3);
+        assert_eq!(list[0], ("users".to_string(), 1));
+        assert_eq!(list[1], ("chats".to_string(), 2));
+        assert_eq!(list[2], ("memories".to_string(), 3));
+    }
 }
+

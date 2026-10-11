@@ -10,6 +10,7 @@ pub trait StorageSubstrate: Send + Sync {
     fn get_record(&self, col_id: u32, record_id: u128) -> Result<Option<Vec<u8>>>;
     fn put_record(&self, col_id: u32, record_id: u128, payload: &[u8]) -> Result<()>;
     fn delete_record(&self, col_id: u32, record_id: u128) -> Result<bool>;
+    fn scan_records(&self, col_id: u32, limit: usize) -> Result<Vec<(u128, Vec<u8>)>>;
 
     // Secondary B+Tree Composite Indexing
     fn index_term(&self, col_id: u32, term: &[u8], record_id: u128) -> Result<()>;
@@ -44,6 +45,45 @@ pub trait StorageSubstrate: Send + Sync {
     fn update_stats(&self, record_id: u128, stats: StatsMetadata) -> Result<()>;
     fn get_stats(&self, record_id: u128) -> Result<Option<StatsMetadata>>;
 
+    // Dense Vector Durability
+    fn put_vector(&self, col_id: u32, record_id: u128, vector: &[f32]) -> Result<()>;
+    fn get_vector(&self, col_id: u32, record_id: u128) -> Result<Option<Vec<f32>>>;
+    fn delete_vector(&self, col_id: u32, record_id: u128) -> Result<bool>;
+    fn scan_vectors(&self, col_id: u32, limit: usize) -> Result<Vec<(u128, Vec<f32>)>>;
+
+    // Time-Series Gorilla Chunk Storage
+    fn put_timeseries_chunk(&self, series_id: u64, start_time_ms: u64, chunk: &[u8]) -> Result<()>;
+    fn scan_timeseries_chunks(
+        &self,
+        series_id: u64,
+        start_time_ms: u64,
+        end_time_ms: u64,
+    ) -> Result<Vec<(u64, Vec<u8>)>>;
+
+    // Dynamic Collection Registry
+    fn get_or_create_collection(&self, name: &str) -> Result<u32>;
+    fn get_collection_id(&self, name: &str) -> Result<Option<u32>>;
+    fn get_collection_name(&self, col_id: u32) -> Result<Option<String>>;
+    fn list_collections(&self) -> Result<Vec<(String, u32)>>;
+
     // Physical durability sync barrier
     fn sync(&self) -> Result<()>;
 }
+
+/// Reactive hook interface invoked upon storage substrate mutations.
+/// Enables in-process autonomous triggers (auto vectorization, graph edge generation, WASM actions).
+pub trait SubstrateHook: Send + Sync {
+    fn on_record_put(&self, col_id: u32, record_id: u128, payload: &[u8]) {
+        let _ = (col_id, record_id, payload);
+    }
+    fn on_record_delete(&self, col_id: u32, record_id: u128) {
+        let _ = (col_id, record_id);
+    }
+    fn on_vector_put(&self, col_id: u32, record_id: u128, vector: &[f32]) {
+        let _ = (col_id, record_id, vector);
+    }
+    fn on_vector_delete(&self, col_id: u32, record_id: u128) {
+        let _ = (col_id, record_id);
+    }
+}
+

@@ -125,3 +125,52 @@ pub fn decode_edge_key(bytes: &[u8]) -> Option<(u128, u32, u128)> {
     let second = BigEndian::read_u128(&bytes[20..36]);
     Some((first, type_id, second))
 }
+
+/// Dense Vector byte encoding for durable storage.
+pub fn encode_vector(vector: &[f32]) -> Vec<u8> {
+    let mut bytes = Vec::with_capacity(vector.len() * 4);
+    for &val in vector {
+        let mut buf = [0u8; 4];
+        BigEndian::write_f32(&mut buf, val);
+        bytes.extend_from_slice(&buf);
+    }
+    bytes
+}
+
+/// Decodes binary bytes back into a float vector.
+pub fn decode_vector(bytes: &[u8]) -> Option<Vec<f32>> {
+    if bytes.len() % 4 != 0 {
+        return None;
+    }
+    let count = bytes.len() / 4;
+    let mut vector = Vec::with_capacity(count);
+    for chunk in bytes.chunks_exact(4) {
+        vector.push(BigEndian::read_f32(chunk));
+    }
+    Some(vector)
+}
+
+/// Time-Series key encoding: `(series_id: u64, start_time_ms: u64)` -> 16 bytes.
+pub fn encode_timeseries_key(series_id: u64, start_time_ms: u64) -> [u8; 16] {
+    let mut key = [0u8; 16];
+    BigEndian::write_u64(&mut key[0..8], series_id);
+    BigEndian::write_u64(&mut key[8..16], start_time_ms);
+    key
+}
+
+/// Time-Series prefix for scanning all chunks of a series.
+pub fn encode_timeseries_prefix(series_id: u64) -> [u8; 8] {
+    let mut prefix = [0u8; 8];
+    BigEndian::write_u64(&mut prefix, series_id);
+    prefix
+}
+
+pub fn decode_timeseries_key(bytes: &[u8]) -> Option<(u64, u64)> {
+    if bytes.len() != 16 {
+        return None;
+    }
+    let series_id = BigEndian::read_u64(&bytes[0..8]);
+    let start_time_ms = BigEndian::read_u64(&bytes[8..16]);
+    Some((series_id, start_time_ms))
+}
+
