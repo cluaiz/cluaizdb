@@ -15,6 +15,7 @@ cluaizdb-group-commit = { path = "../../modules/group-commit" }
 cluaizdb-index-mvhsnw = { path = "../../modules/index-engine/mvhsnw-vector" }
 cluaizdb-mcp = { path = "../../api/mcp-spec" }
 cluaizdb-wasm-sandbox = { path = "../../runtimes/wasmtime-sandbox" }
+cluaizdb-cdql = { path = "../../modules/cdql-query" }
 cluaizdb-server-http = { path = "../server-http" }
 axum = "0.7"
 

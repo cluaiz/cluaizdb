@@ -12,8 +12,8 @@ use cluaizdb_wasm_sandbox::{SandboxConfig, WasmGenomeRunner};
 #[derive(Parser)]
 #[command(
     name = "cluaizdb",
-    about = "CluaizDB Kernel v2 CLI — Microsecond programmable database substrate",
-    version = "0.2.0"
+    about = "CluaizDB 0.1.0 Alpha CLI — Microsecond programmable database substrate",
+    version = "0.1.0"
 )]
 struct Cli {
     /// Path to physical database directory
@@ -39,8 +39,17 @@ enum Commands {
         #[arg(short, long, default_value = "0.0.0.0")]
         host: String,
 
-        #[arg(short, long, default_value_t = 8080)]
+        #[arg(short, long, default_value_t = 7331)]
         port: u16,
+    },
+
+    /// Execute a CDQL pipeline query
+    Query {
+        #[arg(short, long, default_value_t = 1)]
+        col: u32,
+
+        #[arg(short, long)]
+        query: String,
     },
 
     /// Durably store a record into Substrate
@@ -116,7 +125,7 @@ async fn main() -> Result<()> {
 
     match cli.command {
         Commands::Serve { host, port } => {
-            println!("🚀 Starting CluaizDB Kernel v2 Server on {}:{}", host, port);
+            println!("🚀 Starting CluaizDB 0.1.0 Alpha Server on {}:{}", host, port);
             let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
             let committer = GroupCommitter::new(db.clone(), GroupCommitConfig::default());
             let vector_index = Arc::new(HnswIndex::<CosineDistance>::new());
@@ -126,9 +135,35 @@ async fn main() -> Result<()> {
             let router = create_router(state);
 
             let addr: std::net::SocketAddr = format!("{}:{}", host, port).parse()?;
-            let listener = tokio::net::TcpListener::bind(addr).await?;
+            let listener = match tokio::net::TcpListener::bind(addr).await {
+                Ok(l) => l,
+                Err(e) => {
+                    eprintln!("❌ Fatal: Failed to bind to dedicated port {}: {}. Auto-port hopping is disabled to maintain API client stability.", port, e);
+                    return Err(e.into());
+                }
+            };
             println!("📡 Listening at http://{}", addr);
             axum::serve(listener, router).await?;
+        }
+
+        Commands::Query { col, query } => {
+            let db = SubstrateEnv::open(&cli.data_dir, cli.map_size)?;
+            let ast = cluaizdb_cdql::parse(&query)
+                .map_err(|e| anyhow::anyhow!("CDQL syntax error: {}", e))?;
+            let plan = cluaizdb_cdql::build_plan(&ast)
+                .map_err(|e| anyhow::anyhow!("CDQL plan error: {}", e))?;
+            let ctx = cluaizdb_cdql::QueryContext::new(&db, col);
+            let result = cluaizdb_cdql::execute_plan(&plan, &ctx)
+                .map_err(|e| anyhow::anyhow!("CDQL execution failed: {}", e))?;
+
+            if cli.json {
+                println!("{}", serde_json::to_string_pretty(&result)?);
+            } else {
+                println!("⚡ [CDQL Execution in {} µs] Matched {} record(s):", result.execution_time_us, result.count);
+                for (idx, rec) in result.records.iter().enumerate() {
+                    println!("[{}] {}", idx + 1, serde_json::to_string(rec)?);
+                }
+            }
         }
 
         Commands::Put { col, id, payload } => {
