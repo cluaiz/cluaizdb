@@ -12,6 +12,8 @@ crate-type = ["cdylib", "staticlib", "rlib"]
 [dependencies]
 cluaizdb-substrate = { path = "../substrate" }
 cluaizdb-group-commit = { path = "../../modules/group-commit" }
+cluaizdb-cdql = { path = "../../modules/cdql-query" }
+serde_json = { workspace = true }
 libc = "0.2"
 
 [dev-dependencies]

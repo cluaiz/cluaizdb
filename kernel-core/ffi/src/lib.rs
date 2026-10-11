@@ -12,6 +12,7 @@ pub const CLUAIZDB_ERR_NOT_FOUND: i32 = -2;
 pub const CLUAIZDB_ERR_BUFFER_TOO_SMALL: i32 = -3;
 pub const CLUAIZDB_ERR_STORAGE: i32 = -4;
 pub const CLUAIZDB_ERR_PANIC: i32 = -5;
+pub const CLUAIZDB_ERR_PARSE: i32 = -6;
 
 #[inline]
 fn to_u128(hi: u64, lo: u64) -> u128 {
@@ -160,6 +161,61 @@ pub unsafe extern "C" fn cluaizdb_sync(handle: *mut SubstrateEnv) -> i32 {
     result.unwrap_or(CLUAIZDB_ERR_PANIC)
 }
 
+/// Executes a CDQL query directly against the in-process substrate and writes serialized JSON results into out_buf.
+#[no_mangle]
+pub unsafe extern "C" fn cluaizdb_query_cdql(
+    handle: *mut SubstrateEnv,
+    col_id: u32,
+    query_ptr: *const c_char,
+    out_buf: *mut u8,
+    max_buf_len: usize,
+    out_len: *mut usize,
+) -> i32 {
+    if handle.is_null() || query_ptr.is_null() || out_buf.is_null() || out_len.is_null() {
+        return CLUAIZDB_ERR_NULL_HANDLE;
+    }
+
+    let result = catch_unwind(AssertUnwindSafe(|| {
+        let env = &*handle;
+        let c_str = CStr::from_ptr(query_ptr);
+        let query_str = match c_str.to_str() {
+            Ok(s) => s,
+            Err(_) => return CLUAIZDB_ERR_PARSE,
+        };
+
+        let ast = match cluaizdb_cdql::parse(query_str) {
+            Ok(a) => a,
+            Err(_) => return CLUAIZDB_ERR_PARSE,
+        };
+
+        let plan = match cluaizdb_cdql::build_plan(&ast) {
+            Ok(p) => p,
+            Err(_) => return CLUAIZDB_ERR_PARSE,
+        };
+
+        let ctx = cluaizdb_cdql::QueryContext::new(env, col_id);
+        let query_result = match cluaizdb_cdql::execute_plan(&plan, &ctx) {
+            Ok(r) => r,
+            Err(_) => return CLUAIZDB_ERR_STORAGE,
+        };
+
+        let json_bytes = match serde_json::to_vec(&query_result) {
+            Ok(b) => b,
+            Err(_) => return CLUAIZDB_ERR_STORAGE,
+        };
+
+        *out_len = json_bytes.len();
+        if json_bytes.len() > max_buf_len {
+            return CLUAIZDB_ERR_BUFFER_TOO_SMALL;
+        }
+
+        ptr::copy_nonoverlapping(json_bytes.as_ptr(), out_buf, json_bytes.len());
+        CLUAIZDB_OK
+    }));
+
+    result.unwrap_or(CLUAIZDB_ERR_PANIC)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -220,6 +276,50 @@ mod tests {
             assert_eq!(rc, CLUAIZDB_ERR_NOT_FOUND);
 
             // Close
+            cluaizdb_close(handle);
+        }
+    }
+
+    #[test]
+    fn test_c_ffi_query_cdql_execution() {
+        let dir = tempdir().unwrap();
+        let path = dir.path().to_str().unwrap();
+        let c_path = CString::new(path).unwrap();
+
+        unsafe {
+            let handle = cluaizdb_open(c_path.as_ptr(), 10 * 1024 * 1024);
+            assert!(!handle.is_null());
+
+            let col_id = 1u32;
+            let id_hi = 0u64;
+            let id_lo = 100u64;
+            let payload = br#"{"title":"Architectural Excellence","score":99}"#;
+
+            // Put record into substrate
+            let rc = cluaizdb_put(handle, col_id, id_hi, id_lo, payload.as_ptr(), payload.len());
+            assert_eq!(rc, CLUAIZDB_OK);
+
+            // Query via CDQL FFI
+            let query_str = CString::new("find id(\"100\")").unwrap();
+            let mut out_buf = [0u8; 512];
+            let mut out_len = 0usize;
+
+            let rc = cluaizdb_query_cdql(
+                handle,
+                col_id,
+                query_str.as_ptr(),
+                out_buf.as_mut_ptr(),
+                out_buf.len(),
+                &mut out_len as *mut usize,
+            );
+            assert_eq!(rc, CLUAIZDB_OK);
+            assert!(out_len > 0);
+
+            let json_res: serde_json::Value = serde_json::from_slice(&out_buf[..out_len]).unwrap();
+            assert_eq!(json_res["count"], 1);
+            assert_eq!(json_res["records"][0]["title"], "Architectural Excellence");
+            assert_eq!(json_res["records"][0]["score"], 99);
+
             cluaizdb_close(handle);
         }
     }
