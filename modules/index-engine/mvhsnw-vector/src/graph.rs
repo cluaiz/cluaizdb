@@ -106,25 +106,28 @@ impl<D: DistanceMetric> HnswIndex<D> {
 
         let mut curr_obj = entry_point_idx.unwrap();
 
-        // Search Phase 1: From max_level down to level+1, find nearest element
+        // Search Phase 1: From max_level down to level+1, find nearest element via steepest descent
         let nodes = self.nodes.read();
         for lc in (level + 1..=max_level).rev() {
             loop {
                 let mut changed = false;
                 let Some(curr_node) = nodes.get(curr_obj) else { break; };
-                let dist = D::calculate(&vector, &curr_node.vector);
+                let mut dist = D::calculate(&vector, &curr_node.vector);
+                let mut best_neighbor = curr_obj;
 
                 let neighbors = curr_node.connections[lc].read();
                 for &neighbor in neighbors.iter() {
                     let Some(neighbor_node) = nodes.get(neighbor) else { continue; };
                     let n_dist = D::calculate(&vector, &neighbor_node.vector);
                     if n_dist < dist {
-                        curr_obj = neighbor;
+                        dist = n_dist;
+                        best_neighbor = neighbor;
                         changed = true;
-                        break;
                     }
                 }
-                if !changed {
+                if changed {
+                    curr_obj = best_neighbor;
+                } else {
                     break;
                 }
             }
@@ -145,8 +148,30 @@ impl<D: DistanceMetric> HnswIndex<D> {
                     let max_links = if lc == 0 { self.m_max_0 } else { self.m_max };
                     if n_connections.len() < max_links {
                         n_connections.push(new_node_idx);
+                    } else {
+                        // Edge pruning: replace furthest neighbor if new_node is closer
+                        let mut furthest_idx = 0;
+                        let mut max_dist = f32::MIN;
+                        for (i, &exist_idx) in n_connections.iter().enumerate() {
+                            if let Some(en) = nodes.get(exist_idx) {
+                                let d = D::calculate(&neighbor_node.vector, &en.vector);
+                                if d > max_dist {
+                                    max_dist = d;
+                                    furthest_idx = i;
+                                }
+                            }
+                        }
+                        let new_dist = D::calculate(&neighbor_node.vector, &vector);
+                        if new_dist < max_dist {
+                            n_connections[furthest_idx] = new_node_idx;
+                        }
                     }
                 }
+            }
+
+            // Descend: update entry point for next lower layer to the closest neighbor
+            if let Some(&closest) = neighbors.first() {
+                curr_obj = closest;
             }
         }
 
@@ -168,24 +193,27 @@ impl<D: DistanceMetric> HnswIndex<D> {
         let max_level = *self.max_level.read();
         let nodes = self.nodes.read();
 
-        // Drop down layers to level 0
+        // Drop down layers to level 0 via steepest descent
         for lc in (1..=max_level).rev() {
             loop {
                 let mut changed = false;
                 let Some(curr_node) = nodes.get(curr_obj) else { break; };
-                let dist = D::calculate(query, &curr_node.vector);
+                let mut dist = D::calculate(query, &curr_node.vector);
+                let mut best_neighbor = curr_obj;
 
                 let neighbors = curr_node.connections[lc].read();
                 for &neighbor in neighbors.iter() {
                     let Some(neighbor_node) = nodes.get(neighbor) else { continue; };
                     let n_dist = D::calculate(query, &neighbor_node.vector);
                     if n_dist < dist {
-                        curr_obj = neighbor;
+                        dist = n_dist;
+                        best_neighbor = neighbor;
                         changed = true;
-                        break;
                     }
                 }
-                if !changed {
+                if changed {
+                    curr_obj = best_neighbor;
+                } else {
                     break;
                 }
             }
