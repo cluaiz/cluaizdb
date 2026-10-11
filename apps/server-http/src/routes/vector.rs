@@ -5,6 +5,7 @@ use axum::{
     response::IntoResponse,
     Json,
 };
+use cluaizdb_substrate::StorageSubstrate;
 use serde::{Deserialize, Serialize};
 use crate::state::AppState;
 
@@ -35,6 +36,13 @@ pub async fn insert_vector(
         .parse()
         .map_err(|e| (StatusCode::BAD_REQUEST, format!("Invalid record_id: {}", e)))?;
 
+    // 1. Durably persist vector to Substrate LMDB table
+    state
+        .db
+        .put_vector(1, rec_id, &body.vector)
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, format!("Failed to persist vector: {}", e)))?;
+
+    // 2. Insert into in-memory HNSW index
     state.vector_index.insert(rec_id, body.vector);
     Ok(Json(serde_json::json!({ "status": "indexed", "record_id": body.record_id })))
 }

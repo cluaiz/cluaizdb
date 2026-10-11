@@ -1,6 +1,6 @@
 [package]
 name = "cluaizdb-mcp"
-version = "0.2.0"
+version = "0.1.0"
 edition = "2021"
 description = "Native Model Context Protocol (MCP) server integration for CluaizDB Kernel v2"
 license = "MIT OR Apache-2.0"

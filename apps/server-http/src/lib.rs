@@ -45,7 +45,7 @@ mod tests {
         let body_bytes = resp.into_body().collect().await.unwrap().to_bytes();
         let body_json: serde_json::Value = serde_json::from_slice(&body_bytes).unwrap();
         assert_eq!(body_json["status"], "ok");
-        assert_eq!(body_json["version"], "0.2.0");
+        assert_eq!(body_json["version"], "0.1.0");
     }
 
     #[tokio::test]
@@ -109,5 +109,46 @@ mod tests {
         assert!(body_json["result"]["tools"].as_array().is_some());
         let tools = body_json["result"]["tools"].as_array().unwrap();
         assert_eq!(tools.len(), 4);
+    }
+
+    #[tokio::test]
+    async fn test_cdql_query_endpoint() {
+        let app = setup_test_app();
+
+        let put_payload = json!({
+            "collection_id": 1,
+            "record_id": "777",
+            "payload": "{\"framework\": \"CluaizDB\", \"tier\": \"Alpha\"}"
+        });
+
+        let put_req = Request::builder()
+            .method("POST")
+            .uri("/v1/records")
+            .header("content-type", "application/json")
+            .body(Body::from(serde_json::to_vec(&put_payload).unwrap()))
+            .unwrap();
+
+        let put_resp = app.clone().oneshot(put_req).await.unwrap();
+        assert_eq!(put_resp.status(), StatusCode::OK);
+
+        let cdql_req_body = json!({
+            "query": "find id(\"777\")",
+            "collection_id": 1
+        });
+
+        let cdql_req = Request::builder()
+            .method("POST")
+            .uri("/v1/cdql")
+            .header("content-type", "application/json")
+            .body(Body::from(serde_json::to_vec(&cdql_req_body).unwrap()))
+            .unwrap();
+
+        let cdql_resp = app.oneshot(cdql_req).await.unwrap();
+        assert_eq!(cdql_resp.status(), StatusCode::OK);
+
+        let body_bytes = cdql_resp.into_body().collect().await.unwrap().to_bytes();
+        let body_json: serde_json::Value = serde_json::from_slice(&body_bytes).unwrap();
+        assert_eq!(body_json["count"], 1);
+        assert_eq!(body_json["records"][0]["framework"], "CluaizDB");
     }
 }

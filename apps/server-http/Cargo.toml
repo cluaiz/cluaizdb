@@ -1,8 +1,8 @@
 [package]
 name = "cluaizdb-server-http"
-version = "0.2.0"
+version = "0.1.0"
 edition = "2021"
-description = "Sovereign REST & MCP HTTP/Stdio edge server for CluaizDB Kernel v2"
+description = "Sovereign REST & MCP HTTP edge server for CluaizDB 0.1.0 Alpha"
 license = "MIT OR Apache-2.0"
 
 [[bin]]
@@ -13,6 +13,7 @@ path = "src/main.rs"
 cluaizdb-substrate = { path = "../../kernel-core/substrate" }
 cluaizdb-group-commit = { path = "../../modules/group-commit" }
 cluaizdb-index-mvhsnw = { path = "../../modules/index-engine/mvhsnw-vector" }
+cluaizdb-cdql = { path = "../../modules/cdql-query" }
 cluaizdb-wasm-sandbox = { path = "../../runtimes/wasmtime-sandbox" }
 cluaizdb-mcp = { path = "../../api/mcp-spec" }
 

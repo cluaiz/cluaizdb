@@ -1,3 +1,4 @@
+pub mod cdql;
 pub mod health;
 pub mod mcp;
 pub mod records;
@@ -14,6 +15,8 @@ pub fn create_router(state: Arc<AppState>) -> Router {
     Router::new()
         // Health
         .route("/health", get(health::health_check))
+        // CDQL Unified Query Engine
+        .route("/v1/cdql", post(cdql::handle_cdql_query))
         // Records
         .route("/v1/records", post(records::put_record))
         .route(
