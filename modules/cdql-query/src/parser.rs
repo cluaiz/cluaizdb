@@ -14,13 +14,13 @@ pub enum CdqlValue {
 /// Comparison operators for filters
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum CompareOp {
-    Eq,        // =
-    NotEq,     // !=
-    Gt,        // >
-    Lt,        // <
-    Gte,       // >=
-    Lte,       // <=
-    Contains,  // contains
+    Eq,       // =
+    NotEq,    // !=
+    Gt,       // >
+    Lt,       // <
+    Gte,      // >=
+    Lte,      // <=
+    Contains, // contains
 }
 
 /// A single key-value filter condition
@@ -53,79 +53,26 @@ pub enum AggFunc {
 /// Each "step" in a CDQL pipeline
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum CdqlOp {
-    Insert {
-        label: String,
-        data: std::collections::HashMap<String, CdqlValue>,
-    },
-    Find {
-        label: String,
-        filters: Vec<Filter>,
-    },
-    FindById {
-        id: String,
-    },
-    Filter {
-        field: String,
-        op: CompareOp,
-        value: CdqlValue,
-    },
-    Project {
-        keep: Vec<String>,
-    },
-    Unwind {
-        field: String,
-    },
-    Traverse {
-        edge: String,
-        min_hops: usize,
-        max_hops: usize,
-        min_weight: f64,
-    },
-    ShortestPath {
-        to_node: String,
-    },
-    Join {
-        target: String,
-        on_left: String,
-        on_right: String,
-        join_type: JoinType,
-    },
-    GroupBy {
-        fields: Vec<String>,
-    },
-    Aggregate {
-        functions: Vec<AggFunc>,
-    },
-    TimeWindow {
-        size: String,
-    },
-    SimilarTo {
-        vector: Vec<f32>,
-        metric: String,
-    },
-    Search {
-        query: String,
-        fuzzy: bool,
-    },
-    GeoNear {
-        lat: f64,
-        lon: f64,
-        radius_km: f64,
-    },
-    RangeScan {
-        field: String,
-        start: CdqlValue,
-        end: CdqlValue,
-    },
-    Stream {
-        start_byte: usize,
-        end_byte: usize,
-    },
+    Insert { label: String, data: std::collections::HashMap<String, CdqlValue> },
+    Find { label: String, filters: Vec<Filter> },
+    FindById { id: String },
+    Filter { field: String, op: CompareOp, value: CdqlValue },
+    Project { keep: Vec<String> },
+    Unwind { field: String },
+    Traverse { edge: String, min_hops: usize, max_hops: usize, min_weight: f64 },
+    ShortestPath { to_node: String },
+    Join { target: String, on_left: String, on_right: String, join_type: JoinType },
+    GroupBy { fields: Vec<String> },
+    Aggregate { functions: Vec<AggFunc> },
+    TimeWindow { size: String },
+    SimilarTo { vector: Vec<f32>, metric: String },
+    Search { query: String, fuzzy: bool },
+    GeoNear { lat: f64, lon: f64, radius_km: f64 },
+    RangeScan { field: String, start: CdqlValue, end: CdqlValue },
+    Stream { start_byte: usize, end_byte: usize },
     Limit(usize),
-    SortBy {
-        field: String,
-        ascending: bool,
-    },
+    SortBy { field: String, ascending: bool },
+    WasmTransform { genome_id: u64, func: String },
 }
 
 /// The full CDQL query — an ordered pipeline of operations
@@ -148,11 +95,7 @@ pub fn parse(input: &str) -> Result<CdqlQuery, String> {
 
     let mut ops = Vec::new();
     for (i, segment) in segments.iter().enumerate() {
-        let op = if i == 0 {
-            parse_find(segment)?
-        } else {
-            parse_pipeline_op(segment)?
-        };
+        let op = if i == 0 { parse_find(segment)? } else { parse_pipeline_op(segment)? };
         ops.push(op);
     }
 
@@ -202,12 +145,7 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
 
     if segment.starts_with("get ") {
         let relation = segment["get ".len()..].trim().to_string();
-        return Ok(CdqlOp::Traverse {
-            edge: relation,
-            min_hops: 1,
-            max_hops: 1,
-            min_weight: 0.0,
-        });
+        return Ok(CdqlOp::Traverse { edge: relation, min_hops: 1, max_hops: 1, min_weight: 0.0 });
     }
 
     if segment.starts_with("filter ") {
@@ -225,7 +163,8 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
     }
 
     if segment.starts_with("traverse(") {
-        let body = segment.strip_prefix("traverse(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
+        let body =
+            segment.strip_prefix("traverse(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
         let edge = extract_named_string(body, "edge").unwrap_or_else(|| "*".to_string());
         let min_hops = extract_named_f64(body, "min_hops").map(|v| v as usize).unwrap_or(1);
         let max_hops = extract_named_f64(body, "max_hops").map(|v| v as usize).unwrap_or(3);
@@ -234,8 +173,11 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
     }
 
     if segment.starts_with("shortest_path(") {
-        let body = segment.strip_prefix("shortest_path(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
-        let to_node = extract_named_string(body, "to").unwrap_or_default();
+        let body =
+            segment.strip_prefix("shortest_path(").and_then(|s| s.strip_suffix(')')).unwrap_or("").trim();
+        let to_node = extract_named_string(body, "to").unwrap_or_else(|| {
+            body.trim_matches('"').trim_matches('\'').to_string()
+        });
         return Ok(CdqlOp::ShortestPath { to_node });
     }
 
@@ -244,7 +186,8 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
         let target = extract_named_string(body, "target").unwrap_or_default();
         let on_left = extract_named_string(body, "on_left").unwrap_or_default();
         let on_right = extract_named_string(body, "on_right").unwrap_or_default();
-        let join_type_str = extract_named_string(body, "type").unwrap_or_else(|| "inner".to_string());
+        let join_type_str =
+            extract_named_string(body, "type").unwrap_or_else(|| "inner".to_string());
         let join_type = match join_type_str.to_lowercase().as_str() {
             "left" => JoinType::Left,
             "right" => JoinType::Right,
@@ -255,8 +198,10 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
     }
 
     if segment.starts_with("group_by(") {
-        let body = segment.strip_prefix("group_by(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
-        let fields: Vec<String> = body.split(',')
+        let body =
+            segment.strip_prefix("group_by(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
+        let fields: Vec<String> = body
+            .split(',')
             .map(|s| s.trim().trim_matches('"').to_string())
             .filter(|s| !s.is_empty())
             .collect();
@@ -264,7 +209,8 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
     }
 
     if segment.starts_with("aggregate(") {
-        let body = segment.strip_prefix("aggregate(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
+        let body =
+            segment.strip_prefix("aggregate(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
         let mut functions = Vec::new();
         let parts: Vec<&str> = body.split(',').collect();
         for part in parts {
@@ -272,32 +218,66 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
             if p.starts_with("count()") {
                 functions.push(AggFunc::Count);
             } else if p.starts_with("sum(") {
-                let f = p.strip_prefix("sum(").and_then(|s| s.strip_suffix(')')).unwrap_or("").trim_matches('"').to_string();
-                if !f.is_empty() { functions.push(AggFunc::Sum(f)); }
+                let f = p
+                    .strip_prefix("sum(")
+                    .and_then(|s| s.strip_suffix(')'))
+                    .unwrap_or("")
+                    .trim_matches('"')
+                    .to_string();
+                if !f.is_empty() {
+                    functions.push(AggFunc::Sum(f));
+                }
             } else if p.starts_with("avg(") {
-                let f = p.strip_prefix("avg(").and_then(|s| s.strip_suffix(')')).unwrap_or("").trim_matches('"').to_string();
-                if !f.is_empty() { functions.push(AggFunc::Avg(f)); }
+                let f = p
+                    .strip_prefix("avg(")
+                    .and_then(|s| s.strip_suffix(')'))
+                    .unwrap_or("")
+                    .trim_matches('"')
+                    .to_string();
+                if !f.is_empty() {
+                    functions.push(AggFunc::Avg(f));
+                }
             } else if p.starts_with("min(") {
-                let f = p.strip_prefix("min(").and_then(|s| s.strip_suffix(')')).unwrap_or("").trim_matches('"').to_string();
-                if !f.is_empty() { functions.push(AggFunc::Min(f)); }
+                let f = p
+                    .strip_prefix("min(")
+                    .and_then(|s| s.strip_suffix(')'))
+                    .unwrap_or("")
+                    .trim_matches('"')
+                    .to_string();
+                if !f.is_empty() {
+                    functions.push(AggFunc::Min(f));
+                }
             } else if p.starts_with("max(") {
-                let f = p.strip_prefix("max(").and_then(|s| s.strip_suffix(')')).unwrap_or("").trim_matches('"').to_string();
-                if !f.is_empty() { functions.push(AggFunc::Max(f)); }
+                let f = p
+                    .strip_prefix("max(")
+                    .and_then(|s| s.strip_suffix(')'))
+                    .unwrap_or("")
+                    .trim_matches('"')
+                    .to_string();
+                if !f.is_empty() {
+                    functions.push(AggFunc::Max(f));
+                }
             }
         }
         return Ok(CdqlOp::Aggregate { functions });
     }
 
     if segment.starts_with("time_window(") {
-        let body = segment.strip_prefix("time_window(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
+        let body =
+            segment.strip_prefix("time_window(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
         let size = extract_named_string(body, "size").unwrap_or_else(|| "1h".to_string());
         return Ok(CdqlOp::TimeWindow { size });
     }
 
     if segment.starts_with("project(") {
-        let body = segment.strip_prefix("project(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
-        let keep: Vec<String> = body.split(',')
-            .map(|s| s.trim().trim_matches('"').to_string())
+        let mut body = segment.strip_prefix("project(").and_then(|s| s.strip_suffix(')')).unwrap_or("").trim();
+        if let Some(rest) = body.strip_prefix("keep:") {
+            body = rest.trim();
+        }
+        let body = body.trim_start_matches('[').trim_end_matches(']').trim();
+        let keep: Vec<String> = body
+            .split(',')
+            .map(|s| s.trim().trim_matches('"').trim_matches('\'').trim().to_string())
             .filter(|s| !s.is_empty())
             .collect();
         return Ok(CdqlOp::Project { keep });
@@ -310,10 +290,8 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
     }
 
     if segment.starts_with("geo_near(") {
-        let body = segment
-            .strip_prefix("geo_near(")
-            .and_then(|s| s.strip_suffix(')'))
-            .unwrap_or("");
+        let body =
+            segment.strip_prefix("geo_near(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
         let lat = extract_named_f64(body, "lat").unwrap_or(0.0);
         let lon = extract_named_f64(body, "lon").unwrap_or(0.0);
         let radius_km = extract_named_f64(body, "radius_km").unwrap_or(5.0);
@@ -321,20 +299,14 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
     }
 
     if segment.starts_with("search(") {
-        let body = segment
-            .strip_prefix("search(")
-            .and_then(|s| s.strip_suffix(')'))
-            .unwrap_or("");
+        let body = segment.strip_prefix("search(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
         let query = extract_named_string(body, "query").unwrap_or_default();
         let fuzzy = extract_named_bool(body, "fuzzy").unwrap_or(false);
         return Ok(CdqlOp::Search { query, fuzzy });
     }
 
     if segment.starts_with("range(") {
-        let body = segment
-            .strip_prefix("range(")
-            .and_then(|s| s.strip_suffix(')'))
-            .unwrap_or("");
+        let body = segment.strip_prefix("range(").and_then(|s| s.strip_suffix(')')).unwrap_or("");
         let field = extract_named_string(body, "field").unwrap_or_default();
         let start = if let Some(n) = extract_named_f64(body, "start") {
             CdqlValue::Number(n)
@@ -356,18 +328,52 @@ fn parse_pipeline_op(segment: &str) -> Result<CdqlOp, String> {
         return Ok(CdqlOp::Stream { start_byte, end_byte });
     }
 
+    if segment.starts_with("wasm(") || segment.starts_with("compute(") {
+        let prefix = if segment.starts_with("wasm(") { "wasm(" } else { "compute(" };
+        let body = segment.strip_prefix(prefix).and_then(|s| s.strip_suffix(')')).unwrap_or("");
+        let genome_id = extract_named_f64(body, "id").map(|v| v as u64).unwrap_or(1);
+        let func = extract_named_string(body, "func").unwrap_or_else(|| {
+            body.trim().trim_matches('"').to_string()
+        });
+        return Ok(CdqlOp::WasmTransform { genome_id, func });
+    }
+
+    if segment.starts_with("similar_to(") || segment.starts_with("vector_knn(") {
+        let prefix = if segment.starts_with("similar_to(") { "similar_to(" } else { "vector_knn(" };
+        let body = segment.strip_prefix(prefix).and_then(|s| s.strip_suffix(')')).unwrap_or("").trim();
+        let vector = parse_vector_bracket(body);
+        let metric = extract_named_string(body, "metric").unwrap_or_else(|| "cosine".to_string());
+        return Ok(CdqlOp::SimilarTo { vector, metric });
+    }
+
     Err(format!("Unknown or unimplemented pipeline operation: '{}'", segment))
+}
+
+fn parse_vector_bracket(body: &str) -> Vec<f32> {
+    if let (Some(start), Some(end)) = (body.find('['), body.find(']')) {
+        let inner = &body[start + 1..end];
+        inner
+            .split(',')
+            .filter_map(|s| s.trim().parse::<f32>().ok())
+            .collect()
+    } else {
+        Vec::new()
+    }
 }
 
 fn parse_filters(input: &str) -> Result<Vec<Filter>, String> {
     let input = input.trim();
-    if input.is_empty() { return Ok(vec![]); }
+    if input.is_empty() {
+        return Ok(vec![]);
+    }
 
     let mut filters = Vec::new();
     let parts: Vec<&str> = input.split(',').collect();
 
     for part in parts {
-        if part.trim().is_empty() { continue; }
+        if part.trim().is_empty() {
+            continue;
+        }
         filters.push(parse_single_filter(part.trim())?);
     }
 
@@ -376,6 +382,7 @@ fn parse_filters(input: &str) -> Result<Vec<Filter>, String> {
 
 fn parse_single_filter(input: &str) -> Result<Filter, String> {
     let ops = [
+        ("==", CompareOp::Eq),
         (">=", CompareOp::Gte),
         ("<=", CompareOp::Lte),
         ("!=", CompareOp::NotEq),
@@ -399,14 +406,24 @@ fn parse_single_filter(input: &str) -> Result<Filter, String> {
 
 fn parse_value(input: &str) -> Result<CdqlValue, String> {
     let input = input.trim();
-    if input == "?" { return Ok(CdqlValue::Parameter); }
+    if input == "?" {
+        return Ok(CdqlValue::Parameter);
+    }
     if input.starts_with('"') && input.ends_with('"') {
         return Ok(CdqlValue::Text(input[1..input.len() - 1].to_string()));
     }
-    if input == "true" { return Ok(CdqlValue::Bool(true)); }
-    if input == "false" { return Ok(CdqlValue::Bool(false)); }
-    if input == "null" { return Ok(CdqlValue::Null); }
-    if let Ok(n) = input.parse::<f64>() { return Ok(CdqlValue::Number(n)); }
+    if input == "true" {
+        return Ok(CdqlValue::Bool(true));
+    }
+    if input == "false" {
+        return Ok(CdqlValue::Bool(false));
+    }
+    if input == "null" {
+        return Ok(CdqlValue::Null);
+    }
+    if let Ok(n) = input.parse::<f64>() {
+        return Ok(CdqlValue::Number(n));
+    }
     Ok(CdqlValue::Text(input.to_string()))
 }
 
@@ -425,7 +442,9 @@ fn parse_insert(segment: &str) -> Result<CdqlOp, String> {
     let mut data = std::collections::HashMap::new();
     let parts: Vec<&str> = data_str.split(',').collect();
     for part in parts {
-        if part.trim().is_empty() { continue; }
+        if part.trim().is_empty() {
+            continue;
+        }
         if let Some(colon) = part.find(':') {
             let key = part[..colon].trim().to_string();
             let val_str = part[colon + 1..].trim();
@@ -454,7 +473,11 @@ fn extract_named_string(body: &str, key: &str) -> Option<String> {
         Some(inner[..end].to_string())
     } else {
         let raw = after.split(',').next().unwrap_or("").trim();
-        if raw.is_empty() { None } else { Some(raw.to_string()) }
+        if raw.is_empty() {
+            None
+        } else {
+            Some(raw.to_string())
+        }
     }
 }
 
@@ -464,8 +487,8 @@ fn extract_named_bool(body: &str, key: &str) -> Option<bool> {
     let after = body[pos + search.len()..].trim();
     let raw = after.split(',').next().unwrap_or("").trim();
     match raw {
-        "true"  => Some(true),
+        "true" => Some(true),
         "false" => Some(false),
-        _       => None,
+        _ => None,
     }
 }

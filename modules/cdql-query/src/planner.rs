@@ -1,106 +1,54 @@
 /// CDQL Query Planner
 ///
 /// Converts a `CdqlQuery` AST into an ordered `QueryPlan`.
-
 use super::parser::{AggFunc, CdqlOp, CdqlQuery, CdqlValue, CompareOp, Filter, JoinType};
 
 /// A resolved, executable step in the query execution pipeline
 #[derive(Debug, Clone)]
 pub enum PlanStep {
     // 1. FAST PATH (Key-Value)
-    FastPathIdLookup {
-        id: String,
-    },
+    FastPathIdLookup { id: String },
 
     // 2. CORE / DOCUMENT
-    InsertData {
-        label: String,
-        data: std::collections::HashMap<String, CdqlValue>,
-    },
-    ScanAll {
-        label_filter: Option<String>,
-        filters: Vec<Filter>,
-    },
-    FilterResults {
-        field: String,
-        op: CompareOp,
-        value: CdqlValue,
-    },
-    Unwind {
-        field: String,
-    },
-    Project {
-        keep: Vec<String>,
-    },
+    InsertData { label: String, data: std::collections::HashMap<String, CdqlValue> },
+    ScanAll { label_filter: Option<String>, filters: Vec<Filter> },
+    FilterResults { field: String, op: CompareOp, value: CdqlValue },
+    Unwind { field: String },
+    Project { keep: Vec<String> },
 
     // 3. GRAPH
-    GraphTraverse {
-        edge: String,
-        min_hops: usize,
-        max_hops: usize,
-        min_weight: f64,
-    },
-    ShortestPath {
-        to_node: String,
-    },
+    GraphTraverse { edge: String, min_hops: usize, max_hops: usize, min_weight: f64 },
+    ShortestPath { to_node: String },
 
     // 4. RELATIONAL SQL
-    RelationalJoin {
-        target: String,
-        on_left: String,
-        on_right: String,
-        join_type: JoinType,
-    },
-    GroupBy {
-        fields: Vec<String>,
-    },
-    Aggregate {
-        functions: Vec<AggFunc>,
-    },
+    RelationalJoin { target: String, on_left: String, on_right: String, join_type: JoinType },
+    GroupBy { fields: Vec<String> },
+    Aggregate { functions: Vec<AggFunc> },
 
     // 5. TIME-SERIES
-    TimeWindow {
-        size: String,
-    },
+    TimeWindow { size: String },
 
     // 6. VECTOR / AI
-    VectorScan {
-        vector: Vec<f32>,
-        metric: String,
-    },
+    VectorScan { vector: Vec<f32>, metric: String },
 
     // 7. FULL TEXT SEARCH
-    FullTextSearch {
-        query: String,
-        fuzzy: bool,
-    },
+    FullTextSearch { query: String, fuzzy: bool },
 
     // 8. GEO-SPATIAL
-    GeoNear {
-        lat: f64,
-        lon: f64,
-        radius_km: f64,
-    },
+    GeoNear { lat: f64, lon: f64, radius_km: f64 },
 
     // 9. WIDE-COLUMN
-    RangeScan {
-        field: String,
-        start: CdqlValue,
-        end: CdqlValue,
-    },
+    RangeScan { field: String, start: CdqlValue, end: CdqlValue },
 
     // 10. BLOB / OBJECT
-    ByteStream {
-        start_byte: usize,
-        end_byte: usize,
-    },
+    ByteStream { start_byte: usize, end_byte: usize },
 
     // UTILITY
     Limit(usize),
-    SortBy {
-        field: String,
-        ascending: bool,
-    },
+    SortBy { field: String, ascending: bool },
+
+    // 11. PROGRAMMABLE WASM COMPUTE
+    WasmTransform { genome_id: u64, func: String },
 }
 
 /// The full execution plan for a CDQL query
@@ -113,11 +61,7 @@ pub struct QueryPlan {
 
 impl QueryPlan {
     pub fn new() -> Self {
-        Self {
-            steps: Vec::new(),
-            is_fast_path: false,
-            limit: 100,
-        }
+        Self { steps: Vec::new(), is_fast_path: false, limit: 100 }
     }
 }
 
@@ -134,10 +78,7 @@ pub fn build_plan(query: &CdqlQuery) -> Result<QueryPlan, String> {
     for op in &query.ops {
         match op {
             CdqlOp::Insert { label, data } => {
-                plan.steps.push(PlanStep::InsertData {
-                    label: label.clone(),
-                    data: data.clone(),
-                });
+                plan.steps.push(PlanStep::InsertData { label: label.clone(), data: data.clone() });
             }
             CdqlOp::FindById { id } => {
                 plan.is_fast_path = true;
@@ -145,10 +86,7 @@ pub fn build_plan(query: &CdqlQuery) -> Result<QueryPlan, String> {
             }
             CdqlOp::Find { label, filters } => {
                 let label_filter = if label == "*" { None } else { Some(label.clone()) };
-                plan.steps.push(PlanStep::ScanAll {
-                    label_filter,
-                    filters: filters.clone(),
-                });
+                plan.steps.push(PlanStep::ScanAll { label_filter, filters: filters.clone() });
             }
             CdqlOp::Filter { field, op, value } => {
                 plan.steps.push(PlanStep::FilterResults {
@@ -167,7 +105,9 @@ pub fn build_plan(query: &CdqlQuery) -> Result<QueryPlan, String> {
                     min_weight: *min_weight,
                 });
             }
-            CdqlOp::ShortestPath { to_node } => plan.steps.push(PlanStep::ShortestPath { to_node: to_node.clone() }),
+            CdqlOp::ShortestPath { to_node } => {
+                plan.steps.push(PlanStep::ShortestPath { to_node: to_node.clone() })
+            }
             CdqlOp::Join { target, on_left, on_right, join_type } => {
                 plan.steps.push(PlanStep::RelationalJoin {
                     target: target.clone(),
@@ -176,22 +116,43 @@ pub fn build_plan(query: &CdqlQuery) -> Result<QueryPlan, String> {
                     join_type: join_type.clone(),
                 });
             }
-            CdqlOp::GroupBy { fields } => plan.steps.push(PlanStep::GroupBy { fields: fields.clone() }),
-            CdqlOp::Aggregate { functions } => plan.steps.push(PlanStep::Aggregate { functions: functions.clone() }),
-            CdqlOp::TimeWindow { size } => plan.steps.push(PlanStep::TimeWindow { size: size.clone() }),
-            CdqlOp::SimilarTo { vector, metric } => plan.steps.push(PlanStep::VectorScan { vector: vector.clone(), metric: metric.clone() }),
-            CdqlOp::Search { query, fuzzy } => plan.steps.push(PlanStep::FullTextSearch { query: query.clone(), fuzzy: *fuzzy }),
-            CdqlOp::GeoNear { lat, lon, radius_km } => plan.steps.push(PlanStep::GeoNear { lat: *lat, lon: *lon, radius_km: *radius_km }),
-            CdqlOp::RangeScan { field, start, end } => plan.steps.push(PlanStep::RangeScan { field: field.clone(), start: start.clone(), end: end.clone() }),
-            CdqlOp::Stream { start_byte, end_byte } => plan.steps.push(PlanStep::ByteStream { start_byte: *start_byte, end_byte: *end_byte }),
+            CdqlOp::GroupBy { fields } => {
+                plan.steps.push(PlanStep::GroupBy { fields: fields.clone() })
+            }
+            CdqlOp::Aggregate { functions } => {
+                plan.steps.push(PlanStep::Aggregate { functions: functions.clone() })
+            }
+            CdqlOp::TimeWindow { size } => {
+                plan.steps.push(PlanStep::TimeWindow { size: size.clone() })
+            }
+            CdqlOp::SimilarTo { vector, metric } => plan
+                .steps
+                .push(PlanStep::VectorScan { vector: vector.clone(), metric: metric.clone() }),
+            CdqlOp::Search { query, fuzzy } => {
+                plan.steps.push(PlanStep::FullTextSearch { query: query.clone(), fuzzy: *fuzzy })
+            }
+            CdqlOp::GeoNear { lat, lon, radius_km } => {
+                plan.steps.push(PlanStep::GeoNear { lat: *lat, lon: *lon, radius_km: *radius_km })
+            }
+            CdqlOp::RangeScan { field, start, end } => plan.steps.push(PlanStep::RangeScan {
+                field: field.clone(),
+                start: start.clone(),
+                end: end.clone(),
+            }),
+            CdqlOp::Stream { start_byte, end_byte } => plan
+                .steps
+                .push(PlanStep::ByteStream { start_byte: *start_byte, end_byte: *end_byte }),
             CdqlOp::Limit(n) => {
                 plan.limit = *n;
                 plan.steps.push(PlanStep::Limit(*n));
             }
             CdqlOp::SortBy { field, ascending } => {
-                plan.steps.push(PlanStep::SortBy {
-                    field: field.clone(),
-                    ascending: *ascending,
+                plan.steps.push(PlanStep::SortBy { field: field.clone(), ascending: *ascending });
+            }
+            CdqlOp::WasmTransform { genome_id, func } => {
+                plan.steps.push(PlanStep::WasmTransform {
+                    genome_id: *genome_id,
+                    func: func.clone(),
                 });
             }
         }

@@ -6,5 +6,13 @@ description = "Universal query parser, planner, and evaluator for CluaizDB"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
+cluaizdb-substrate = { path = "../../kernel-core/substrate" }
+cluaizdb-index-mvhsnw = { path = "../index-engine/mvhsnw-vector" }
+cluaizdb-wasm-sandbox = { path = "../../runtimes/wasmtime-sandbox" }
+cluaizdb-time-series = { path = "../time-series" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"
+wat = "1.0"
