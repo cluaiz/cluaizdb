@@ -1,9 +1,9 @@
 # 💻 Command Line Interface (CLI) Reference
 
-> **The Sovereign Admin & Automation Tool for CluaizDB**  
-> *In-Process CDQL Execution • Direct Point Reads • Secondary Index Seeks • MCP Tool Invocation*
+> **The Sovereign Market-Standard Admin & Automation Tool for CluaizDB**  
+> *Interactive CDQL Shell (REPL) • Bi-Directional Graph Tracing • In-Process Vector ANN • Bulk JSONL Pipelines • Hardware Profiler*
 
-The `cluaizdb` CLI binary (`apps/cli`) provides direct administrative control and scripting access to the database substrate without requiring an external daemon or network connection. It can also launch the sovereign HTTP and MCP server.
+The `cluaizdb` CLI binary (`apps/cli`) provides complete administrative control, direct in-process database substrate operations, interactive querying, and daemon orchestration without requiring an external container or network dependency.
 
 ---
 
@@ -11,7 +11,7 @@ The `cluaizdb` CLI binary (`apps/cli`) provides direct administrative control an
 
 ```mermaid
 flowchart TB
-    CLI["cluaizdb CLI Binary"]
+    CLI["cluaizdb CLI Binary (apps/cli)"]
 
     subgraph GLOBAL["Global Parameters"]
         DIR["--data-dir (default: ./data/cluaizdb)"]
@@ -19,28 +19,48 @@ flowchart TB
         FMT["--json (Machine-Readable Output)"]
     end
 
-    subgraph DAEMON["Daemon Mode"]
-        SERVE["serve<br/>--host &amp; --port"]
+    subgraph INTERACTIVE["1. Interactive & Query"]
+        REPL["repl<br/>Interactive CDQL Console"]
+        QUERY["query<br/>One-Shot CDQL Pipeline"]
     end
 
-    subgraph STORAGE_OPS["In-Process Storage &amp; Indexing"]
-        PUT["put<br/>Write Record"]
-        GET["get<br/>Direct Page-Cache Read"]
-        DEL["delete<br/>Delete Record"]
-        IDX["index-term<br/>Add Secondary Index"]
-        SEEK["seek-term<br/>Prefix Range Seek"]
+    subgraph STORAGE_OPS["2. Document & Bulk Storage"]
+        CRUD["put • get • delete • scan<br/>Point CRUD &amp; Sequential Scans"]
+        BULK["import • export<br/>Streaming JSONL Bulk Pipelines"]
     end
 
-    subgraph COMPUTE_OPS["Query &amp; Protocol Execution"]
-        QUERY["query<br/>Execute CDQL Pipeline"]
-        MCPLIST["mcp-list<br/>List Registered Tools"]
-        MCPCALL["mcp-call<br/>Execute Tool Call"]
+    subgraph GRAPH_OPS["3. Bi-Directional Graph Engine"]
+        EDGE_ADD["edge-add • edge-del<br/>Link Weighted Graph Edges"]
+        EDGE_TRACE["edge-trace<br/>Multi-Hop BFS Traversal"]
+    end
+
+    subgraph VECTOR_OPS["4. In-Process Vector ANN"]
+        VEC_IN["vec-insert<br/>Dense Float Embeddings"]
+        VEC_ANN["vec-search<br/>Top-K Cosine/L2 Graph ANN"]
+    end
+
+    subgraph INDEX_OPS["5. Secondary Indexing"]
+        IDX["index-term • seek-term<br/>Composite Prefix Range Seeks"]
+    end
+
+    subgraph SYSTEM_OPS["6. System, Diagnostics & Daemon"]
+        SERVE["serve<br/>Axum REST &amp; MCP Daemon"]
+        STATS["stats<br/>Disk Size &amp; Table Telemetry"]
+        BENCH["bench<br/>Hardware Latency Profiler"]
+    end
+
+    subgraph AI_PROTOCOL["7. Model Context Protocol"]
+        MCP["mcp-list • mcp-call<br/>Native Agent Tool Invocation"]
     end
 
     CLI --> GLOBAL
-    GLOBAL --> DAEMON
+    GLOBAL --> INTERACTIVE
     GLOBAL --> STORAGE_OPS
-    GLOBAL --> COMPUTE_OPS
+    GLOBAL --> GRAPH_OPS
+    GLOBAL --> VECTOR_OPS
+    GLOBAL --> INDEX_OPS
+    GLOBAL --> SYSTEM_OPS
+    GLOBAL --> AI_PROTOCOL
 ```
 
 ---
@@ -57,223 +77,187 @@ Every `cluaizdb` command accepts the following global flags:
 
 ---
 
-## 📋 Command Reference
+## 📋 Comprehensive Command Reference
 
-### 1. `serve` — Launch Sovereign Daemon
-Starts the Axum HTTP REST server and JSON-RPC Model Context Protocol (MCP) daemon.
-
-```bash
-# Launch server on custom host and port
-cargo run --release -p cluaizdb-cli -- serve --host 127.0.0.1 --port 7331
-```
-
-- **Options**:
-  - `-h, --host <STRING>`: Bind address (default: `0.0.0.0`).
-  - `-p, --port <U16>`: Dedicated TCP port (default: `7331`). Auto-port hopping is disabled to maintain client stability.
-
----
-
-### 2. `put` — Durably Store a Record
-Writes a 128-bit decimal identified record into a collection using the double-buffered `GroupCommitter`.
+### 1. `repl` — Interactive CDQL Console
+Launches an interactive read-eval-print loop with active collection state and dot-commands (similar to `sqlite3` or `duckdb`).
 
 ```bash
-# Store agent state record
-cargo run --release -p cluaizdb-cli -- put --col 1 --id 1001 --payload '{"state":"active","fuel":850}'
+cargo run --release -p cluaizdb-cli -- repl --col 1
 ```
 
-- **Output (Human)**: `✅ [OK] Record 1001 durably written to collection 1`
-- **Output (`--json`)**:
-```json
-{
-  "status": "committed",
-  "col": 1,
-  "id": "1001"
-}
+```text
+╔══════════════════════════════════════════════════════════════════╗
+║               CluaizDB Interactive CDQL Shell (v0.1.0)           ║
+║   Type CDQL queries or dot-commands:                             ║
+║   .help             - Show available shell commands              ║
+║   .stats            - View database & collection telemetry       ║
+║   .use <col_id>     - Switch active collection                   ║
+║   .collections      - List registered collections                ║
+║   .exit / .quit     - Exit shell                                 ║
+╚══════════════════════════════════════════════════════════════════╝
+cluaizdb [col:1]> find status == 'active' | limit 5
+⚡ [Executed in 18 µs] Matched 1 record(s):
+  [1] {"agent":"Alpha","status":"active"}
+cluaizdb [col:1]> .exit
+👋 Goodbye.
 ```
 
 ---
 
-### 3. `get` — Direct Page-Cache Point Read
-Retrieves an owned byte slice directly from the memory-mapped page cache.
+### 2. `stats` — Database Telemetry & Storage Footprint
+Inspects physical disk space allocation on drive, active collection record counts, and LMDB memory-map limits.
 
 ```bash
-cargo run --release -p cluaizdb-cli -- get --col 1 --id 1001
+cargo run --release -p cluaizdb-cli -- stats
 ```
 
 - **Output (Human)**:
 ```text
-⚡ Record 1001:
-{"state":"active","fuel":850}
+📊 ─── CluaizDB Telemetry & Statistics ───
+  • Data Directory   : "./data/cluaizdb"
+  • Disk Footprint   : data.mdb (0.06 MB) | lock.mdb (7.94 KB)
+  • Virtual Map Size : 10.00 GB configured
+  • Active DBIs      : 9 Dedicated Tables (B+Tree Substrate)
+  • Collections (1):
+      - Col 1 ('default') : 42 record(s)
+  • Total Records    : 42
 ```
 - **Output (`--json`)**:
 ```json
 {
-  "found": true,
-  "col": 1,
-  "id": "1001",
-  "payload": "{\"state\":\"active\",\"fuel\":850}"
-}
-```
-
----
-
-### 4. `delete` — Atomic Record Purge
-Removes a record from the primary index and document tables.
-
-```bash
-cargo run --release -p cluaizdb-cli -- delete --col 1 --id 1001
-```
-
-- **Output (Human)**: `🗑️ [OK] Deleted record 1001`
-- **Output (`--json`)**: `{"deleted": true, "id": "1001"}`
-
----
-
-### 5. `index-term` — Insert Secondary Index Key
-Maps a textual or numerical token into the composite B+Tree index (`ColID + Term + RecordID`).
-
-```bash
-cargo run --release -p cluaizdb-cli -- index-term --col 1 --term "active" --id 1001
-```
-
-- **Output (Human)**: `🔍 [OK] Indexed term 'active' -> 1001`
-- **Output (`--json`)**: `{"status": "indexed", "term": "active", "id": "1001"}`
-
----
-
-### 6. `seek-term` — Prefix Index Lookup
-Performs a lexicographical prefix scan over the composite index DBI, returning matching 128-bit IDs.
-
-```bash
-cargo run --release -p cluaizdb-cli -- seek-term --col 1 --term "active"
-```
-
-- **Output (Human)**:
-```text
-🔍 Term 'active' matched 1 record(s):
-   • 1001
-```
-- **Output (`--json`)**:
-```json
-{
-  "term": "active",
-  "matches": ["1001"]
-}
-```
-
----
-
-### 7. `query` — In-Process CDQL Pipeline Execution
-Parses, plans, and executes a multi-stage CDQL query pipeline against local storage.
-
-```bash
-cargo run --release -p cluaizdb-cli -- query --col 1 --query "find status == 'active' | limit 10"
-```
-
-- **Output (Human)**:
-```text
-⚡ [CDQL Execution in 12 µs] Matched 1 record(s):
-[1] {"state":"active","fuel":850}
-```
-- **Output (`--json`)**:
-```json
-{
-  "execution_time_us": 12,
-  "count": 1,
-  "records": [
-    {
-      "state": "active",
-      "fuel": 850
-    }
+  "data_dir": "./data/cluaizdb",
+  "data_mdb_bytes": 65536,
+  "lock_mdb_bytes": 8192,
+  "configured_map_size_bytes": 10737418240,
+  "total_collections": 1,
+  "total_records": 42,
+  "collections": [
+    { "id": 1, "name": "default", "record_count": 42 }
   ]
 }
 ```
 
 ---
 
-### 8. `mcp-list` — Inspect Native Tool Registry
-Queries the local Model Context Protocol engine and returns all declared tool schemas in JSON-RPC 2.0 format.
+### 3. `bench` — In-Process Hardware Latency Profiler
+Executes real in-process reads and writes on the local hardware to measure actual percentiles (p50, p99, throughput). No synthetic claims.
 
 ```bash
-cargo run --release -p cluaizdb-cli -- mcp-list
+cargo run --release -p cluaizdb-cli -- bench --iterations 1000
 ```
 
 - **Output**:
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "result": {
-    "tools": [
-      {
-        "name": "db_ingest",
-        "description": "Durably store a document record into the Substrate storage engine",
-        "inputSchema": { "type": "object" }
-      },
-      {
-        "name": "db_query_vector",
-        "description": "Perform Approximate Nearest Neighbor (ANN) search over vector index",
-        "inputSchema": { "type": "object" }
-      },
-      {
-        "name": "db_inspect_node",
-        "description": "Direct point read of a record from the memory-mapped page cache",
-        "inputSchema": { "type": "object" }
-      },
-      {
-        "name": "db_graph_trace",
-        "description": "Traverse directional graph edges from a source record",
-        "inputSchema": { "type": "object" }
-      }
-    ]
-  }
-}
+```text
+🧪 Starting In-Process Hardware Latency Benchmark (1000 ops)...
+🏁 ─── Hardware Benchmark Results ───
+  • In-Process Point Reads  : p50 = 1.40 µs | p99 = 4.20 µs (281849 ops/sec)
+  • In-Process Direct Writes: p50 = 353.50 µs | p99 = 1420.00 µs (2359 ops/sec)
+  • Hardware Grounding      : 100% Measured Locally on Disk (Zero Synthetic Numbers)
 ```
 
 ---
 
-### 9. `mcp-call` — Direct Tool Execution
-Simulates an AI Agent host tool call via the command line.
+### 4. `put`, `get`, `delete` & `scan` — Document Storage CRUD
+Atomic 128-bit decimal identified point storage operations directly over memory-mapped B+Tree.
 
 ```bash
+# Durably store a record
+cargo run --release -p cluaizdb-cli -- put --col 1 --id 42 --payload '{"status":"active","agent":"Alpha"}'
+
+# Read directly from page cache
+cargo run --release -p cluaizdb-cli -- get --col 1 --id 42
+
+# Scan sequential records
+cargo run --release -p cluaizdb-cli -- scan --col 1 --limit 10
+
+# Atomic delete
+cargo run --release -p cluaizdb-cli -- delete --col 1 --id 42
+```
+
+---
+
+### 5. `import` & `export` — Bulk JSONL Streaming
+High-throughput bulk ingestion leveraging `GroupCommitter` batching, and cursor-based collection export.
+
+```bash
+# Bulk import records
+cargo run --release -p cluaizdb-cli -- import --col 1 --file ./backup.jsonl
+
+# Export collection to file
+cargo run --release -p cluaizdb-cli -- export --col 1 --file ./dump.jsonl --limit 50000
+```
+
+---
+
+### 6. `edge-add`, `edge-del` & `edge-trace` — Bi-Directional Graph Engine
+Native relationship linking and multi-hop graph BFS traversal.
+
+```bash
+# Link weighted directional edge
+cargo run --release -p cluaizdb-cli -- edge-add --from 42 --to 108 --type-id 1 --weight 0.85
+
+# Trace multi-hop traversal from source
+cargo run --release -p cluaizdb-cli -- edge-trace --from 42 --max-depth 3 --min-weight 0.5
+```
+
+- **Output**:
+```text
+🕸️ Traversed graph from 42 (Found 1 nodes):
+   [Depth 1] Node: 108 (Weight: 0.85)
+```
+
+---
+
+### 7. `vec-insert` & `vec-search` — In-Process Vector ANN
+Dense float embedding insertion and top-k Cosine Approximate Nearest Neighbor search.
+
+```bash
+# Insert vector
+cargo run --release -p cluaizdb-cli -- vec-insert --col 1 --id 42 --vector '[0.1, 0.2, 0.3]'
+cargo run --release -p cluaizdb-cli -- vec-insert --col 1 --id 108 --vector '[0.9, 0.8, 0.7]'
+
+# Top-K Cosine ANN search
+cargo run --release -p cluaizdb-cli -- vec-search --col 1 --vector '[0.1, 0.21, 0.29]' --top-k 2
+```
+
+- **Output**:
+```text
+📐 Vector ANN Search (Top-2 Results):
+   [1] Record ID: 42 | Distance: 0.0007
+   [2] Record ID: 108 | Distance: 0.1097
+```
+
+---
+
+### 8. `index-term` & `seek-term` — Composite Secondary Indexing
+Lexicographical B+Tree prefix seeks over indexed tokens.
+
+```bash
+cargo run --release -p cluaizdb-cli -- index-term --col 1 --term "agent:alpha" --id 42
+cargo run --release -p cluaizdb-cli -- seek-term --col 1 --term "agent:alpha"
+```
+
+---
+
+### 9. `serve` — Sovereign Server Daemon
+Launches the Axum REST engine and Model Context Protocol daemon over HTTP.
+
+```bash
+cargo run --release -p cluaizdb-cli -- serve --host 127.0.0.1 --port 7331
+```
+
+---
+
+### 10. `mcp-list` & `mcp-call` — AI Agent Protocol Simulation
+Inspects native tool schemas and simulates tool invocation without an external LLM host.
+
+```bash
+# List tools
+cargo run --release -p cluaizdb-cli -- mcp-list
+
+# Call tool
 cargo run --release -p cluaizdb-cli -- mcp-call \
   --tool db_inspect_node \
-  --args '{"collection": 1, "record_id": 1001}'
-```
-
-- **Output**:
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "result": {
-    "content": [
-      {
-        "type": "text",
-        "text": "{\"state\":\"active\",\"fuel\":850}"
-      }
-    ]
-  }
-}
-```
-
----
-
-## 🛠️ Shell Automation Scripting
-
-Because every command supports `--json` and emits predictable exit codes, CluaizDB can be scripted in bash or PowerShell:
-
-```bash
-#!/usr/bin/env bash
-set -e
-
-DATA_DIR="./agent_runtime_db"
-
-# 1. Ingest record
-cargo run -q --release -p cluaizdb-cli -- --data-dir "$DATA_DIR" --json \
-  put --col 1 --id 42 --payload '{"agent":"AlphaZero","generation":4}'
-
-# 2. Extract payload using jq
-RECORD=$(cargo run -q --release -p cluaizdb-cli -- --data-dir "$DATA_DIR" --json get --col 1 --id 42 | jq -r '.payload')
-echo "Retrieved Payload: $RECORD"
+  --args '{"collection": 1, "record_id": 42}'
 ```
