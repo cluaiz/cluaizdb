@@ -1,42 +1,67 @@
-# What is CLUAIZD?
+# 📖 Introduction & System Mental Model
 
-Welcome to the official documentation for **CLUAIZD (Core Network System Database)**.
-
-## The Autonomic Memory Substrate
-Traditional databases force you to choose an architecture before you start building. If you need relationships, you pick Graph DB. If you need search, you pick Search Engine. If you need JSON documents, you pick Document Store. This results in massive architectural fragmentation, data syncing headaches, and system bloat.
-
-**CLUAIZD shatters this paradigm.**
-
-Built in Rust on top of LMDB, CLUAIZD is a biological-inspired, autonomic memory substrate. Out of the box, it is a completely empty "Brain" (a graph of Neurons and Synapses). It possesses no hardcoded schemas, no specialized indexes, and no arbitrary limits.
-
-It is a **10-in-1 shape-shifting engine**.
-
-> [!NOTE]
-> **The Zero-Logic Substrate Rule**
-> The core Rust engine contains zero business logic or query optimization rules. It acts solely as a high-speed router. All "database intelligence" is dynamically injected via WASM Genomes.
-
-## How it works: Genomes (DNA)
-Instead of hardcoding features into the core engine, CLUAIZD relies on **Genomes** (WASM or Rhai scripts). When you insert a Neuron (data record) into CLUAIZD, you attach a specific Genome to it. 
-
-For example:
-- Attach `sql_strict.json` and the Neuron acts like a strict Relational table.
-- Attach `time_series.json` and the Neuron will automatically compress old data and aggregate time windows.
-- Attach `ephemeral_cache.json` and the Neuron behaves like In-Memory Cache, evicting itself from memory based on TTL.
-
-## The cluaizdb Neural Query Language (CDQL)
-To command these diverse Genomes, CLUAIZD introduces **CDQL** — a universal, pipeline-based query language. CDQL allows you to run Graph traversals, Vector searches, and Geo-Spatial queries seamlessly within the exact same pipeline string.
-
-```text
-// Find blue cars, traverse their owner graph, and filter by radius
-find Car(color: "blue") 
-  -> traverse(edge: "owner", hops: 1..2)
-  -> geo_near(lat: 28.6, lon: 77.2, radius: "5km")
-```
-
-## Why CLUAIZD?
-1. **0ms Latency:** C-FFI bindings allow robotics, Python engines, and C++ game engines to access memory-mapped data directly without TCP/HTTP overhead.
-2. **Bits-to-Atoms Tiering:** The background "Dreamer" engine automatically downgrades unused payloads into heavy ZSTD compression (Cold Storage) to prevent OOM (Out-of-Memory) crashes without deleting data.
-3. **Crash Safety:** A robust Write-Ahead Log (WAL) ensures your memory substrate recovers idempotently after power failures.
+> **Component:** `docs/get-started`  
+> **Architecture:** 4-Layer Cognitive Database Subsystem  
+> **Philosophy:** Embedded In-Process Multi-Model Engine for AI Agents
 
 ---
-Let's build a nervous system. Proceed to the [Quickstart](quickstart) to spin up your engine.
+
+## 🧭 The 4 Core Architectural Layers
+
+CluaizDB is designed around a clean separation of concerns, structured into 4 cohesive layers:
+
+```mermaid
+flowchart TB
+    subgraph LAYER1["Layer 1: Access & Integration"]
+        RUST["Rust API<br/>Direct crate embedding"]
+        FFI["C-ABI (cluaizdb.h)<br/>C, C++, Python, Go"]
+        HTTP["Axum HTTP Daemon<br/>REST &amp; JSON-RPC"]
+        MCP["Model Context Protocol<br/>Claude Desktop / Cursor / Antigravity"]
+    end
+
+    subgraph LAYER2["Layer 2: Cognitive Governance"]
+        SIGNAL["Task Signals &amp; Sensory Intake"]
+        GENOME["Agent Genomes &amp; DNA Modules"]
+        INTERCEPTOR["Action Interceptor &amp; Policy Engine"]
+        TOPOLOGY["Taxonomic Topology &amp; Concept Clusters"]
+        ASYNC_LOG["Async Experience Queue"]
+    end
+
+    subgraph LAYER3["Layer 3: Query & Compute Engine"]
+        CDQL["CDQL Query Planner &amp; Executor"]
+        HNSW["In-Process MV-HNSW Vector ANN Index"]
+        GORILLA["Gorilla Time-Series Compression"]
+        WASMTIME["Wasmtime Sandboxed Bytecode Runtime"]
+        GROUP_COMMIT["Double-Buffered Group Committer"]
+    end
+
+    subgraph LAYER4["Layer 4: Storage Foundation"]
+        LMDB["LMDB Memory-Mapped B+Tree Substrate"]
+        RECORDS["Document / Record Storage"]
+        INDEXES["Composite Secondary Prefix Indices"]
+        EDGES["Bi-Directional Graph Storage (Outbound &amp; Inbound)"]
+        DISK[("data.mdb &amp; lock.mdb on Disk")]
+    end
+
+    LAYER1 --> LAYER2
+    LAYER1 --> LAYER3
+    LAYER2 --> LAYER3
+    LAYER3 --> LAYER4
+    LAYER4 --> DISK
+```
+
+---
+
+## 🧠 Mental Model Breakdown
+
+1. **Storage Foundation (Layer 4)**:
+   - Houses the persistent B+Tree tables via LMDB.
+   - Provides $O(\log N)$ point lookups, bi-directional graph traversal, composite secondary indices, and zero ghost pointer cleanup.
+2. **Query & Compute Engine (Layer 3)**:
+   - Bridges multiple database paradigms into a unified statement via CDQL pipelines (`->`).
+   - Manages in-process vector ANN search, delta-of-delta time-series compression, and sandboxed WebAssembly execution.
+3. **Cognitive Governance (Layer 2)**:
+   - Acts as an intelligent supervisor for AI agents.
+   - Pre-evaluates tool intents and queries, blocking destructive operations and injecting bounded `< 50 token` memory context packets.
+4. **Access & Integration (Layer 1)**:
+   - Polyglot interfaces for any host environment: embedded Rust traits, C/Python FFI headers, Axum HTTP endpoints, or MCP tool handlers.

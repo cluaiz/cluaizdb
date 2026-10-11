@@ -8,12 +8,12 @@
         "pages": [
           {
             "slug": "why-cluaizdb",
-            "title": "💡 Why CLUAIZD?",
+            "title": "💡 Why CluaizDB?",
             "file_path": "docs/vision/why-cluaizdb.md"
           },
           {
             "slug": "for-ai-agents",
-            "title": "🤖 For AI Agents",
+            "title": "🤖 Built for AI Agents",
             "file_path": "docs/vision/for-ai-agents.md"
           }
         ]
@@ -21,692 +21,180 @@
     ]
   },
   {
-    "id": "getting-started",
+    "id": "get-started",
     "title": "🚀 Getting Started",
     "groups": [
       {
-        "group": "AI & Cursor Rules",
-        "pages": [
-          {
-            "slug": "skill",
-            "title": "🤖 AI Agent Skill File",
-            "file_path": "docs/get-started/skill.md"
-          }
-        ]
-      },
-      {
-        "group": "Overview",
+        "group": "Developer Onboarding",
         "pages": [
           {
             "slug": "introduction",
-            "title": "📖 What is CLUAIZD?",
+            "title": "📖 Introduction & Mental Model",
             "file_path": "docs/get-started/introduction.md"
           },
           {
             "slug": "quickstart",
-            "title": "⚡ Quickstart",
+            "title": "⚡ 5-Minute Quickstart",
             "file_path": "docs/get-started/quickstart.md"
           },
           {
             "slug": "installation",
-            "title": "📦 Installation",
+            "title": "📦 Installation & Toolchain",
             "file_path": "docs/get-started/installation.md"
           },
           {
-            "slug": "build-a-todo-app",
-            "title": "🛠️ Build Your First App",
-            "file_path": "docs/get-started/build-a-todo-app.md"
+            "slug": "mcp-integration",
+            "title": "🔌 Model Context Protocol (MCP)",
+            "file_path": "docs/get-started/mcp-integration.md"
           }
         ]
       }
     ]
   },
   {
-    "id": "the-10-genomes",
-    "title": "🧬 The 10 Genomes",
+    "id": "cognitive-governance",
+    "title": "🧠 Cognitive Governance",
     "groups": [
       {
-        "group": "DNA Architecture",
+        "group": "Agent Memory & Safety",
         "pages": [
           {
-            "slug": "dna-architecture",
-            "title": "⚙️ DNA Architecture & Hooks",
-            "file_path": "docs/genomes/dna-architecture.md"
+            "slug": "signal-and-activation",
+            "title": "📡 Task Signals & Experience Activation",
+            "file_path": "docs/cognitive-governance/signal-and-activation.md"
           },
           {
-            "slug": "supported-dnas",
-            "title": "🧩 All 10 Paradigms",
-            "file_path": "docs/genomes/supported-dnas.md"
-          }
-        ]
-      },
-      {
-        "group": "Core Paradigms",
-        "pages": [
-          {
-            "slug": "relational-sql",
-            "title": "🗄️ Relational SQL",
-            "file_path": "docs/genomes/relational-sql.md"
+            "slug": "genome-and-dna",
+            "title": "🧬 Programmable Genomes & DNA Modules",
+            "file_path": "docs/cognitive-governance/genome-and-dna.md"
           },
           {
-            "slug": "document-nosql",
-            "title": "📑 Document NoSQL",
-            "file_path": "docs/genomes/document-nosql.md"
+            "slug": "lifecycle-hooks-and-policies",
+            "title": "🛡️ Policy Engine & Context Builder",
+            "file_path": "docs/cognitive-governance/lifecycle-hooks-and-policies.md"
           },
           {
-            "slug": "key-value",
-            "title": "⚡ Key-Value",
-            "file_path": "docs/genomes/key-value.md"
-          }
-        ]
-      },
-      {
-        "group": "Advanced Analytics",
-        "pages": [
-          {
-            "slug": "graph-network",
-            "title": "🕸️ Graph Network",
-            "file_path": "docs/genomes/graph-network.md"
+            "slug": "topology-manager",
+            "title": "🕸️ Taxonomic Hierarchy & Topology",
+            "file_path": "docs/cognitive-governance/topology-manager.md"
           },
           {
-            "slug": "time-series",
-            "title": "⏱️ Time-Series",
-            "file_path": "docs/genomes/time-series.md"
-          },
-          {
-            "slug": "wide-column",
-            "title": "🏛️ Wide-Column",
-            "file_path": "docs/genomes/wide-column.md"
-          }
-        ]
-      },
-      {
-        "group": "Specialized Engines",
-        "pages": [
-          {
-            "slug": "vector-ai",
-            "title": "🧠 Vector AI",
-            "file_path": "docs/genomes/vector-ai.md"
-          },
-          {
-            "slug": "full-text-search",
-            "title": "🔍 Full-Text Search",
-            "file_path": "docs/genomes/full-text-search.md"
-          },
-          {
-            "slug": "geospatial",
-            "title": "🌍 Geo-Spatial",
-            "file_path": "docs/genomes/geospatial.md"
-          },
-          {
-            "slug": "blob-storage",
-            "title": "📦 Blob Storage",
-            "file_path": "docs/genomes/blob-storage.md"
+            "slug": "experience-capture",
+            "title": "📥 Async Experience Capture",
+            "file_path": "docs/cognitive-governance/experience-capture.md"
           }
         ]
       }
     ]
   },
   {
-    "id": "cluaizdb-types",
-    "title": "🗃️ 30 Database Paradigms",
+    "id": "query-and-compute",
+    "title": "⚡ Query & Compute Engine",
     "groups": [
       {
-        "group": "Paradigms 01-10",
-        "pages": [
-          { "slug": "01-key-value", "title": "⚡ 01: Key-Value", "file_path": "docs/cluaizdb-types/01-key-value.md" },
-          { "slug": "02-graph", "title": "🕸️ 02: Graph", "file_path": "docs/cluaizdb-types/02-graph.md" },
-          { "slug": "03-document", "title": "📑 03: Document NoSQL", "file_path": "docs/cluaizdb-types/03-document.md" },
-          { "slug": "04-relational", "title": "🗄️ 04: Relational", "file_path": "docs/cluaizdb-types/04-relational.md" },
-          { "slug": "05-vector-ai", "title": "🧠 05: Vector AI", "file_path": "docs/cluaizdb-types/05-vector-ai.md" },
-          { "slug": "06-time-series", "title": "⏱️ 06: Time-Series", "file_path": "docs/cluaizdb-types/06-time-series.md" },
-          { "slug": "07-geo-spatial", "title": "🌍 07: Geo-Spatial", "file_path": "docs/cluaizdb-types/07-geo-spatial.md" },
-          { "slug": "08-wide-column", "title": "🏛️ 08: Wide-Column", "file_path": "docs/cluaizdb-types/08-wide-column.md" },
-          { "slug": "09-full-text-search", "title": "🔍 09: Full-Text Search", "file_path": "docs/cluaizdb-types/09-full-text-search.md" },
-          { "slug": "10-blob-object", "title": "📦 10: Blob / Object", "file_path": "docs/cluaizdb-types/10-blob-object.md" }
-        ]
-      },
-      {
-        "group": "Paradigms 11-20",
-        "pages": [
-          { "slug": "11-multi-model", "title": "🧩 11: Multi-Model", "file_path": "docs/cluaizdb-types/11-multi-model.md" },
-          { "slug": "12-hierarchical", "title": "🌳 12: Hierarchical", "file_path": "docs/cluaizdb-types/12-hierarchical.md" },
-          { "slug": "13-network", "title": "🕸️ 13: Network Model", "file_path": "docs/cluaizdb-types/13-network.md" },
-          { "slug": "14-object-oriented", "title": "📦 14: Object-Oriented", "file_path": "docs/cluaizdb-types/14-object-oriented.md" },
-          { "slug": "15-columnar", "title": "📊 15: Columnar", "file_path": "docs/cluaizdb-types/15-columnar.md" },
-          { "slug": "16-in-memory", "title": "🏁 16: In-Memory", "file_path": "docs/cluaizdb-types/16-in-memory.md" },
-          { "slug": "17-ledger-blockchain", "title": "🔗 17: Immutable Ledger / Blockchain", "file_path": "docs/cluaizdb-types/17-ledger-blockchain.md" },
-          { "slug": "18-spatial-geographic", "title": "🌍 18: Spatial Geographic", "file_path": "docs/cluaizdb-types/18-spatial-geographic.md" },
-          { "slug": "19-event-sourcing", "title": "⏱️ 19: Event Sourcing", "file_path": "docs/cluaizdb-types/19-event-sourcing.md" },
-          { "slug": "20-autonomous", "title": "🤖 20: Autonomous", "file_path": "docs/cluaizdb-types/20-autonomous.md" }
-        ]
-      },
-      {
-        "group": "Paradigms 21-30",
-        "pages": [
-          { "slug": "21-newsql", "title": "📊 21: NewSQL", "file_path": "docs/cluaizdb-types/21-newsql.md" },
-          { "slug": "22-streaming-reactive", "title": "📡 22: Streaming Reactive", "file_path": "docs/cluaizdb-types/22-streaming-reactive.md" },
-          { "slug": "23-temporal", "title": "⏱️ 23: Temporal", "file_path": "docs/cluaizdb-types/23-temporal.md" },
-          { "slug": "24-array-tensor", "title": "🔲 24: Array / Tensor", "file_path": "docs/cluaizdb-types/24-array-tensor.md" },
-          { "slug": "25-federated-virtual", "title": "🌐 25: Federated / Virtual", "file_path": "docs/cluaizdb-types/25-federated-virtual.md" },
-          { "slug": "26-multivalued", "title": "📈 26: Multivalued Attributes", "file_path": "docs/cluaizdb-types/26-multivalued.md" },
-          { "slug": "27-native-xml", "title": "🎲 27: Native XML", "file_path": "docs/cluaizdb-types/27-native-xml.md" },
-          { "slug": "28-spatial-temporal", "title": "👥 28: Spatial Temporal", "file_path": "docs/cluaizdb-types/28-spatial-temporal.md" },
-          { "slug": "29-graph-relational", "title": "🕸️ 29: Graph-Relational Hybrid", "file_path": "docs/cluaizdb-types/29-graph-relational.md" },
-          { "slug": "30-embedded-in-process", "title": "🔌 30: Embedded In-Process", "file_path": "docs/cluaizdb-types/30-embedded-in-process.md" }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "dna-templates",
-    "title": "🧬 DNA Templates & Serialization",
-    "groups": [
-      {
-        "group": "Templates & Hubs",
-        "pages": [
-          { "slug": "dna-templates-readme", "title": "📦 DNA Templates Hub", "file_path": "docs/cluaizdb-dna-templates/README.md" },
-          { "slug": "serialization-formats", "title": "📦 FlatBuffers & Protobuf Guide", "file_path": "docs/cluaizdb-dna-templates/serialization_formats.md" },
-          { "slug": "cdql-example", "title": "⚡ CDQL DNA Rule Example", "file_path": "docs/cluaizdb-dna-templates/cdql_example.md" }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "reference-manual",
-    "title": "📚 Reference Manual",
-    "groups": [
-      {
-        "group": "General",
+        "group": "CDQL Query Engine",
         "pages": [
           {
-            "slug": "api_index",
-            "title": "🔌 HTTP / WebSocket API Reference (A-Z)",
-            "file_path": "docs/reference/api_index.md"
+            "slug": "cdql-overview",
+            "title": "🔍 CDQL Architecture & Query Pipeline",
+            "file_path": "docs/query-and-compute/cdql-overview.md"
           },
           {
-            "slug": "cdql_index",
-            "title": "📖 CDQL Master Reference (A-Z)",
-            "file_path": "docs/reference/cdql_index.md"
-          },
-          {
-            "slug": "config_index",
-            "title": "⚙️ Configuration Reference (A-Z)",
-            "file_path": "docs/reference/config_index.md"
-          },
-          {
-            "slug": "dictionary",
-            "title": "📖 Master Technical Dictionary (A-Z)",
-            "file_path": "docs/reference/dictionary.md"
-          },
-          {
-            "slug": "dna_index",
-            "title": "🧪 DNA Execution Affordances (A-Z)",
-            "file_path": "docs/reference/dna_index.md"
-          },
-          {
-            "slug": "index",
-            "title": "📚 Cluaizdb Reference Manual",
-            "file_path": "docs/reference/index.md"
-          },
-          {
-            "slug": "types_index",
-            "title": "📦 Data Types Reference (A-Z)",
-            "file_path": "docs/reference/types_index.md"
+            "slug": "cdql-syntax-guide",
+            "title": "📜 Syntax Guide (FIND, TRAVERSE, SIMILAR, TIME_WINDOW)",
+            "file_path": "docs/query-and-compute/cdql-syntax-guide.md"
           }
         ]
       },
       {
-        "group": "Api",
+        "group": "Compute & Execution Modules",
         "pages": [
           {
-            "slug": "auth",
-            "title": "Authorization Mechanics",
-            "file_path": "docs/reference/api/auth.md"
+            "slug": "mvhsnw-vector-index",
+            "title": "📐 MV-HNSW In-Process Vector Index",
+            "file_path": "docs/query-and-compute/mvhsnw-vector-index.md"
           },
           {
-            "slug": "post_neuron",
-            "title": "POST /neuron Ingestion API",
-            "file_path": "docs/reference/api/post_neuron.md"
+            "slug": "gorilla-timeseries",
+            "title": "⏱️ Gorilla Time-Series Compression",
+            "file_path": "docs/query-and-compute/gorilla-timeseries.md"
           },
           {
-            "slug": "ws_stream",
-            "title": "ws:// /stream WebSocket API",
-            "file_path": "docs/reference/api/ws_stream.md"
-          }
-        ]
-      },
-      {
-        "group": "Cdql",
-        "pages": [
-          {
-            "slug": "cosine_distance",
-            "title": "cosine_distance Reference",
-            "file_path": "docs/reference/cdql/cosine_distance.md"
+            "slug": "wasmtime-sandbox",
+            "title": "🔒 Wasmtime Sandboxing & Fuel Metering",
+            "file_path": "docs/query-and-compute/wasmtime-sandbox.md"
           },
           {
-            "slug": "crispr",
-            "title": "crispr API Reference",
-            "file_path": "docs/reference/cdql/crispr.md"
-          },
-          {
-            "slug": "delete",
-            "title": "delete Command Reference",
-            "file_path": "docs/reference/cdql/delete.md"
-          },
-          {
-            "slug": "euclidean_distance",
-            "title": "euclidean_distance Reference",
-            "file_path": "docs/reference/cdql/euclidean_distance.md"
-          },
-          {
-            "slug": "find",
-            "title": "find Command Reference",
-            "file_path": "docs/reference/cdql/find.md"
-          },
-          {
-            "slug": "force",
-            "title": "force Command Reference",
-            "file_path": "docs/reference/cdql/force.md"
-          },
-          {
-            "slug": "gt",
-            "title": "$gt Command Reference",
-            "file_path": "docs/reference/cdql/gt.md"
-          },
-          {
-            "slug": "insert",
-            "title": "insert Command Reference",
-            "file_path": "docs/reference/cdql/insert.md"
-          },
-          {
-            "slug": "limit",
-            "title": "limit Command Reference",
-            "file_path": "docs/reference/cdql/limit.md"
-          },
-          {
-            "slug": "lt",
-            "title": "$lt Command Reference",
-            "file_path": "docs/reference/cdql/lt.md"
-          },
-          {
-            "slug": "similar",
-            "title": "similar Command Reference",
-            "file_path": "docs/reference/cdql/similar.md"
-          },
-          {
-            "slug": "update",
-            "title": "update Command Reference",
-            "file_path": "docs/reference/cdql/update.md"
-          },
-          {
-            "slug": "where",
-            "title": "where Command Reference",
-            "file_path": "docs/reference/cdql/where.md"
-          },
-          {
-            "slug": "geo_near",
-            "title": "geo_near — Geo-Spatial Proximity Reference",
-            "file_path": "docs/reference/cdql/geo_near.md"
-          },
-          {
-            "slug": "range",
-            "title": "range — Range Scan Reference",
-            "file_path": "docs/reference/cdql/range.md"
-          },
-          {
-            "slug": "search",
-            "title": "search — Full-Text Search Reference",
-            "file_path": "docs/reference/cdql/search.md"
-          },
-          {
-            "slug": "traverse",
-            "title": "traverse — Graph Traversal Reference",
-            "file_path": "docs/reference/cdql/traverse.md"
-          },
-          {
-            "slug": "shortest_path",
-            "title": "shortest_path — Graph Shortest Path Reference",
-            "file_path": "docs/reference/cdql/shortest_path.md"
-          },
-          {
-            "slug": "join",
-            "title": "join — Relational Hash Join Reference",
-            "file_path": "docs/reference/cdql/join.md"
-          },
-          {
-            "slug": "group_by",
-            "title": "group_by — SQL Grouping Reference",
-            "file_path": "docs/reference/cdql/group_by.md"
-          },
-          {
-            "slug": "aggregate",
-            "title": "aggregate — SQL Aggregation Reference",
-            "file_path": "docs/reference/cdql/aggregate.md"
-          },
-          {
-            "slug": "time_window",
-            "title": "time_window — Time-Series Windowing Reference",
-            "file_path": "docs/reference/cdql/time_window.md"
-          },
-          {
-            "slug": "stream",
-            "title": "stream — Blob Stream Slicing Reference",
-            "file_path": "docs/reference/cdql/stream.md"
-          },
-          {
-            "slug": "project",
-            "title": "project — Document Field Projection Reference",
-            "file_path": "docs/reference/cdql/project.md"
-          },
-          {
-            "slug": "unwind",
-            "title": "unwind — Document Array Flattening Reference",
-            "file_path": "docs/reference/cdql/unwind.md"
-          }
-        ]
-      },
-      {
-        "group": "Config",
-        "pages": [
-          {
-            "slug": "memory_map_size",
-            "title": "memory_map_size Configuration",
-            "file_path": "docs/reference/config/memory_map_size.md"
-          },
-          {
-            "slug": "wal_sync",
-            "title": "wal_sync Configuration",
-            "file_path": "docs/reference/config/wal_sync.md"
-          }
-        ]
-      },
-      {
-        "group": "Dna",
-        "pages": [
-          {
-            "slug": "avg",
-            "title": "avg Aggregation Reference",
-            "file_path": "docs/reference/dna/avg.md"
-          },
-          {
-            "slug": "ctx_abort",
-            "title": "ctx.abort Engine API",
-            "file_path": "docs/reference/dna/ctx_abort.md"
-          },
-          {
-            "slug": "ctx_fetch",
-            "title": "ctx.fetch Engine API",
-            "file_path": "docs/reference/dna/ctx_fetch.md"
-          },
-          {
-            "slug": "ctx_time",
-            "title": "ctx.time Engine API",
-            "file_path": "docs/reference/dna/ctx_time.md"
-          },
-          {
-            "slug": "group_by",
-            "title": "group_by Aggregation Reference",
-            "file_path": "docs/reference/dna/group_by.md"
-          },
-          {
-            "slug": "on_delete",
-            "title": "on_delete Event Hook",
-            "file_path": "docs/reference/dna/on_delete.md"
-          },
-          {
-            "slug": "on_lifecycle",
-            "title": "on_lifecycle Event Hook",
-            "file_path": "docs/reference/dna/on_lifecycle.md"
-          },
-          {
-            "slug": "on_read",
-            "title": "on_read Event Hook",
-            "file_path": "docs/reference/dna/on_read.md"
-          },
-          {
-            "slug": "on_write",
-            "title": "on_write Event Hook",
-            "file_path": "docs/reference/dna/on_write.md"
-          },
-          {
-            "slug": "sum",
-            "title": "sum Aggregation Reference",
-            "file_path": "docs/reference/dna/sum.md"
-          },
-          {
-            "slug": "on_traverse",
-            "title": "on_traverse Event Hook",
-            "file_path": "docs/reference/dna/on_traverse.md"
-          },
-          {
-            "slug": "on_path_step",
-            "title": "on_path_step Event Hook",
-            "file_path": "docs/reference/dna/on_path_step.md"
-          },
-          {
-            "slug": "on_path_resolve",
-            "title": "on_path_resolve Event Hook",
-            "file_path": "docs/reference/dna/on_path_resolve.md"
-          }
-        ]
-      },
-      {
-        "group": "Types",
-        "pages": [
-          {
-            "slug": "binary",
-            "title": "binary Data Type",
-            "file_path": "docs/reference/types/binary.md"
-          },
-          {
-            "slug": "code",
-            "title": "code Data Type",
-            "file_path": "docs/reference/types/code.md"
-          },
-          {
-            "slug": "json",
-            "title": "json Data Type",
-            "file_path": "docs/reference/types/json.md"
-          },
-          {
-            "slug": "text",
-            "title": "text Data Type",
-            "file_path": "docs/reference/types/text.md"
-          },
-          {
-            "slug": "vector",
-            "title": "vector Data Type",
-            "file_path": "docs/reference/types/vector.md"
-          },
-          {
-            "slug": "voltage_stream",
-            "title": "voltage_stream Data Type",
-            "file_path": "docs/reference/types/voltage_stream.md"
+            "slug": "group-commit",
+            "title": "💾 Double-Buffered Group Commit",
+            "file_path": "docs/query-and-compute/group-commit.md"
           }
         ]
       }
     ]
   },
   {
-    "id": "CDQL-mastery",
-    "title": "⚡ CDQL Mastery",
+    "id": "storage-foundation",
+    "title": "🏛️ Storage Foundation",
     "groups": [
       {
-        "group": "Reference",
+        "group": "LMDB Substrate",
         "pages": [
           {
-            "slug": "rosetta-stone",
-            "title": "🗺️ Rosetta Stone Cheatsheet",
-            "file_path": "docs/CDQL/rosetta-stone.md"
+            "slug": "mmap-storage-substrate",
+            "title": "🧱 Memory-Mapped B+Tree Substrate",
+            "file_path": "docs/storage-foundation/mmap-storage-substrate.md"
           },
           {
-            "slug": "CDQL-intro",
-            "title": "🔍 CDQL Introduction",
-            "file_path": "docs/query-language/CDQL-intro.md"
+            "slug": "bidirectional-graph-storage",
+            "title": "🔗 Bi-Directional Graph Storage",
+            "file_path": "docs/storage-foundation/bidirectional-graph-storage.md"
           },
           {
-            "slug": "syntax-reference",
-            "title": "📖 Syntax Reference",
-            "file_path": "docs/query-language/syntax-reference.md"
-          }
-        ]
-      },
-      {
-        "group": "Pipelines",
-        "pages": [
-          {
-            "slug": "hybrid-pipelines",
-            "title": "🧩 Hybrid Pipelines",
-            "file_path": "docs/CDQL/hybrid-pipelines.md"
+            "slug": "secondary-indexing",
+            "title": "📑 Composite Indices & Zero Ghost Pointers",
+            "file_path": "docs/storage-foundation/secondary-indexing.md"
           },
           {
-            "slug": "advanced-pipelines",
-            "title": "⚡ Advanced Pipelines",
-            "file_path": "docs/CDQL/advanced-pipelines.md"
-          },
-          {
-            "slug": "performance-tuning",
-            "title": "🚀 Performance Tuning",
-            "file_path": "docs/CDQL/performance-tuning.md"
+            "slug": "disk-persistence",
+            "title": "💿 File Layout & ACID Durability",
+            "file_path": "docs/storage-foundation/disk-persistence.md"
           }
         ]
       }
     ]
   },
   {
-    "id": "api-reference",
-    "title": "📡 API Reference",
+    "id": "access-and-integration",
+    "title": "🔌 Access & Integration",
     "groups": [
       {
-        "group": "Core Endpoints",
+        "group": "APIs & Interfaces",
         "pages": [
           {
-            "slug": "rest-api",
-            "title": "🌐 REST API",
-            "file_path": "docs/clients/rest-api.md"
+            "slug": "rust-api",
+            "title": "🦀 Embedded Rust API",
+            "file_path": "docs/access-and-integration/rust-api.md"
           },
           {
-            "slug": "c-ffi",
-            "title": "⚡ C-FFI Bindings",
-            "file_path": "docs/clients/c-ffi.md"
-          }
-        ]
-      },
-      {
-        "group": "Advanced System APIs",
-        "pages": [
-          {
-            "slug": "juju",
-            "title": "🧿 JUJU Spatial Canvas",
-            "file_path": "docs/api/juju.md"
+            "slug": "c-abi-ffi",
+            "title": "⚡ C-ABI Bindings (cluaizdb.h)",
+            "file_path": "docs/access-and-integration/c-abi-ffi.md"
           },
           {
-            "slug": "crispr",
-            "title": "🔬 CRISPR Surgery API",
-            "file_path": "docs/api/crispr.md"
+            "slug": "http-server",
+            "title": "🌐 HTTP JSON-RPC Server",
+            "file_path": "docs/access-and-integration/http-server.md"
           },
           {
-            "slug": "booster",
-            "title": "🚀 Booster WASM Engine",
-            "file_path": "docs/api/booster.md"
+            "slug": "mcp-server",
+            "title": "🤖 MCP Server Tool Reference",
+            "file_path": "docs/access-and-integration/mcp-server.md"
           },
           {
-            "slug": "websocket",
-            "title": "💓 WebSocket Telemetry",
-            "file_path": "docs/api/websocket.md"
-          },
-          {
-            "slug": "ingest-stream",
-            "title": "📡 Sensor Stream Ingestion",
-            "file_path": "docs/api/ingest-stream.md"
-          },
-          {
-            "slug": "sandbox-validate",
-            "title": "🧪 Deep Archer Sandbox",
-            "file_path": "docs/api/sandbox-validate.md"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "deep-architecture",
-    "title": "🧠 Deep Architecture",
-    "groups": [
-      {
-        "group": "Storage Internals",
-        "pages": [
-          {
-            "slug": "bits-to-atoms",
-            "title": "🧊 Bits to Atoms (LMDB)",
-            "file_path": "docs/architecture/bits-to-atoms.md"
-          },
-          {
-            "slug": "lmdb-zero-copy",
-            "title": "💾 LMDB & Zero-Copy",
-            "file_path": "docs/architecture/lmdb-zero-copy.md"
-          },
-          {
-            "slug": "crash-recovery",
-            "title": "🛡️ WAL Crash Recovery",
-            "file_path": "docs/architecture/crash-recovery.md"
-          },
-          {
-            "slug": "wal-internals",
-            "title": "📜 WAL Internals",
-            "file_path": "docs/architecture/wal-internals.md"
-          },
-          {
-            "slug": "sensory-shards",
-            "title": "📡 Sensory Shards",
-            "file_path": "docs/architecture/sensory-shards.md"
-          }
-        ]
-      },
-      {
-        "group": "Autonomic Systems",
-        "pages": [
-          {
-            "slug": "dreamer-engine",
-            "title": "🌌 The Dreamer Engine",
-            "file_path": "docs/architecture/dreamer-engine.md"
-          },
-          {
-            "slug": "ffi-bypass",
-            "title": "⚡ FFI Bypass Manual",
-            "file_path": "docs/architecture/ffi-bypass.md"
-          },
-          {
-            "slug": "genome-hooks",
-            "title": "🧬 Genome Hooks Reference",
-            "file_path": "docs/architecture/genome-hooks.md"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "deployment",
-    "title": "🚀 Deployment",
-    "groups": [
-      {
-        "group": "Infrastructure",
-        "pages": [
-          {
-            "slug": "bare-metal",
-            "title": "⚡ Bare-Metal (Native)",
-            "file_path": "docs/deployment/bare-metal.md"
-          },
-          {
-            "slug": "docker",
-            "title": "🐳 Docker Setup",
-            "file_path": "docs/deployment/docker.md"
-          },
-          {
-            "slug": "config-reference",
-            "title": "⚙️ Config.toml Reference",
-            "file_path": "docs/deployment/config-reference.md"
+            "slug": "cli-reference",
+            "title": "💻 CLI Command Reference",
+            "file_path": "docs/access-and-integration/cli-reference.md"
           }
         ]
       }
